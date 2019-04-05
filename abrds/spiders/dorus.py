@@ -8,6 +8,10 @@ class QuotesSpider(scrapy.Spider):
         'http://russia.dorus.ru/auto/buses'
     ]
 
+    allowed_domains = [
+        'dorus.ru'
+    ]
+
     def parse(self, response):
         # follow links to author pages
         for href in response.xpath('///div[@class="onepost"]//a/@href').getall():
