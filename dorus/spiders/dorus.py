@@ -5,41 +5,34 @@ import requests
 class QuotesSpider(scrapy.Spider):
     name = 'dorus'
     start_urls = [
-        'http://www.dorus.ru/computers/office-equipment/jc97-03220a-003n01018-kronshteyn-avtopodatchika_10380288.html',
+        'http://russia.dorus.ru/auto/buses'
     ]
 
     def parse(self, response):
-        # for quote in response.css('div.quote'):
-        r = requests.post("http://www.dorus.ru/action.php", data={'act': 'getcontact', 'type': 'phone', 'id': '10380288'})
+        # follow links to author pages
+        for href in response.xpath('///div[@class="onepost"]//a/@href').getall():
+            yield response.follow(href, self.parse_item)
+        # follow pagination links
+        nextPage = response.xpath('///div[@class="margt24"]/span[@class="link"]/@onclick').get().replace("openLink('",'').replace("', true)",'')
+        yield response.follow(nextPage, self.parse)
+
+    def parse_item(self, response):
+        id = re.findall('\d+', response.xpath('//script/text()').re('Номер этого объявления: [\d]+</div>')[0])[0]
+        r = requests.post("http://www.dorus.ru/action.php", data={'act': 'getcontact', 'type': 'phone', 'id': id})
         phone = r.text
 
         result = {
-            'external_id': re.findall('\d+', response.xpath('//script/text()').re('Номер этого объявления: [\d]+</div>')[0])[0],
+            'external_id': id,
             'title': response.css('h1::text').get(),
-            'price': response.css('div.pprice::text').get(),
-            'author': response.css('div.pauthor::text').get(),
-            'city': response.css('div.pcity::text').get(),
-            'date': response.xpath('//script/text()').re('Дата размещения: .+:\d\d</div>'),
+            'description': response.css('div.margt6.margb12::text').get(),
+            'price': response.css('div.pprice::text').re('\d+')[0],
+            'author': response.css('div.pauthor::text').get().replace("Контактное лицо: ", ""),
+            'city': response.css('div.pcity::text').get().replace("Город: ", ""),
+            'date': response.xpath('//script/text()').re('Дата размещения: .+:\d\d</div>')[0].replace("Дата размещения: ", "").replace("</div>", ""),
             'images': response.css('div.imgfull img::attr(src)').extract(),
+            'category':  response.css('div.bullet.fbold span::text').get(),
+            'url':  response.css('div.purl span::text').get(),
             'phone': phone
         }
-        # phone_request = FormRequest.from_response("http://www.dorus.ru/action.php", callback=parse_phone, formdata={'act': 'getcontact', 'id': '10380288', 'type': 'phone'})
-
 
         yield result
-
-        # type = 'phone'
-        # var data = 'act=getcontact&id=' + id + '&type=' + type;
-        # req.open('POST', 'http://' + city + '.dorus.ru/action.php', true);
-        #     req.setRequestHeader('Accept-Charset', 'windows-1251');
-        #     req.setRequestHeader('Accept-Language','ru, en');
-        #     req.setRequestHeader('Connection', 'close');
-        #     req.setRequestHeader('Content-length', data.length);
-        #     req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-        next_page = None
-        # response.css('li.next a::attr("href")').get()
-        if next_page is not None:
-            yield response.follow(next_page, self.parse)
-    # def parse_phone(self,response):
-    #     result['phone'] = phone_request
