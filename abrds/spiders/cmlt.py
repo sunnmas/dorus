@@ -7,8 +7,7 @@ import requests
 class QuotesSpider(scrapy.Spider):
     name = 'cmlt'
     start_urls = [
-        # 'http://www.cmlt.ru/ads--rubric-1394'
-        'https://www.cmlt.ru/ad-a17216852'
+        'https://www.cmlt.ru/ads--rubric-88'
     ]
 
     allowed_domains = [
@@ -16,14 +15,18 @@ class QuotesSpider(scrapy.Spider):
     ]
 
     def parse(self, response):
-        # follow links to author pages
-        # for href in response.xpath('///div[@class="onepost"]//a/@href').getall():
-        #     yield response.follow(href, self.parse_item)
-        # # follow pagination links
-        # nextPage = response.xpath('///div[@class="margt24"]/span[@class="link"]/@onclick').get().replace("openLink('",'').replace("', true)",'')
-        # yield response.follow(nextPage, self.parse)
+        # follow links to adv pages
+        links = response.css('div.item a.an-bg-link::attr(href)').getall()
+        links = list(set(links))
+        print(links)
+        for href in links:
+            yield response.follow("https://cmlt.ru"+href, self.parse_item)
+        # follow pagination links
+        nextPage = "https://cmlt.ru"+response.css('a.pagesController:last-child::attr(href)').get()
+        yield response.follow(nextPage, self.parse)
 
 
+    def parse_item(self, response):
         id = re.search('ad-.\d+',response.url).group(0).replace('ad-', '')
         title = response.css('h1::text').get().replace('\n','')
         description = ''.join(response.css('div.full-an-info div.view-an.content-block::text').getall()).replace('\n','')

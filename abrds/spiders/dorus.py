@@ -13,7 +13,7 @@ class QuotesSpider(scrapy.Spider):
     ]
 
     def parse(self, response):
-        # follow links to author pages
+        # follow links to adv pages
         for href in response.xpath('///div[@class="onepost"]//a/@href').getall():
             yield response.follow(href, self.parse_item)
         # follow pagination links
