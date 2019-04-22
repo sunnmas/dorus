@@ -26,17 +26,23 @@ class QuotesSpider(scrapy.Spider):
         phone = r.text
 
         result = {
+            'provider': 'dorus',
             'external_id': id,
+            'date': response.xpath('//script/text()').re('Дата размещения: .+:\d\d</div>')[0].replace("Дата размещения: ", "").replace("</div>", ""),
             'title': response.css('h1::text').get(),
             'description': response.css('div.margt6.margb12::text').get(),
             'price': response.css('div.pprice::text').re('\d+')[0],
-            'author': response.css('div.pauthor::text').get().replace("Контактное лицо: ", ""),
-            'city': response.css('div.pcity::text').get().replace("Город: ", ""),
-            'date': response.xpath('//script/text()').re('Дата размещения: .+:\d\d</div>')[0].replace("Дата размещения: ", "").replace("</div>", ""),
+            'address': response.css('div.pcity::text').get().replace("Город: ", ""),
+            'coordinates': None,
+            'ext_category':  response.css('div.bullet.fbold span::text').get(),
             'images': response.css('div.imgfull img::attr(src)').extract(),
-            'category':  response.css('div.bullet.fbold span::text').get(),
-            'url':  response.css('div.purl span::text').get(),
-            'phone': phone
+            'videos': None,
+            'site': None,
+            'details': None,
+            'author_external_id': 'unknown id',
+            'author': response.css('div.pauthor::text').get().replace("Контактное лицо: ", ""),
+            'phone': phone,
+            'original_url': response.css('div.purl span::text').get(),
         }
 
         yield result

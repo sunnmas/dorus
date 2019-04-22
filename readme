@@ -1,0 +1,6 @@
+
+install Microsoft visual c++ 14
+pip install --upgrade setuptools
+
+you need mysql phyton:
+		pip install PyMySQL
