@@ -13,34 +13,30 @@ from scrapy.contrib.spiders import Rule
 class CmltSpider(scrapy.Spider):
     name = 'cmlt'
     start_urls = [
-        # 'https://www.cmlt.ru/ads--rubric-88'
-        'https://www.cmlt.ru/ad-b5167401'
+        'https://www.cmlt.ru/ads--rubric-88'
+        # 'https://www.cmlt.ru/ad-b5167401'
     ]
 
     allowed_domains = [
         'cmlt.ru'
     ]
 
-    # def parse(self, response):
-    #     # follow links to adv pages
-    #     links = response.css('div.item a.an-bg-link::attr(href)').getall()
-    #     links = list(set(links))
-    #     print('LINKS TO ADS FROM PAGE:')
-    #     print(links)
-    #     for href in links:
-    #         page = "https://www.cmlt.ru"+href
-    #         print("\tPARSING PAGE"+page)
-    #         yield response.follow(page, self.parse_item)
-    #     # follow pagination links
-    #     nextPage = "https://www.cmlt.ru"+response.css('a.pagesController:last-child::attr(href)').get()
-    #     yield response.follow(nextPage, self.parse)
-
-    # rules = (
-    #     # Rule(LinkExtractor(allow=(r'/ad-[.]+')), callback='parse', follow=True)
-    #     Rule(LinkExtractor(allow=('/')), callback='parse', follow=True)
-    # )
-
     def parse(self, response):
+        # follow links to adv pages
+        links = response.css('div.item a.an-bg-link::attr(href)').getall()
+        links = list(set(links))
+        print('LINKS TO ADS FROM PAGE:')
+        print(links)
+        for href in links:
+            page = "https://www.cmlt.ru"+href
+            print("\tPARSING PAGE"+page)
+            yield response.follow(page, self.parse_item)
+        # follow pagination links
+        nextPage = "https://www.cmlt.ru"+response.css('a.pagesController:last-child::attr(href)').get()
+        yield response.follow(nextPage, self.parse)
+
+
+    def parse_item(self, response):
         print("INVOKED parse_item url")
         print(response.url)
         item = ItemLoader(item=Ad(), response=response)
@@ -68,11 +64,10 @@ class CmltSpider(scrapy.Spider):
         item.add_value('author_external_id', 'unknown')
         item.add_value('author', re.search('<title>.+? — ',r).group(0).replace('<title>Объявления автора ','').replace(' — ',''))
         item.add_value('phone', response.css('span.an-contact-phone::text').get().replace('\n','').replace('-',''))
-        item.add_value('original_url', 'www...')
+        item.add_value('original_url', response.url)
         item.add_value('created_at', 'now')
         item.add_value('processed', False)
         print('ITEM IS:')
         print(item)
 
         return item.load_item()
-        # return item
