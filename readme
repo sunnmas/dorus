@@ -10,4 +10,15 @@ pythonanywhere setup:
 ----------------------------------------------------
 mkvirtualenv scrapy36 --python=/usr/bin/python3.7
 python -V
-pip install scrapy PyMySQL
+pip install scrapy PyMySQL requests
+mkdir abrds
+cd abrds
+git clone https://github.com/sunnmas/dorus.git
+touch run_cmlt_spyder
+nano run_cmlt_spyder
+
+insert into file:
+cd /home/4e4o/abrds/dorus
+/home/4e4o/.virtualenvs/scrapy36/bin/python app.py
+
+chmod 755 run_cmlt_spyder
