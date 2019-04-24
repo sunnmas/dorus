@@ -4,3 +4,10 @@ pip install --upgrade setuptools
 
 you need mysql phyton:
 		pip install PyMySQL
+		
+		
+pythonanywhere setup:
+----------------------------------------------------
+mkvirtualenv scrapy36 --python=/usr/bin/python3.7
+python -V
+pip install scrapy PyMySQL
