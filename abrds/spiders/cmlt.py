@@ -9,7 +9,6 @@ import requests
 from scrapy.loader import ItemLoader
 from scrapy.linkextractors import LinkExtractor
 from abrds.items import Ad
-from scrapy.contrib.spiders import Rule
 
 class CmltSpider(scrapy.Spider):
     name = 'cmlt'
