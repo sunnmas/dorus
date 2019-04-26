@@ -38,7 +38,6 @@ class CmltSpider(scrapy.Spider):
 
 
     def parse_item(self, response):
-        print("INVOKED parse_item url")
         print(response.url)
         item = ItemLoader(item=Ad(), response=response)
         item.add_value('provider',  'cmlt')

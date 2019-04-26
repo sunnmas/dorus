@@ -6,15 +6,21 @@
 # https://doc.scrapy.org/en/latest/topics/items.html
 
 import scrapy
+from scrapy.loader.processors import TakeFirst, MapCompose, Join
+
+def remove_rnt(value):
+	return value.replace("\r",'').replace("\t",'').replace("\n",'')
+
 
 class Ad(scrapy.Item):
     provider = scrapy.Field()
-    external_id = scrapy.Field()
+    external_id = scrapy.Field(input_processor=MapCompose(remove_rnt))
     date = scrapy.Field()
+    offer = scrapy.Field()
     title = scrapy.Field()
     description = scrapy.Field()
     price = scrapy.Field()
-    address = scrapy.Field()
+    address = scrapy.Field(input_processor=MapCompose(remove_rnt))
     lattitude = scrapy.Field()
     longitude = scrapy.Field()
     ext_category = scrapy.Field()
