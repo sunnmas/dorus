@@ -12,12 +12,12 @@ from scrapy.http import Request
 
 class MysqlStore(object):
     def __init__(self):
-        print("PIPELINE INIT!!!!!!!!!!!!!")
+        print("PIPELINE INIT")
 
 
     def process_item(self, item, spider):    
-        print("PIPELINE GO!!!!!!!!!!!!!")
-        connection = pymysql.connect(host='63.32.4.85',
+        print("STORE TO MYSQL")
+        connection = pymysql.connect(host='62.33.3.10',
                              user='root',
                              password='awpse354vnknvo437659',
                              db='scrapy',
@@ -28,18 +28,19 @@ class MysqlStore(object):
         with connection.cursor() as cursor:
             # Read a single record
             sql = """INSERT INTO items (
-                            provider, external_id, date,
+                            provider, external_id, date, offer,
                             title, description, price, address,
                             coordinates, ext_category,
                             images, videos, site, details,
                             author_external_id, author,
                             phone, original_url)  
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, POINT(%s,%s), %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, POINT(%s,%s), %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
             params = (
                         item['provider'], 
                         item['external_id'],
                         item['date'],
+                        item['offer'],
                         item['title'],
                         item['description'],
                         item['price'],
