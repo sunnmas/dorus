@@ -1,6 +1,5 @@
-# scrapy runspider abrds/spiders/cmlt.py -o cmlt.json
 # cd Documents/scrapy/abrds
-# scrapy runspider abrds/spiders/cmlt.py
+# scrapy runspider abrds/spiders/irr.py
 
 import scrapy
 import datetime
@@ -15,31 +14,92 @@ import base64
 class IrrSpider(scrapy.Spider):
     name = 'irr'
     start_urls = [
-        'https://irr.ru/real-estate/apartments-sale/secondary/prodaetsya-1-k-kvartira-moskva-moskva-dubninskaya-advert708922038.html'
-        # 'https://irr.ru/real-estate/apartments-sale/new/1-komn-kvartira-v-novostroyke-advert707860767.html'
-        # 'https://irr.ru/real-estate/apartments-sale/one-rooms/moskovskaya-obl/himki-gorod/'
+         #Продажа квартир
+        'https://irr.ru/real-estate/apartments-sale/moskovskaya-obl/',
+        'https://saint-petersburg.irr.ru/real-estate/apartments-sale/', 
+        'https://irr.ru/real-estate/apartments-sale/',
+        'https://kazan.irr.ru/real-estate/apartments-sale/',
+        'https://tolyatti.irr.ru/real-estate/apartments-sale/',
+        'https://ekaterinburg.irr.ru/real-estate/apartments-sale/',
+        'https://krasnodar.irr.ru/real-estate/apartments-sale/',
+        'https://perm.irr.ru/real-estate/apartments-sale/',
+
+        #Аренда квартир
+        'https://irr.ru/real-estate/rent/moskovskaya-obl/',
+        'https://saint-petersburg.irr.ru/real-estate/rent/', 
+        'https://irr.ru/real-estate/rent/',
+        'https://kazan.irr.ru/real-estate/rent/',
+        'https://tolyatti.irr.ru/real-estate/rent/',
+        'https://ekaterinburg.irr.ru/real-estate/rent/',
+        'https://krasnodar.irr.ru/real-estate/rent/',
+        'https://perm.irr.ru/real-estate/rent/',
+
+        #Продажа коммерческой недвижимости
+        'https://irr.ru/real-estate/commercial-sale/moskovskaya-obl/',
+        'https://saint-petersburg.irr.ru/real-estate/commercial-sale/', 
+        'https://irr.ru/real-estate/commercial-sale/',
+        'https://kazan.irr.ru/real-estate/commercial-sale/',
+        'https://tolyatti.irr.ru/real-estate/commercial-sale/',
+        'https://ekaterinburg.irr.ru/real-estate/commercial-sale/',
+        'https://krasnodar.irr.ru/real-estate/commercial-sale/',
+        'https://perm.irr.ru/real-estate/commercial-sale/',
+
+        #Аренда коммерческой недвижимости
+        'https://irr.ru/real-estate/commercial/moskovskaya-obl/',
+        'https://saint-petersburg.irr.ru/real-estate/commercial/', 
+        'https://irr.ru/real-estate/commercial/',
+        'https://kazan.irr.ru/real-estate/commercial/',
+        'https://tolyatti.irr.ru/real-estate/commercial/',
+        'https://ekaterinburg.irr.ru/real-estate/commercial/',
+        'https://krasnodar.irr.ru/real-estate/commercial/',
+        'https://perm.irr.ru/real-estate/commercial/',
+
+        #Дома коттеджи продажа
+        'https://irr.ru/real-estate/out-of-town/moskovskaya-obl/',
+        'https://saint-petersburg.irr.ru/real-estate/out-of-town/', 
+        'https://irr.ru/real-estate/out-of-town/',
+        'https://kazan.irr.ru/real-estate/out-of-town/',
+        'https://tolyatti.irr.ru/real-estate/out-of-town/',
+        'https://ekaterinburg.irr.ru/real-estate/out-of-town/',
+        'https://krasnodar.irr.ru/real-estate/out-of-town/',
+        'https://perm.irr.ru/real-estate/out-of-town/',
+
+        #Дома коттеджи аренда
+        'https://irr.ru/real-estate/out-of-town-rent/moskovskaya-obl/',
+        'https://saint-petersburg.irr.ru/real-estate/out-of-town-rent/', 
+        'https://irr.ru/real-estate/out-of-town-rent/',
+        'https://kazan.irr.ru/real-estate/out-of-town-rent/',
+        'https://tolyatti.irr.ru/real-estate/out-of-town-rent/',
+        'https://ekaterinburg.irr.ru/real-estate/out-of-town-rent/',
+        'https://krasnodar.irr.ru/real-estate/out-of-town-rent/',
+        'https://perm.irr.ru/real-estate/out-of-town-rent/'
+
     ]
 
     allowed_domains = [
         'irr.ru'
     ]
 
-    # def parse(self, response):
-    #     # follow links to adv pages
-    #     links = response.css('.listing .listing__item .listing__itemTitleWrapper a::attr(href)').getall()
-    #     links = list(set(links))
-    #     print('LINKS TO ADS FROM PAGE:')
-    #     print(links)
-    #     for href in links:
-    #         page = href
-    #         print("\tPARSING PAGE"+page)
-    #         yield response.follow(page, self.parse_item)
-    #     # follow pagination links
-    #     nextPage = response.css('.pagination__pagesItem a:last-child::attr(href)').get()
-    #     yield response.follow(nextPage, self.parse)
-
-
     def parse(self, response):
+        # Определяем список ссылок со страницы
+        links = response.css('.listing .listing__item .listing__itemTitleWrapper a::attr(href)').getall()
+        links = list(set(links))
+        print('LINKS TO ADS FROM PAGE:')
+        print(links)
+        for href in links:
+            page = href
+            print("\tPARSING PAGE"+page)
+            yield response.follow(page, self.parse_item)
+        # ссылки на следующие страницы
+        try:
+            next_page_id = int(re.search('/page\d+', response.url)[0].replace('/page',''))+1
+        except BaseException:
+            next_page_id = 2
+        nextPage = response.url+'page'+str(next_page_id)
+        yield response.follow(nextPage, self.parse)
+
+
+    def parse_item(self, response):
         print(response.url)
 
         item = ItemLoader(item=Ad(), response=response)
@@ -58,7 +118,7 @@ class IrrSpider(scrapy.Spider):
         try:
             coordinates = response.css('.js-productPageMap::attr(data-map-info)').get()
             coordinates = json.loads(coordinates)
-            item.add_value('lattitude', coordinates['lat']) 
+            item.add_value('lattitude', coordinates['lat'])
             item.add_value('longitude', coordinates['lng'])
         except BaseException:
             print('coords not found')
