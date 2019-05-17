@@ -13,6 +13,9 @@ import base64
 
 class IrrSpider(scrapy.Spider):
     name = 'irr'
+    custom_settings = {
+        'LOG_FILE': 'irr.log',
+    }
     start_urls = [
         # 'https://irr.ru/real-estate/apartments-sale/secondary/prodaetsya-1-k-kvartira-moskovskaya-oblast-advert706333882.html'
         # Продажа квартир студий и комнат

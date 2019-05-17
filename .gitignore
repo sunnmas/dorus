@@ -1,2 +1,3 @@
 *.pyc
 /abrds/__pycache__/*.pyc
+*.log
