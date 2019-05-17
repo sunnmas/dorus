@@ -30,7 +30,7 @@ class MysqlStore(object):
             sql = """INSERT INTO items (
                             provider, external_id, date, offer,
                             title, description, price, address,
-                            coordinates, ext_category,
+                            coordinates, category,
                             images, videos, site, details,
                             author_external_id, author,
                             phone, original_url)  
@@ -47,7 +47,7 @@ class MysqlStore(object):
                         item['address'],
                         item['lattitude'],
                         item['longitude'],
-                        item['ext_category'],
+                        item['category'],
                         item['images'],
                         item['videos'],
                         item['site'],

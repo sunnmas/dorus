@@ -21,6 +21,14 @@ def remove_double_spaces(value):
 def strip(value):
     return value.strip()
 
+def clean_address(value):
+    try:
+        shit = re.search("\d+ минут от ", value)[0]
+        return value.replace(shit, '')
+    except BaseException:
+        return value
+    
+
 class Ad(scrapy.Item):
     provider = scrapy.Field()
     external_id = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_double_spaces, strip))
@@ -29,10 +37,10 @@ class Ad(scrapy.Item):
     title = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_double_spaces, strip))
     description = scrapy.Field(input_processor=MapCompose(concat, remove_double_spaces))
     price = scrapy.Field()
-    address = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_double_spaces, strip), output_processor=Join(', '))
+    address = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_double_spaces, strip, clean_address), output_processor=Join(', '))
     lattitude = scrapy.Field()
     longitude = scrapy.Field()
-    ext_category = scrapy.Field()
+    category = scrapy.Field()
     images = scrapy.Field()
     videos = scrapy.Field()
     site = scrapy.Field()

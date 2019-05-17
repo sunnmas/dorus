@@ -14,65 +14,66 @@ import base64
 class IrrSpider(scrapy.Spider):
     name = 'irr'
     start_urls = [
-         #Продажа квартир
-        'https://irr.ru/real-estate/apartments-sale/moskovskaya-obl/',
-        'https://saint-petersburg.irr.ru/real-estate/apartments-sale/', 
-        'https://irr.ru/real-estate/apartments-sale/',
-        'https://kazan.irr.ru/real-estate/apartments-sale/',
-        'https://tolyatti.irr.ru/real-estate/apartments-sale/',
-        'https://ekaterinburg.irr.ru/real-estate/apartments-sale/',
-        'https://krasnodar.irr.ru/real-estate/apartments-sale/',
-        'https://perm.irr.ru/real-estate/apartments-sale/',
+        'https://irr.ru/real-estate/apartments-sale/secondary/prodaetsya-dvuhkomnatnaya-kvartira-na-shestom-advert703568065.html'
+        # Продажа квартир студий и комнат
+        # 'https://irr.ru/real-estate/apartments-sale/moskovskaya-obl/'
+        # 'https://saint-petersburg.irr.ru/real-estate/apartments-sale/', 
+        # 'https://irr.ru/real-estate/apartments-sale/',
+        # 'https://kazan.irr.ru/real-estate/apartments-sale/',
+        # 'https://tolyatti.irr.ru/real-estate/apartments-sale/',
+        # 'https://ekaterinburg.irr.ru/real-estate/apartments-sale/',
+        # 'https://krasnodar.irr.ru/real-estate/apartments-sale/',
+        # 'https://perm.irr.ru/real-estate/apartments-sale/',
 
-        #Аренда квартир
-        'https://irr.ru/real-estate/rent/moskovskaya-obl/',
-        'https://saint-petersburg.irr.ru/real-estate/rent/', 
-        'https://irr.ru/real-estate/rent/',
-        'https://kazan.irr.ru/real-estate/rent/',
-        'https://tolyatti.irr.ru/real-estate/rent/',
-        'https://ekaterinburg.irr.ru/real-estate/rent/',
-        'https://krasnodar.irr.ru/real-estate/rent/',
-        'https://perm.irr.ru/real-estate/rent/',
+        # #Аренда квартир комнат и студий
+        # 'https://irr.ru/real-estate/rent/moskovskaya-obl/',
+        # 'https://saint-petersburg.irr.ru/real-estate/rent/', 
+        # 'https://irr.ru/real-estate/rent/',
+        # 'https://kazan.irr.ru/real-estate/rent/',
+        # 'https://tolyatti.irr.ru/real-estate/rent/',
+        # 'https://ekaterinburg.irr.ru/real-estate/rent/',
+        # 'https://krasnodar.irr.ru/real-estate/rent/',
+        # 'https://perm.irr.ru/real-estate/rent/',
 
-        #Продажа коммерческой недвижимости
-        'https://irr.ru/real-estate/commercial-sale/moskovskaya-obl/',
-        'https://saint-petersburg.irr.ru/real-estate/commercial-sale/', 
-        'https://irr.ru/real-estate/commercial-sale/',
-        'https://kazan.irr.ru/real-estate/commercial-sale/',
-        'https://tolyatti.irr.ru/real-estate/commercial-sale/',
-        'https://ekaterinburg.irr.ru/real-estate/commercial-sale/',
-        'https://krasnodar.irr.ru/real-estate/commercial-sale/',
-        'https://perm.irr.ru/real-estate/commercial-sale/',
+        # #Продажа коммерческой недвижимости
+        # 'https://irr.ru/real-estate/commercial-sale/moskovskaya-obl/',
+        # 'https://saint-petersburg.irr.ru/real-estate/commercial-sale/', 
+        # 'https://irr.ru/real-estate/commercial-sale/',
+        # 'https://kazan.irr.ru/real-estate/commercial-sale/',
+        # 'https://tolyatti.irr.ru/real-estate/commercial-sale/',
+        # 'https://ekaterinburg.irr.ru/real-estate/commercial-sale/',
+        # 'https://krasnodar.irr.ru/real-estate/commercial-sale/',
+        # 'https://perm.irr.ru/real-estate/commercial-sale/',
 
-        #Аренда коммерческой недвижимости
-        'https://irr.ru/real-estate/commercial/moskovskaya-obl/',
-        'https://saint-petersburg.irr.ru/real-estate/commercial/', 
-        'https://irr.ru/real-estate/commercial/',
-        'https://kazan.irr.ru/real-estate/commercial/',
-        'https://tolyatti.irr.ru/real-estate/commercial/',
-        'https://ekaterinburg.irr.ru/real-estate/commercial/',
-        'https://krasnodar.irr.ru/real-estate/commercial/',
-        'https://perm.irr.ru/real-estate/commercial/',
+        # #Аренда коммерческой недвижимости
+        # 'https://irr.ru/real-estate/commercial/moskovskaya-obl/',
+        # 'https://saint-petersburg.irr.ru/real-estate/commercial/', 
+        # 'https://irr.ru/real-estate/commercial/',
+        # 'https://kazan.irr.ru/real-estate/commercial/',
+        # 'https://tolyatti.irr.ru/real-estate/commercial/',
+        # 'https://ekaterinburg.irr.ru/real-estate/commercial/',
+        # 'https://krasnodar.irr.ru/real-estate/commercial/',
+        # 'https://perm.irr.ru/real-estate/commercial/',
 
-        #Дома коттеджи продажа
-        'https://irr.ru/real-estate/out-of-town/moskovskaya-obl/',
-        'https://saint-petersburg.irr.ru/real-estate/out-of-town/', 
-        'https://irr.ru/real-estate/out-of-town/',
-        'https://kazan.irr.ru/real-estate/out-of-town/',
-        'https://tolyatti.irr.ru/real-estate/out-of-town/',
-        'https://ekaterinburg.irr.ru/real-estate/out-of-town/',
-        'https://krasnodar.irr.ru/real-estate/out-of-town/',
-        'https://perm.irr.ru/real-estate/out-of-town/',
+        # #Дома коттеджи продажа
+        # 'https://irr.ru/real-estate/out-of-town/moskovskaya-obl/',
+        # 'https://saint-petersburg.irr.ru/real-estate/out-of-town/', 
+        # 'https://irr.ru/real-estate/out-of-town/',
+        # 'https://kazan.irr.ru/real-estate/out-of-town/',
+        # 'https://tolyatti.irr.ru/real-estate/out-of-town/',
+        # 'https://ekaterinburg.irr.ru/real-estate/out-of-town/',
+        # 'https://krasnodar.irr.ru/real-estate/out-of-town/',
+        # 'https://perm.irr.ru/real-estate/out-of-town/',
 
-        #Дома коттеджи аренда
-        'https://irr.ru/real-estate/out-of-town-rent/moskovskaya-obl/',
-        'https://saint-petersburg.irr.ru/real-estate/out-of-town-rent/', 
-        'https://irr.ru/real-estate/out-of-town-rent/',
-        'https://kazan.irr.ru/real-estate/out-of-town-rent/',
-        'https://tolyatti.irr.ru/real-estate/out-of-town-rent/',
-        'https://ekaterinburg.irr.ru/real-estate/out-of-town-rent/',
-        'https://krasnodar.irr.ru/real-estate/out-of-town-rent/',
-        'https://perm.irr.ru/real-estate/out-of-town-rent/'
+        # #Дома коттеджи аренда
+        # 'https://irr.ru/real-estate/out-of-town-rent/moskovskaya-obl/',
+        # 'https://saint-petersburg.irr.ru/real-estate/out-of-town-rent/', 
+        # 'https://irr.ru/real-estate/out-of-town-rent/',
+        # 'https://kazan.irr.ru/real-estate/out-of-town-rent/',
+        # 'https://tolyatti.irr.ru/real-estate/out-of-town-rent/',
+        # 'https://ekaterinburg.irr.ru/real-estate/out-of-town-rent/',
+        # 'https://krasnodar.irr.ru/real-estate/out-of-town-rent/',
+        # 'https://perm.irr.ru/real-estate/out-of-town-rent/'
 
     ]
 
@@ -80,26 +81,39 @@ class IrrSpider(scrapy.Spider):
         'irr.ru'
     ]
 
+    def parse_details(self, details):
+        arr = ['Этаж', 'Всего комнат']
+        subs = [['Этажей в здании', 'Этажей'], ['Общая площадь', 'Площадь, м²']]
+        result = []
+        for i in details:
+            for j in arr:
+                if re.search(j, i) != None:
+                    result.append(i.strip())
+        result = '{'+', '.join(result)+'}'
+        for k in subs:
+            result = result.replace(k[0], k[1])
+        return result
+
+    # def parse(self, response):
+    #     # Определяем список ссылок со страницы
+    #     links = response.css('.listing .listing__item .listing__itemTitleWrapper a::attr(href)').getall()
+    #     links = list(set(links))
+    #     print('LINKS TO ADS FROM PAGE:')
+    #     print(links)
+    #     for href in links:
+    #         page = href
+    #         print("\tPARSING PAGE"+page)
+    #         yield response.follow(page, self.parse_item)
+    #     # ссылки на следующие страницы
+    #     try:
+    #         next_page_id = int(re.search('/page\d+', response.url)[0].replace('/page',''))+1
+    #     except BaseException:
+    #         next_page_id = 2
+    #     nextPage = response.url+'page'+str(next_page_id)
+    #     yield response.follow(nextPage, self.parse)
+
+
     def parse(self, response):
-        # Определяем список ссылок со страницы
-        links = response.css('.listing .listing__item .listing__itemTitleWrapper a::attr(href)').getall()
-        links = list(set(links))
-        print('LINKS TO ADS FROM PAGE:')
-        print(links)
-        for href in links:
-            page = href
-            print("\tPARSING PAGE"+page)
-            yield response.follow(page, self.parse_item)
-        # ссылки на следующие страницы
-        try:
-            next_page_id = int(re.search('/page\d+', response.url)[0].replace('/page',''))+1
-        except BaseException:
-            next_page_id = 2
-        nextPage = response.url+'page'+str(next_page_id)
-        yield response.follow(nextPage, self.parse)
-
-
-    def parse_item(self, response):
         print(response.url)
 
         item = ItemLoader(item=Ad(), response=response)
@@ -110,8 +124,9 @@ class IrrSpider(scrapy.Spider):
         id = response.css('.js-advertId::attr(value)').get()
         item.add_value('external_id', id)
         item.add_value('date', adv['date_create'])
-        item.add_value('title', adv['title'])
+        item.add_css('title', '.productPage__title::text')
         item.add_value('description', adv['text'])
+        item.add_css('price', '.productPage__price::attr(content)')
         item.add_css('address', '.js-scrollToMap::text')
         item.add_css('address', '.productPage__metro::text')
         
@@ -126,8 +141,13 @@ class IrrSpider(scrapy.Spider):
         item.add_value('images', images)
         item.add_value('videos', '')
         site = response.css('.productPage__infoTextBold a::attr(href)').get().replace('?utm_source=irr','')
+        if re.search('irr.ru', site) != None:
+            site = ''
         item.add_value('site', site)
-        item.add_value('details', '')
+
+        details = response.css('.productPage__infoColumnBlockText::text').getall()
+        details = self.parse_details(details)
+        item.add_value('details', details)
 
         author_external_id = re.search("var advert_user_id = '.+?';", response.text)[0]
         author_external_id = author_external_id.replace("var advert_user_id = '",'').replace("';",'')
@@ -141,12 +161,27 @@ class IrrSpider(scrapy.Spider):
         item.add_value('phone', phone)
         url = response.url[14:]
         print(url)
-        ext_category = re.search("/.*?/.*?/", url)[0][1:-1].replace('/','::')
-        item.add_value('ext_category', ext_category)
-        offer = re.search("::.+", ext_category)[0].replace('::','')
+        category = re.search("/.*?/.*?/", url)[0][1:-1].replace('/','::')
+        offer = re.search("::.+", category)[0].replace('::','')
+
+        category = category.replace('real-estate::apartments-sale', 'Квартиры, комнаты')
+        category = category.replace('real-estate::rent', 'Квартиры, комнаты')
+        category = category.replace('real-estate::commercial-sale', 'Коммерческая недвижимость')
+        category = category.replace('real-estate::commercial', 'Коммерческая недвижимость')
+        category = category.replace('real-estate::out-of-town-rent', 'Дома, дачи, коттеджи')
+        category = category.replace('real-estate::out-of-town', 'Дома, дачи, коттеджи')
+        item.add_value('category', category)
+
+        offer = offer.replace('apartments-sale', 'Продам')
+        offer = offer.replace('rent', 'Сдам')
+        offer = offer.replace('commercial-sale', 'Продам')
+        offer = offer.replace('commercial', 'Сдам в аренду')
+        offer = offer.replace('out-of-town-rent', 'Сдам')
+        offer = offer.replace('out-of-town', 'Продам')
         item.add_value('offer', offer)
         item.add_value('original_url', url)
         item.add_value('created_at', 'now')
         item.add_value('processed', False)
         print('======================================================')
         return item.load_item()
+
