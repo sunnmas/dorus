@@ -153,8 +153,11 @@ class IrrSpider(scrapy.Spider):
         images = ','.join(response.css('.lineGallery img::attr(data-src)').getall())
         item.add_value('images', images)
         item.add_value('videos', '')
-        site = response.css('.productPage__infoTextBold a::attr(href)').get().replace('?utm_source=irr','')
-        if re.search('irr.ru', site) != None:
+        try:
+            site = response.css('.productPage__infoTextBold a::attr(href)').get().replace('?utm_source=irr','')
+            if re.search('irr.ru', site) != None:
+                site = ''
+        except BaseException:
             site = ''
         item.add_value('site', site)
 
