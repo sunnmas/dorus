@@ -14,16 +14,16 @@ import base64
 class IrrSpider(scrapy.Spider):
     name = 'irr'
     start_urls = [
-        'https://irr.ru/real-estate/apartments-sale/secondary/prodaetsya-dvuhkomnatnaya-kvartira-na-shestom-advert703568065.html'
+        # 'https://irr.ru/real-estate/apartments-sale/secondary/prodaetsya-1-k-kvartira-moskovskaya-oblast-advert706333882.html'
         # Продажа квартир студий и комнат
-        # 'https://irr.ru/real-estate/apartments-sale/moskovskaya-obl/'
-        # 'https://saint-petersburg.irr.ru/real-estate/apartments-sale/', 
-        # 'https://irr.ru/real-estate/apartments-sale/',
-        # 'https://kazan.irr.ru/real-estate/apartments-sale/',
-        # 'https://tolyatti.irr.ru/real-estate/apartments-sale/',
-        # 'https://ekaterinburg.irr.ru/real-estate/apartments-sale/',
-        # 'https://krasnodar.irr.ru/real-estate/apartments-sale/',
-        # 'https://perm.irr.ru/real-estate/apartments-sale/',
+        'https://irr.ru/real-estate/apartments-sale/moskovskaya-obl/'
+        'https://saint-petersburg.irr.ru/real-estate/apartments-sale/', 
+        'https://irr.ru/real-estate/apartments-sale/',
+        'https://kazan.irr.ru/real-estate/apartments-sale/',
+        'https://tolyatti.irr.ru/real-estate/apartments-sale/',
+        'https://ekaterinburg.irr.ru/real-estate/apartments-sale/',
+        'https://krasnodar.irr.ru/real-estate/apartments-sale/',
+        'https://perm.irr.ru/real-estate/apartments-sale/'
 
         # #Аренда квартир комнат и студий
         # 'https://irr.ru/real-estate/rent/moskovskaya-obl/',
@@ -82,38 +82,46 @@ class IrrSpider(scrapy.Spider):
     ]
 
     def parse_details(self, details):
-        arr = ['Этаж', 'Всего комнат']
-        subs = [['Этажей в здании', 'Этажей'], ['Общая площадь', 'Площадь, м²']]
+        print(details)
+        arr = ['Этаж', 'Всего комнат', 'Комнат в квартире', 'Площадь кухни', 'Год постройки', 'Общая площадь', 'Высота потолков']
+        subs = [
+                [' м', ''], [' г.', ''],
+                ['Этажей в здании', 'Этажей'],
+                ['Общая площадь', 'Площадь'],
+                ['Комнат в квартире', 'Количество комнат'],
+                ['Год постройки', 'Год постройки']
+            ]
         result = []
         for i in details:
             for j in arr:
                 if re.search(j, i) != None:
-                    result.append(i.strip())
+                    result.append('"'+i.strip().replace(': ','": "')+'"')
         result = '{'+', '.join(result)+'}'
         for k in subs:
             result = result.replace(k[0], k[1])
         return result
 
-    # def parse(self, response):
-    #     # Определяем список ссылок со страницы
-    #     links = response.css('.listing .listing__item .listing__itemTitleWrapper a::attr(href)').getall()
-    #     links = list(set(links))
-    #     print('LINKS TO ADS FROM PAGE:')
-    #     print(links)
-    #     for href in links:
-    #         page = href
-    #         print("\tPARSING PAGE"+page)
-    #         yield response.follow(page, self.parse_item)
-    #     # ссылки на следующие страницы
-    #     try:
-    #         next_page_id = int(re.search('/page\d+', response.url)[0].replace('/page',''))+1
-    #     except BaseException:
-    #         next_page_id = 2
-    #     nextPage = response.url+'page'+str(next_page_id)
-    #     yield response.follow(nextPage, self.parse)
-
-
     def parse(self, response):
+        # Определяем список ссылок со страницы
+        links = response.css('.listing .listing__item .listing__itemTitleWrapper a::attr(href)').getall()
+        links = list(set(links))
+        print('LINKS TO ADS FROM PAGE:')
+        print(links)
+        for href in links:
+            page = href
+            print("\tPARSING PAGE"+page)
+            yield response.follow(page, self.parse_item)
+        # ссылки на следующие страницы
+        try:
+            cur_page_id = int(re.search('/page\d+', response.url)[0].replace('/page',''))
+        except BaseException:
+            next_page_id = 2
+        nextPage = response.url.replace('page'+str(cur_page_id),'')+'page'+str(cur_page_id + 1)
+        yield response.follow(nextPage, self.parse)
+
+
+    def parse_item(self, response):
+        print('----------------------------------------------------------------')
         print(response.url)
 
         item = ItemLoader(item=Ad(), response=response)
@@ -137,6 +145,8 @@ class IrrSpider(scrapy.Spider):
             item.add_value('longitude', coordinates['lng'])
         except BaseException:
             print('coords not found')
+            item.add_value('lattitude', '0')
+            item.add_value('longitude', '0')
         images = ','.join(response.css('.lineGallery img::attr(data-src)').getall())
         item.add_value('images', images)
         item.add_value('videos', '')
@@ -159,9 +169,8 @@ class IrrSpider(scrapy.Spider):
         phone = response.css('input[name="phoneBase64"]::attr(value)').get()
         phone = base64.b64decode(phone).decode("utf-8").replace('(','').replace(')','').replace('-','').replace(' ','')[2:]
         item.add_value('phone', phone)
-        url = response.url[14:]
-        print(url)
-        category = re.search("/.*?/.*?/", url)[0][1:-1].replace('/','::')
+        url = response.url
+        category = re.search("irr.ru/.*?/.*?/", url)[0][0:-1].replace('irr.ru/','').replace('/','::')
         offer = re.search("::.+", category)[0].replace('::','')
 
         category = category.replace('real-estate::apartments-sale', 'Квартиры, комнаты')
