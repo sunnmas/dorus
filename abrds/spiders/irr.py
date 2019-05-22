@@ -84,7 +84,7 @@ class IrrSpider(scrapy.Spider):
         'irr.ru'
     ]
 
-    def parse_details(self, details):
+    def parse_details(self, details, category):
         print(details)
         arr = ['Этаж', 'Всего комнат', 'Комнат в квартире', 'Площадь кухни',
             'Год постройки', 'Общая площадь', 'Жилая площадь', 'Высота потолков', 'До метро',
@@ -104,7 +104,15 @@ class IrrSpider(scrapy.Spider):
             for j in arr:
                 if re.search(j, i) != None:
                     result.append('"'+i.strip().replace(': ','": "')+'"')
-        result = '{'+', '.join(result)+'}'
+
+        offer = re.search("::.+", category)[0].replace('::','')
+        offer = offer.replace('apartments-sale', 'Продам')
+        offer = offer.replace('rent', 'Сдам')
+        offer = offer.replace('commercial-sale', 'Продам')
+        offer = offer.replace('commercial', 'Сдам в аренду')
+        offer = offer.replace('out-of-town-rent', 'Сдам')
+        offer = offer.replace('out-of-town', 'Продам')
+        result = '{"Тип предложения": "'+offer+'", '+', '.join(result)+'}'
         for k in subs:
             result = result.replace(k[0], k[1])
         return result
@@ -166,10 +174,6 @@ class IrrSpider(scrapy.Spider):
             site = ''
         item.add_value('site', site)
 
-        details = response.css('.productPage__infoColumnBlockText::text').getall()
-        details = self.parse_details(details)
-        item.add_value('details', details)
-
         author_external_id = re.search("var advert_user_id = '.+?';", response.text)[0]
         author_external_id = author_external_id.replace("var advert_user_id = '",'').replace("';",'')
         author_external_id = base64.b64decode(author_external_id).decode("utf-8")
@@ -181,10 +185,12 @@ class IrrSpider(scrapy.Spider):
         phone = base64.b64decode(phone).decode("utf-8").replace('(','').replace(')','').replace('-','').replace(' ','')[2:]
         item.add_value('phone', phone)
         url = response.url
-        category = re.search("irr.ru/.*?/.*?/", url)[0][0:-1].replace('irr.ru/','').replace('/','::')
-        offer = re.search("::.+", category)[0].replace('::','')
+        draft_category = re.search("irr.ru/.*?/.*?/", url)[0][0:-1].replace('irr.ru/','').replace('/','::')
+        details = response.css('.productPage__infoColumnBlockText::text').getall()
+        details = self.parse_details(details, draft_category)
+        item.add_value('details', details)
 
-        category = category.replace('real-estate::apartments-sale', 'Квартиры, комнаты')
+        category = draft_category.replace('real-estate::apartments-sale', 'Квартиры, комнаты')
         category = category.replace('real-estate::rent', 'Квартиры, комнаты')
         category = category.replace('real-estate::commercial-sale', 'Коммерческая недвижимость')
         category = category.replace('real-estate::commercial', 'Коммерческая недвижимость')
@@ -192,13 +198,7 @@ class IrrSpider(scrapy.Spider):
         category = category.replace('real-estate::out-of-town', 'Дома, дачи, коттеджи')
         item.add_value('category', category)
 
-        offer = offer.replace('apartments-sale', 'Продам')
-        offer = offer.replace('rent', 'Сдам')
-        offer = offer.replace('commercial-sale', 'Продам')
-        offer = offer.replace('commercial', 'Сдам в аренду')
-        offer = offer.replace('out-of-town-rent', 'Сдам')
-        offer = offer.replace('out-of-town', 'Продам')
-        item.add_value('offer', offer)
+
         item.add_value('original_url', url)
         item.add_value('created_at', 'now')
         item.add_value('processed', False)

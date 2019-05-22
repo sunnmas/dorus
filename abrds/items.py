@@ -33,7 +33,6 @@ class Ad(scrapy.Item):
     provider = scrapy.Field()
     external_id = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_double_spaces, strip))
     date = scrapy.Field()
-    offer = scrapy.Field()
     title = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_double_spaces, strip))
     description = scrapy.Field(input_processor=MapCompose(concat, remove_double_spaces))
     price = scrapy.Field()

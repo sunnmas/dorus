@@ -2,7 +2,6 @@ CREATE TABLE `items` (
 	`provider` ENUM('dorus','cmlt','phtdsk','irr') NOT NULL COLLATE 'utf8_bin',
 	`external_id` VARCHAR(50) NOT NULL COLLATE 'utf8_bin',
 	`date` DATETIME NOT NULL,
-	`offer` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8_bin',
 	`title` VARCHAR(160) NOT NULL COLLATE 'utf8_bin',
 	`description` TEXT NOT NULL COLLATE 'utf8_bin',
 	`price` BIGINT(20) NOT NULL DEFAULT '0',

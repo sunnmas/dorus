@@ -28,19 +28,18 @@ class MysqlStore(object):
         with connection.cursor() as cursor:
             # Read a single record
             sql = """INSERT INTO items (
-                            provider, external_id, date, offer,
+                            provider, external_id, date,
                             title, description, price, address,
                             coordinates, category,
                             images, videos, site, details,
                             author_external_id, author,
                             phone, original_url)  
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, POINT(%s,%s), %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, POINT(%s,%s), %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
             params = (
                         item['provider'], 
                         item['external_id'],
                         item['date'],
-                        item['offer'],
                         item['title'],
                         item['description'],
                         item['price'],
