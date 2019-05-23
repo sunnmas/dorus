@@ -18,8 +18,8 @@ class MysqlStore(object):
     def process_item(self, item, spider):    
         print("STORE TO MYSQL")
         connection = pymysql.connect(host='62.33.3.10',
-                             user='root',
-                             password='awpse354vnknvo437659',
+                             user='spider',
+                             password='dgfjghjdghdfh',
                              db='scrapy',
                              charset="utf8",
                              cursorclass=pymysql.cursors.DictCursor)
