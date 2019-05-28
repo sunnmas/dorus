@@ -130,9 +130,10 @@ class IrrSpider(scrapy.Spider):
         # ссылки на следующие страницы
         try:
             cur_page_id = int(re.search('/page\d+', response.url)[0].replace('/page',''))
+            nextPage = response.url.replace('page'+str(cur_page_id),'')+'page'+str(cur_page_id + 1)
         except BaseException:
             next_page_id = 2
-        nextPage = response.url.replace('page'+str(cur_page_id),'')+'page'+str(cur_page_id + 1)
+            nextPage = response.url+'page2'
         yield response.follow(nextPage, self.parse)
 
 
