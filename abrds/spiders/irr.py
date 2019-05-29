@@ -85,11 +85,10 @@ class IrrSpider(scrapy.Spider):
         'irr.ru'
     ]
 
-    def parse_details(self, details, category):
-        print(details)
+    def parse_details(self, details, category, title, url):
         arr = ['Этаж', 'Всего комнат', 'Комнат в квартире', 'Площадь кухни',
             'Год постройки', 'Общая площадь', 'Жилая площадь', 'Высота потолков', 'До метро',
-            'Лифты в здании', 'Материал стен', 'Санузел']
+            'Лифты в здании', 'Материал стен', 'Санузел', 'Приватизированная квартира']
         subs = [
                 [' м,', ','], [' г.', ''],
                 [' мин/пеш', ''], [' км', ''],
@@ -97,8 +96,9 @@ class IrrSpider(scrapy.Spider):
                 ['Комнат в квартире', 'Количество комнат'],
                 ['Год постройки', 'Год постройки'],
                 ['До метро, минут(пешком)', 'До метро пешком'],
-                ['Лифты в здании', 'Лифт: 1'],
-                ['Материал стен', 'Тип здания']
+                ['Лифты в здании', '"Лифт": "1"'],
+                ['Материал стен', 'Тип здания'],
+                ['Приватизированная квартира', '"Приватизированная квартира": "1"']
             ]
         result = []
         for i in details:
@@ -113,9 +113,23 @@ class IrrSpider(scrapy.Spider):
         offer = offer.replace('commercial', 'Сдам в аренду')
         offer = offer.replace('out-of-town-rent', 'Сдам')
         offer = offer.replace('out-of-town', 'Продам')
-        result = '{"Тип предложения": "'+offer+'", '+', '.join(result)+'}'
+        result.append('"Тип предложения": "'+offer+'"')
+        if (category == 'real-estate::apartments-sale') or (category == "real-estate::rent"):
+            if re.search('Студия, ', title) != None:
+                result.append('"Студия": "1"')
+            else:
+                result.append('"Студия": "0"')
+
+            if re.search('/secondary/', url) != None:
+                result.append('"Вторичное жилье": "1"')
+            else:
+                result.append('"Вторичное жилье": "0"')
+
+        result = '{'+', '.join(result)+'}'
+
         for k in subs:
             result = result.replace(k[0], k[1])
+        print("details: "+result)
         return result
 
     def parse(self, response):
@@ -130,7 +144,7 @@ class IrrSpider(scrapy.Spider):
             yield response.follow(page, self.parse_item)
         # ссылки на следующие страницы
         try:
-            cur_page_id = int(re.search('/page\d+', response.url)[0].replace('/page',''))
+            cur_page_id = int(re.search('/page\d+', response.url).group(0).replace('/page',''))
             nextPage = response.url.replace('page'+str(cur_page_id),'')+'page'+str(cur_page_id + 1)
         except BaseException:
             next_page_id = 2
@@ -150,7 +164,8 @@ class IrrSpider(scrapy.Spider):
         id = response.css('.js-advertId::attr(value)').get()
         item.add_value('external_id', id)
         item.add_value('date', adv['date_create'])
-        item.add_css('title', '.productPage__title::text')
+        title = response.css('.productPage__title::text').get()
+        item.add_value('title', title)
         item.add_value('description', adv['text'])
         item.add_css('price', '.productPage__price::attr(content)')
         item.add_css('address', '.js-scrollToMap::text')
@@ -189,7 +204,7 @@ class IrrSpider(scrapy.Spider):
         url = response.url
         draft_category = re.search("irr.ru/.*?/.*?/", url).group(0)[0:-1].replace('irr.ru/','').replace('/','::')
         details = response.css('.productPage__infoColumnBlockText::text').getall()
-        details = self.parse_details(details, draft_category)
+        details = self.parse_details(details, draft_category, title, response.url)
         item.add_value('details', details)
 
         category = draft_category.replace('real-estate::apartments-sale', 'Квартиры, комнаты')
@@ -200,10 +215,8 @@ class IrrSpider(scrapy.Spider):
         category = category.replace('real-estate::out-of-town', 'Дома, дачи, коттеджи')
         item.add_value('category', category)
 
-
         item.add_value('original_url', url)
         item.add_value('created_at', 'now')
         item.add_value('processed', False)
         print('======================================================')
         return item.load_item()
-
