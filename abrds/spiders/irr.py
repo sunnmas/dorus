@@ -104,8 +104,8 @@ class IrrSpider(scrapy.Spider):
         print('draft details: '+'='.join(details))
         for i in details:
             for j in arr:
-                print('i='+i+'; j='+j)
-                if re.search(j, i) != None:
+                print('i='.encode('utf-8')+i.encode('utf-8')+'; j='.encode('utf-8')+j.encode('utf-8'))
+                if re.search(j.encode('utf-8'), i.encode('utf-8')) != None:
                     print('+')
                     result.append('"'+i.strip().replace(': ','": "')+'"')
         print("pre details: "+'*'.join(result))
