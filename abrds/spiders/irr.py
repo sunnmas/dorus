@@ -1,5 +1,6 @@
 # cd Documents/scrapy/abrds
 # scrapy runspider abrds/spiders/irr.py
+# shub deploy 392088
 
 import scrapy
 import datetime
@@ -175,7 +176,7 @@ class IrrSpider(scrapy.Spider):
             site = ''
         item.add_value('site', site)
 
-        author_external_id = re.search("var advert_user_id = '.+?';", response.text)[0]
+        author_external_id = re.search("var advert_user_id = '.+?';", response.text).group(0)
         author_external_id = author_external_id.replace("var advert_user_id = '",'').replace("';",'')
         author_external_id = base64.b64decode(author_external_id).decode("utf-8")
         item.add_value('author_external_id', author_external_id)
