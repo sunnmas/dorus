@@ -101,6 +101,7 @@ class IrrSpider(scrapy.Spider):
                 ['Лифты в здании', 'Лифт": "1']
             ]
         result = []
+        print('draft details: '+'='.join(details))
         for i in details:
             for j in arr:
                 if re.search(j, i) != None:
