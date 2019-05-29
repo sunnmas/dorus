@@ -114,9 +114,12 @@ class IrrSpider(scrapy.Spider):
                 print(type(x))
                 print(x)
                 print(x.group(0))
+                print(j.decode('cp1251'))
                 # print(i+j.decode('cp1251'))
                 # print(i+j.encode('latin1'))
-                # print(i+j.encode('latin1').decode('cp1251'))
+                print(j.encode('latin1').decode('cp1251'))
+                print(i.decode('cp1251'))
+                print(i.encode('latin1').decode('cp1251'))
                 print(re.search(j, i))
                 if not (re.search(j, i) is None):
                     print('+')
