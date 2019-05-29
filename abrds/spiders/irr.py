@@ -187,7 +187,7 @@ class IrrSpider(scrapy.Spider):
         phone = base64.b64decode(phone).decode("utf-8").replace('(','').replace(')','').replace('-','').replace(' ','')[2:]
         item.add_value('phone', phone)
         url = response.url
-        draft_category = re.search("irr.ru/.*?/.*?/", url)[0][0:-1].replace('irr.ru/','').replace('/','::')
+        draft_category = re.search("irr.ru/.*?/.*?/", url).group(0)[0:-1].replace('irr.ru/','').replace('/','::')
         details = response.css('.productPage__infoColumnBlockText::text').getall()
         details = self.parse_details(details, draft_category)
         item.add_value('details', details)
