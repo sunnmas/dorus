@@ -104,10 +104,25 @@ class IrrSpider(scrapy.Spider):
         print('draft details: '+'='.join(details))
         for i in details:
             for j in arr:
-                print('i='.encode('utf-8')+i.encode('utf-8')+'; j='.encode('utf-8')+j.encode('utf-8'))
-                if re.search(j.encode('utf-8'), i.encode('utf-8')) != None:
+                # print(unicode('i=', 'ascii')+unicode(i, 'ascii')+unicode('; j=', 'ascii')+unicode(j, 'ascii'))
+                # print(i+j.decode('cp1251'))
+                # print(type(i))
+                # print(i)
+                # print(type(j))
+                # print(j)
+                # x = re.search(j, j)
+                # print(type(x))
+                # print(x)
+                # print(x.group(0))
+                if re.search(j, i).group(0) != '':
                     print('+')
+                    print(i)
+                    print(i.strip())
+                    print(i.strip().replace(': ','": "'))
+                    print(i.strip().replace(': ','": "')+'"')
+                    print('"'+i.strip().replace(': ','": "')+'"')
                     result.append('"'+i.strip().replace(': ','": "')+'"')
+                    print('++')
         print("pre details: "+'*'.join(result))
         offer = re.search("::.+", category).group(0).replace('::','')
         offer = offer.replace('apartments-sale', 'Продам')
