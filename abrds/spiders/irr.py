@@ -106,7 +106,7 @@ class IrrSpider(scrapy.Spider):
                 if re.search(j, i) != None:
                     result.append('"'+i.strip().replace(': ','": "')+'"')
 
-        offer = re.search("::.+", category)[0].replace('::','')
+        offer = re.search("::.+", category).group(0).replace('::','')
         offer = offer.replace('apartments-sale', 'Продам')
         offer = offer.replace('rent', 'Сдам')
         offer = offer.replace('commercial-sale', 'Продам')
