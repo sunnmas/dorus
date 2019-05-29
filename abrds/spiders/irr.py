@@ -96,16 +96,16 @@ class IrrSpider(scrapy.Spider):
                 ['Комнат в квартире', 'Количество комнат'],
                 ['Год постройки', 'Год постройки'],
                 ['До метро, минут(пешком)', 'До метро пешком'],
-                ['Лифты в здании', 'Лифт": "1'],
                 ['Материал стен', 'Тип здания'],
-                ['Приватизированная квартира', 'Приватизированная квартира": "1']
+                ['Приватизированная квартира', 'Приватизированная квартира": "1'],
+                ['Лифты в здании', 'Лифт": "1']
             ]
         result = []
         for i in details:
             for j in arr:
                 if re.search(j, i) != None:
                     result.append('"'+i.strip().replace(': ','": "')+'"')
-
+        print("pre details:"+result)
         offer = re.search("::.+", category).group(0).replace('::','')
         offer = offer.replace('apartments-sale', 'Продам')
         offer = offer.replace('rent', 'Сдам')
