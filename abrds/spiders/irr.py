@@ -114,7 +114,8 @@ class IrrSpider(scrapy.Spider):
                 # print(type(x))
                 # print(x)
                 # print(x.group(0))
-                if re.search(j, i).group(0) != '':
+
+                if not (re.search(j, i) is None):
                     print('+')
                     print(i)
                     print(i.strip())
