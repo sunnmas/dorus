@@ -143,7 +143,7 @@ class IrrSpider(scrapy.Spider):
 
         item = ItemLoader(item=Ad(), response=response)
 
-        adv = re.search("product\['listingParams'\] = {.+?}", response.text)[0]
+        adv = re.search("product\['listingParams'\] = {.+?}", response.text).group(0)
         adv = json.loads(adv.replace("product['listingParams'] = ",''))
         item.add_value('provider',  'irr')
         id = response.css('.js-advertId::attr(value)').get()
