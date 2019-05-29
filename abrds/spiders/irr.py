@@ -104,7 +104,9 @@ class IrrSpider(scrapy.Spider):
         print('draft details: '+'='.join(details))
         for i in details:
             for j in arr:
+                print('i='+i+'; j='+j)
                 if re.search(j, i) != None:
+                    print('+')
                     result.append('"'+i.strip().replace(': ','": "')+'"')
         print("pre details: "+'*'.join(result))
         offer = re.search("::.+", category).group(0).replace('::','')
