@@ -1,6 +1,7 @@
 # cd Documents/scrapy/abrds
 # scrapy runspider abrds/spiders/irr.py
 # shub deploy 392088
+# C:\Users\A\Anaconda3\Scripts>activate.bat base && python --version && conda.bat deactivate
 
 import scrapy
 import datetime
