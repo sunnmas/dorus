@@ -3,6 +3,7 @@
 # shub deploy 392088
 # C:\Users\A\Anaconda3\Scripts>activate.bat base && python --version && conda.bat deactivate
 
+
 import scrapy
 import datetime
 import re
@@ -19,8 +20,7 @@ class IrrSpider(scrapy.Spider):
         'LOG_FILE': 'irr.log',
     }
     start_urls = [
-        # 'https://irr.ru/real-estate/apartments-sale/secondary/prodaetsya-1-k-kvartira-moskovskaya-oblast-advert706333882.html'
-        # Продажа квартир студий и комнат
+        # Продажа квартир и студий
         'https://irr.ru/real-estate/apartments-sale/moskovskaya-obl/'
         'https://saint-petersburg.irr.ru/real-estate/apartments-sale/', 
         'https://irr.ru/real-estate/apartments-sale/',
@@ -28,57 +28,77 @@ class IrrSpider(scrapy.Spider):
         'https://tolyatti.irr.ru/real-estate/apartments-sale/',
         'https://ekaterinburg.irr.ru/real-estate/apartments-sale/',
         'https://krasnodar.irr.ru/real-estate/apartments-sale/',
-        'https://perm.irr.ru/real-estate/apartments-sale/'
+        'https://perm.irr.ru/real-estate/apartments-sale/',
 
-        # #Аренда квартир комнат и студий
-        # 'https://irr.ru/real-estate/rent/moskovskaya-obl/',
-        # 'https://saint-petersburg.irr.ru/real-estate/rent/', 
-        # 'https://irr.ru/real-estate/rent/',
-        # 'https://kazan.irr.ru/real-estate/rent/',
-        # 'https://tolyatti.irr.ru/real-estate/rent/',
-        # 'https://ekaterinburg.irr.ru/real-estate/rent/',
-        # 'https://krasnodar.irr.ru/real-estate/rent/',
-        # 'https://perm.irr.ru/real-estate/rent/',
+        #Аренда квартир и студий
+        'https://irr.ru/real-estate/rent/moskovskaya-obl/',
+        'https://saint-petersburg.irr.ru/real-estate/rent/', 
+        'https://irr.ru/real-estate/rent/',
+        'https://kazan.irr.ru/real-estate/rent/',
+        'https://tolyatti.irr.ru/real-estate/rent/',
+        'https://ekaterinburg.irr.ru/real-estate/rent/',
+        'https://krasnodar.irr.ru/real-estate/rent/',
+        'https://perm.irr.ru/real-estate/rent/',
 
-        # #Продажа коммерческой недвижимости
-        # 'https://irr.ru/real-estate/commercial-sale/moskovskaya-obl/',
-        # 'https://saint-petersburg.irr.ru/real-estate/commercial-sale/', 
-        # 'https://irr.ru/real-estate/commercial-sale/',
-        # 'https://kazan.irr.ru/real-estate/commercial-sale/',
-        # 'https://tolyatti.irr.ru/real-estate/commercial-sale/',
-        # 'https://ekaterinburg.irr.ru/real-estate/commercial-sale/',
-        # 'https://krasnodar.irr.ru/real-estate/commercial-sale/',
-        # 'https://perm.irr.ru/real-estate/commercial-sale/',
+        # Продажа комнат
+        'https://irr.ru/real-estate/rooms-sale/moskovskaya-obl/'
+        'https://saint-petersburg.irr.ru/real-estate/rooms-sale/', 
+        'https://irr.ru/real-estate/rooms-sale/',
+        'https://kazan.irr.ru/real-estate/rooms-sale/',
+        'https://tolyatti.irr.ru/real-estate/rooms-sale/',
+        'https://ekaterinburg.irr.ru/real-estate/rooms-sale/',
+        'https://krasnodar.irr.ru/real-estate/rooms-sale/',
+        'https://perm.irr.ru/real-estate/rooms-sale/',
 
-        # #Аренда коммерческой недвижимости
-        # 'https://irr.ru/real-estate/commercial/moskovskaya-obl/',
-        # 'https://saint-petersburg.irr.ru/real-estate/commercial/', 
-        # 'https://irr.ru/real-estate/commercial/',
-        # 'https://kazan.irr.ru/real-estate/commercial/',
-        # 'https://tolyatti.irr.ru/real-estate/commercial/',
-        # 'https://ekaterinburg.irr.ru/real-estate/commercial/',
-        # 'https://krasnodar.irr.ru/real-estate/commercial/',
-        # 'https://perm.irr.ru/real-estate/commercial/',
+        # Аренда комнат
+        'https://irr.ru/real-estate/rooms-rent/moskovskaya-obl/'
+        'https://saint-petersburg.irr.ru/real-estate/rooms-rent/', 
+        'https://irr.ru/real-estate/rooms-rent/',
+        'https://kazan.irr.ru/real-estate/rooms-rent/',
+        'https://tolyatti.irr.ru/real-estate/rooms-rent/',
+        'https://ekaterinburg.irr.ru/real-estate/rooms-rent/',
+        'https://krasnodar.irr.ru/real-estate/rooms-rent/',
+        'https://perm.irr.ru/real-estate/rooms-rent/',
 
-        # #Дома коттеджи продажа
-        # 'https://irr.ru/real-estate/out-of-town/moskovskaya-obl/',
-        # 'https://saint-petersburg.irr.ru/real-estate/out-of-town/', 
-        # 'https://irr.ru/real-estate/out-of-town/',
-        # 'https://kazan.irr.ru/real-estate/out-of-town/',
-        # 'https://tolyatti.irr.ru/real-estate/out-of-town/',
-        # 'https://ekaterinburg.irr.ru/real-estate/out-of-town/',
-        # 'https://krasnodar.irr.ru/real-estate/out-of-town/',
-        # 'https://perm.irr.ru/real-estate/out-of-town/',
+        #Продажа коммерческой недвижимости
+        'https://irr.ru/real-estate/commercial-sale/moskovskaya-obl/',
+        'https://saint-petersburg.irr.ru/real-estate/commercial-sale/', 
+        'https://irr.ru/real-estate/commercial-sale/',
+        'https://kazan.irr.ru/real-estate/commercial-sale/',
+        'https://tolyatti.irr.ru/real-estate/commercial-sale/',
+        'https://ekaterinburg.irr.ru/real-estate/commercial-sale/',
+        'https://krasnodar.irr.ru/real-estate/commercial-sale/',
+        'https://perm.irr.ru/real-estate/commercial-sale/',
 
-        # #Дома коттеджи аренда
-        # 'https://irr.ru/real-estate/out-of-town-rent/moskovskaya-obl/',
-        # 'https://saint-petersburg.irr.ru/real-estate/out-of-town-rent/', 
-        # 'https://irr.ru/real-estate/out-of-town-rent/',
-        # 'https://kazan.irr.ru/real-estate/out-of-town-rent/',
-        # 'https://tolyatti.irr.ru/real-estate/out-of-town-rent/',
-        # 'https://ekaterinburg.irr.ru/real-estate/out-of-town-rent/',
-        # 'https://krasnodar.irr.ru/real-estate/out-of-town-rent/',
-        # 'https://perm.irr.ru/real-estate/out-of-town-rent/'
+        #Аренда коммерческой недвижимости
+        'https://irr.ru/real-estate/commercial/moskovskaya-obl/',
+        'https://saint-petersburg.irr.ru/real-estate/commercial/', 
+        'https://irr.ru/real-estate/commercial/',
+        'https://kazan.irr.ru/real-estate/commercial/',
+        'https://tolyatti.irr.ru/real-estate/commercial/',
+        'https://ekaterinburg.irr.ru/real-estate/commercial/',
+        'https://krasnodar.irr.ru/real-estate/commercial/',
+        'https://perm.irr.ru/real-estate/commercial/',
+
+        #Дома, коттеджи, участки продажа
+        'https://irr.ru/real-estate/out-of-town/moskovskaya-obl/',
+        'https://saint-petersburg.irr.ru/real-estate/out-of-town/', 
+        'https://irr.ru/real-estate/out-of-town/',
+        'https://kazan.irr.ru/real-estate/out-of-town/',
+        'https://tolyatti.irr.ru/real-estate/out-of-town/',
+        'https://ekaterinburg.irr.ru/real-estate/out-of-town/',
+        'https://krasnodar.irr.ru/real-estate/out-of-town/',
+        'https://perm.irr.ru/real-estate/out-of-town/',
+
+        #Дома, коттеджи, участки аренда
+        'https://irr.ru/real-estate/out-of-town-rent/moskovskaya-obl/',
+        'https://saint-petersburg.irr.ru/real-estate/out-of-town-rent/', 
+        'https://irr.ru/real-estate/out-of-town-rent/',
+        'https://kazan.irr.ru/real-estate/out-of-town-rent/',
+        'https://tolyatti.irr.ru/real-estate/out-of-town-rent/',
+        'https://ekaterinburg.irr.ru/real-estate/out-of-town-rent/',
+        'https://krasnodar.irr.ru/real-estate/out-of-town-rent/',
+        'https://perm.irr.ru/real-estate/out-of-town-rent/'
 
     ]
 
@@ -89,7 +109,13 @@ class IrrSpider(scrapy.Spider):
     def parse_details(self, details, category, title, url):
         arr = [u'Этаж', u'Всего комнат', u'Комнат в квартире', u'Площадь кухни',
             u'Год постройки', u'Общая площадь', u'Жилая площадь', u'Высота потолков', u'До метро',
-           u'Лифты в здании', u'Материал стен', u'Санузел', u'Приватизированная квартира']
+           u'Лифты в здании', u'Материал стен', u'Санузел', u'Приватизированная квартира', 
+           u'Площадь арендуемой комнаты', u'Можно с животными', u'Комиссия', u'Период аренды',
+           u'Комнат сдается', u'Доля', u'Тип здания',
+           u'Площадь участка', u'Категория земли', u'Вид разрешенного использования',
+           u'Отапливаемый', u'Мебель', u'Бытовая техника', u'Интернет',
+           u'Количество этажей', u'Количество комнат', u'Количество спален',
+           u'Гараж', u'Охрана']
         subs = [
                 [u' м,', u','], [u' г.', u''],
                 [u' мин/пеш', u''], [u' км', u''],
@@ -99,7 +125,14 @@ class IrrSpider(scrapy.Spider):
                 [u'До метро, минут(пешком)', u'До метро пешком'],
                 [u'Материал стен', u'Тип здания'],
                 [u'Приватизированная квартира', u'Приватизированная квартира": "1'],
-                [u'Лифты в здании', u'Лифт": "1']
+                [u'Можно с животными', u'Можно с животными": "1'],
+                [u'Лифты в здании', u'Лифт": "1'],
+                [u'Отапливаемый', u'Отапливаемый": "1'],
+                [u'Мебель', u'Мебель": "1'],
+                [u'Бытовая техника', u'Бытовая техника": "1'],
+                [u'Интернет', u'Интернет": "1'],
+                [u'Гараж', u'Гараж": "1'],
+                [u'Охрана', u'Охрана": "1']
             ]
         result = []
         print('draft details: '+'='.join(details))
@@ -109,11 +142,13 @@ class IrrSpider(scrapy.Spider):
                     result.append('"'+i.strip().replace(': ','": "')+'"')
         offer = re.search("::.+", category).group(0).replace('::','')
         offer = offer.replace('apartments-sale', 'Продам')
-        offer = offer.replace('rent', 'Сдам')
+        offer = offer.replace('rooms-sale', 'Продам')
+        offer = offer.replace('rooms-rent', 'Сдам')
         offer = offer.replace('commercial-sale', 'Продам')
         offer = offer.replace('commercial', 'Сдам в аренду')
         offer = offer.replace('out-of-town-rent', 'Сдам')
         offer = offer.replace('out-of-town', 'Продам')
+        offer = offer.replace('rent', 'Сдам')
         result.append('"Тип предложения": "'+offer+'"')
         if (category == 'real-estate::apartments-sale') or (category == "real-estate::rent"):
             if re.search('Студия, ', title) != None:
@@ -127,6 +162,8 @@ class IrrSpider(scrapy.Spider):
                 result.append('"Вторичное жилье": "0"')
 
         result = '{'+', '.join(result)+'}'
+        result = result.replace(' м"', '"')
+        result = result.replace(' сот"', '"')
 
         for k in subs:
             result = result.replace(k[0], k[1])
@@ -186,7 +223,7 @@ class IrrSpider(scrapy.Spider):
         item.add_value('videos', '')
         try:
             site = response.css('.productPage__infoTextBold a::attr(href)').get().replace('?utm_source=irr','')
-            if re.search('irr.ru', site) != None:
+            if 'irr.ru' in site:
                 site = ''
         except BaseException:
             site = ''
@@ -209,10 +246,21 @@ class IrrSpider(scrapy.Spider):
         item.add_value('details', details)
 
         category = draft_category.replace('real-estate::apartments-sale', 'Квартиры, комнаты')
+        category = category.replace('real-estate::rooms-sale', 'Квартиры, комнаты')
+        category = category.replace('real-estate::rooms-rent', 'Квартиры, комнаты')
         category = category.replace('real-estate::rent', 'Квартиры, комнаты')
         category = category.replace('real-estate::commercial-sale', 'Коммерческая недвижимость')
         category = category.replace('real-estate::commercial', 'Коммерческая недвижимость')
-        category = category.replace('real-estate::out-of-town-rent', 'Дома, дачи, коттеджи')
+        if category == 'real-estate::out-of-town-rent':
+            if "real-estate/out-of-town-rent/lands" in url:
+                category = category.replace('real-estate::out-of-town-rent', 'Земельные участки')
+            else:
+                category = category.replace('real-estate::out-of-town-rent', 'Дома, дачи, коттеджи')
+        if category == 'real-estate::out-of-town':
+            if "real-estate/out-of-town/lands" in url:
+                category = category.replace('real-estate::out-of-town', 'Земельные участки')
+            else:
+                category = category.replace('real-estate::out-of-town', 'Дома, дачи, коттеджи')
         category = category.replace('real-estate::out-of-town', 'Дома, дачи, коттеджи')
         item.add_value('category', category)
 
