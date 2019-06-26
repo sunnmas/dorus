@@ -46,15 +46,6 @@ class CmltSpider(scrapy.Spider):
             date = response.xpath('////div[@class="full-an-info"]//div[@class="an-history-header"]/preceding-sibling::div/text()').get().replace('\n','')
         except BaseException:
             date = response.xpath('////div[@class="full-an-info"]/div[@class="fullAn"]/div[contains(@class, "view-an")]/following-sibling::div/text()').get().replace('\n','')
-        date = date.replace('Сегодня', datetime.datetime.today().strftime('%Y-%m-%d'))
-        date = date.replace('Вчера', (datetime.datetime.today() - datetime.timedelta(1)).strftime('%Y-%m-%d'))
-        date = date.replace('\xa0',' ')
-        print(date)
-        try:
-            date = datetime.datetime.strptime(date, "%d.%m.%Y %H:%M").strftime("%Y-%m-%d %H:%M:%S")
-        except BaseException:
-            None
-        print(date)
         item.add_value('date', date)
         item.add_value('title', response.css('h1::text').get().replace('\n',''))
         item.add_value('description', ''.join(response.css('div.full-an-info div.view-an.content-block::text').getall()).replace('\n',''))

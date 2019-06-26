@@ -193,7 +193,6 @@ class IrrSpider(scrapy.Spider):
     def parse_item(self, response):
         print('----------------------------------------------------------------')
         print(response.url)
-
         item = ItemLoader(item=Ad(), response=response)
 
         adv = re.search("product\['listingParams'\] = {.+?}", response.text).group(0)

@@ -1,6 +1,5 @@
-# scrapy runspider abrds/spiders/cmlt.py -o cmlt.json
 # cd Documents/scrapy/abrds
-# scrapy runspider abrds/spiders/cmlt.py
+# scrapy runspider abrds/spiders/phtdsk.py
 
 import scrapy
 import datetime
@@ -13,6 +12,9 @@ from scrapy.http.cookies import CookieJar
 
 class PhotodoskaSpider(scrapy.Spider):
     name = 'phtdsk'
+    custom_settings = {
+        'LOG_FILE': 'phtdsk.log',
+    }
     start_urls = [
         'https://photodoska.ru/tomsk/nedvizhimost'
         # 'https://photodoska.ru/tomsk/nedvizhimost/sdam/sdayu-kvartiru-v-solnechnom-mikrorajone-3005728'
@@ -38,55 +40,61 @@ class PhotodoskaSpider(scrapy.Spider):
 
 
     def parse_item(self, response):
+        print('----------------------------------------------------------------')
         print(response.url)
+        item = ItemLoader(item=Ad(), response=response)
 
         cookieJar = response.meta.setdefault('cookie_jar', CookieJar())
         cookieJar.extract_cookies(response, response.request)
 
-        item = ItemLoader(item=Ad(), response=response)
         item.add_value('provider',  'phtdsk')
-        id = response.css('#contacts::attr(data-id)').get().replace('\n','')
+        id = response.css('#contacts::attr(data-id)').get()
         item.add_value('external_id', id)
+    #date
         date = response.css('time::text').get().replace("\r",'').replace("\t",'').replace("\n",'')
-
         try:
             date = datetime.datetime.strptime(date, "%H:%M %d.%m.%Y").strftime("%Y-%m-%d %H:%M:%S")
         except BaseException:
             None
         item.add_value('date', date)
-        item.add_value('offer', response.css('.breadcrumb a::text').getall()[1].replace('\n',''))
+
         item.add_value('title', response.css('h1::text').get().replace('\n','').replace("\r",'').replace("\t",''))
         item.add_value('description', response.css('span[itemprop="description"] p::text').get())
+        item.add_value('description', response.css('span[itemprop="description"] td::text').get())
+    #price
         try:
             item.add_value('price', response.css('span[itemprop="price"]::text').get().replace('руб.', '').replace('\n', '').replace('\xa0', '').replace(' ', ''))
         except BaseException:
             item.add_value('price', 0)
         item.add_css('address', '.post_content h5::text')
-        
+    #coordinates
         coordinates = response.css('meta[name="geo.position"]::attr(content)').get()
         coordinates = coordinates.split(';')
         item.add_value('lattitude', coordinates[0]) 
         item.add_value('longitude', coordinates[1]) 
-        item.add_value('ext_category', response.css('.breadcrumb a::text').get().replace('\n',''))
+    #images    
         images = ','.join(response.css('.swiper-slide a::attr(href)').getall())
         item.add_value('images', images)
         item.add_value('videos', '') 
         item.add_value('site', '') 
-        item.add_value('details', '') 
+    #author
         author_url = response.css('div.an-page-other-user-ans a::attr(href)').get()
-
         author_external_id = response.css('.panel-body div:nth-child(2) a::attr(href)').getall()[0].replace('/user/','')
         item.add_value('author_external_id', author_external_id)
         author = response.css('.panel-body div:nth-child(2) a::text').getall()[0]
         item.add_value('author', author)
-        item.add_value('original_url', response.url[22:])
+        # item.add_value('offer', response.css('.breadcrumb a::text').getall()[1].replace('\n',''))
+        item.add_value('category', response.css('.breadcrumb a::text').get().replace('\n',''))
+        item.add_value('details', '') 
+        
+        item.add_value('original_url', response.url)
         item.add_value('created_at', 'now')
-        item.add_value('processed', False)
         return scrapy.FormRequest("https://photodoska.ru/?a=show_contact_rn",
                 # meta = {'dont_merge_cookies': True, 'cookiejar': cookieJar},
                 formdata={'id': id},
                 meta={'item': item},
                 callback=self.parse_phone)
+        item.add_value('processed', False)
         print('======================================================')
 
     def parse_phone(self, response):

@@ -1,5 +1,5 @@
 CREATE TABLE `items` (
-	`provider` ENUM('dorus','cmlt','phtdsk','irr') NOT NULL COLLATE 'utf8_bin',
+	`provider` ENUM('dorus','cmlt','phtdsk','irr','cian') NOT NULL COLLATE 'utf8_bin',
 	`external_id` VARCHAR(50) NOT NULL COLLATE 'utf8_bin',
 	`date` DATETIME NOT NULL,
 	`title` VARCHAR(160) NOT NULL COLLATE 'utf8_bin',

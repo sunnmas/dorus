@@ -1,1 +1,0 @@
-wscript hide.vbs irr.bat

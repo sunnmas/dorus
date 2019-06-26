@@ -1,0 +1,1 @@
+C:\Users\A\Anaconda3\Scripts\activate.bat base && python phtdsk.py && conda.bat deactivate
