@@ -14,7 +14,8 @@ class CianSpider(scrapy.Spider):
         'LOG_FILE': 'cian.log',
     }
     start_urls = [
-        'https://saransk.cian.ru/sale/flat/198831288/'
+        'https://saransk.cian.ru/sale/flat/204727028/'
+        # 'https://saransk.cian.ru/sale/flat/198831288/'
         # Продажа квартир
         # 'https://kazan.cian.ru/kupit-kvartiru/',
         # 'https://ekb.cian.ru/kupit-kvartiru/',
@@ -31,13 +32,21 @@ class CianSpider(scrapy.Spider):
         # 'https://sevastopol.cian.ru/kupit-kvartiru-novostroyki/',
         # 'https://sochi.cian.ru/kupit-kvartiru-novostroyki/',
         # 'https://kostroma.cian.ru/kupit-kvartiru-novostroyki/',
+
+        # 'https://kazan.cian.ru/kupit-dom/',
+        # 'https://ekb.cian.ru/kupit-dom/',
+        # 'https://omsk.cian.ru/kupit-dom/',
+        # 'https://spb.cian.ru/kupit-dom/',
+        # 'https://sevastopol.cian.ru/kupit-dom/',
+        # 'https://sochi.cian.ru/kupit-dom/',
+        # 'https://kostroma.cian.ru/kupit-dom/',
     ]
 
     allowed_domains = [
         'cian.ru'
     ]
 
-    def parse_details(self, details, category, title, url):
+    def parse_details(self, response, offer):
         arr = [u'Этаж', u'Всего комнат', u'Комнат в квартире', u'Площадь кухни',
             u'Год постройки', u'Общая площадь', u'Жилая площадь', u'Высота потолков', u'До метро',
            u'Лифты в здании', u'Материал стен', u'Санузел', u'Приватизированная квартира', 
@@ -50,51 +59,48 @@ class CianSpider(scrapy.Spider):
         subs = [
                 [u' м,', u','], [u' г.', u''],
                 [u' мин/пеш', u''], [u' км', u''],
-                [u'Этажей в здании', u'Этажей'],
-                [u'Комнат в квартире', u'Количество комнат'],
-                [u'Год постройки', u'Год постройки'],
-                [u'До метро, минут(пешком)', u'До метро пешком'],
-                [u'Материал стен', u'Тип здания'],
-                [u'Приватизированная квартира', u'Приватизированная квартира": "1'],
-                [u'Можно с животными', u'Можно с животными": "1'],
-                [u'Лифты в здании', u'Лифт": "1'],
-                [u'Отапливаемый', u'Отапливаемый": "1'],
-                [u'Мебель', u'Мебель": "1'],
-                [u'Бытовая техника', u'Бытовая техника": "1'],
-                [u'Интернет', u'Интернет": "1'],
-                [u'Гараж', u'Гараж": "1'],
-                [u'Охрана', u'Охрана": "1']
+                [u'Общая', u'Общая площадь'],
+                [u'Жилая', u'Жилая площадь'],
+                [u'Построен', u'Год постройки'],
+                [u'Кухня', u'Площадь кухни']
             ]
         result = []
-        print('draft details: '+'='.join(details))
-        for i in details:
-            for j in arr:
-                if not (re.search(j, i) is None):
-                    result.append('"'+i.strip().replace(': ','": "')+'"')
-        offer = re.search("::.+", category).group(0).replace('::','')
-        offer = offer.replace('apartments-sale', 'Продам')
-        offer = offer.replace('rooms-sale', 'Продам')
-        offer = offer.replace('rooms-rent', 'Сдам')
-        offer = offer.replace('commercial-sale', 'Продам')
-        offer = offer.replace('commercial', 'Сдам в аренду')
-        offer = offer.replace('out-of-town-rent', 'Сдам')
-        offer = offer.replace('out-of-town', 'Продам')
-        offer = offer.replace('rent', 'Сдам')
-        result.append('"Тип предложения": "'+offer+'"')
-        if (category == 'real-estate::apartments-sale') or (category == "real-estate::rent"):
-            if re.search('Студия, ', title) != None:
-                result.append('"Студия": "1"')
-            else:
-                result.append('"Студия": "0"')
+        general_details_titles = response.css('div[class*="--info-title--"]::text').getall()
+        general_details_values = response.css('div[class*="--info-text--"]::text').getall()
+        additional_details_titles = response.css('div[class*="--item--"] div[class*="--name--"]::text').getall()
+        additional_details_values = response.css('div[class*="--item--"] div[class*="--value--"]::text').getall()
 
-            if re.search('/secondary/', url) != None:
-                result.append('"Вторичное жилье": "1"')
+        for id, val in enumerate(general_details_titles):
+            if val == 'Этаж':
+                fl = re.search("\d", general_details_values[id]).group(0)
+                fls = re.search("из \d", general_details_values[id]).group(0).replace('из ', '')
+                result.append('"Этаж": "'+fl+'"')
+                result.append('"Этажей": "'+fls+'"')
             else:
-                result.append('"Вторичное жилье": "0"')
+                result.append('"'+val+'": "'+general_details_values[id].replace(',', '.')+'"')
+
+        for id, val in enumerate(additional_details_titles):
+            result.append('"'+val+'": "'+additional_details_values[id].replace(',', '.')+'"')
+
+        offer = offer.replace('flatSale', 'Продам')
+        offer = offer.replace('landSale', 'Продам')
+        offer = offer.replace('houseSale', 'Продам')
+        offer = offer.replace('houseShareSale', 'Продам')
+        offer = offer.replace('cottageSale', 'Продам')
+        offer = offer.replace('roomSale', 'Продам')
+        
+        offer = offer.replace('flatRent', 'Сдам')
+        offer = offer.replace('landRent', 'Сдам')
+        offer = offer.replace('houseRent', 'Сдам')
+        offer = offer.replace('houseShareRent', 'Сдам')
+        offer = offer.replace('cottageRent', 'Сдам')
+        offer = offer.replace('roomRent', 'Сдам')
+
+        result.append('"Тип предложения": "'+offer+'"')
 
         result = '{'+', '.join(result)+'}'
-        result = result.replace(' м"', '"')
-        result = result.replace(' сот"', '"')
+        result = result.replace(' м²"', '"')
+        result = result.replace(' сот."', '"')
 
         for k in subs:
             result = result.replace(k[0], k[1])
@@ -111,8 +117,8 @@ class CianSpider(scrapy.Spider):
             page = href
             print("\tPARSING PAGE"+page)
             yield response.follow(page, self.parse_item)
+
         # ссылки на следующие страницы
-        
         try:
             nextPage = response.xpath('////li[contains(@class,"--list-item--active--")]/following-sibling::li/a/@href').get()
             yield response.follow(nextPage, self.parse)
@@ -167,13 +173,26 @@ class CianSpider(scrapy.Spider):
         phone = re.search('\+7\d+',response.text).group(0)
         item.add_value('phone', phone)
         url = response.url
-        draft_category = re.search("cian.ru/.*?/.*?/", url).group(0)[0:-1].replace('cian.ru/','').replace('/','::')
-        category = draft_category.replace('sale::flat', 'Квартиры, комнаты')
+        draft_category = re.search('"category":".+?"', response.text).group(0).replace('"category":"','').replace('"','')
+        # re.search("cian.ru/.*?/.*?/", url).group(0)[0:-1].replace('cian.ru/','').replace('/','::')
+        category = draft_category.replace('flatSale', 'Квартиры, комнаты')
+        category = category.replace('flatRent', 'Квартиры, комнаты')
+        category = category.replace('roomSale', 'Квартиры, комнаты')
+        category = category.replace('roomRent', 'Квартиры, комнаты')
+        category = category.replace('landSale', 'Земельные участки')
+        category = category.replace('landRent', 'Земельные участки')
+        category = category.replace('houseShareSale', 'Дома, дачи, коттеджи')
+        category = category.replace('houseSale', 'Дома, дачи, коттеджи')
+        category = category.replace('houseRent', 'Дома, дачи, коттеджи')
+        category = category.replace('cottageRent', 'Дома, дачи, коттеджи')
+        category = category.replace('cottageSale', 'Дома, дачи, коттеджи')
         item.add_value('category', category)
-        item.add_value('details', '')
+
+
+        details = self.parse_details(response, draft_category)
+        item.add_value('details', details)
+
 #         details = response.css('.productPage__infoColumnBlockText::text').getall()
-#         details = self.parse_details(details, draft_category, title, response.url)
-#         item.add_value('details', details)
 
 #         category = category.replace('real-estate::rooms-sale', 'Квартиры, комнаты')
 #         category = category.replace('real-estate::rooms-rent', 'Квартиры, комнаты')
