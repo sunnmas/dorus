@@ -14,32 +14,32 @@ class CianSpider(scrapy.Spider):
         'LOG_FILE': 'cian.log',
     }
     start_urls = [
-        'https://saransk.cian.ru/sale/flat/204727028/'
+        # 'https://check.torproject.org/'
         # 'https://saransk.cian.ru/sale/flat/198831288/'
         # Продажа квартир
-        # 'https://kazan.cian.ru/kupit-kvartiru/',
-        # 'https://ekb.cian.ru/kupit-kvartiru/',
-        # 'https://omsk.cian.ru/kupit-kvartiru/',
-        # 'https://spb.cian.ru/kupit-kvartiru/',
-        # 'https://sevastopol.cian.ru/kupit-kvartiru/',
-        # 'https://sochi.cian.ru/kupit-kvartiru/',
-        # 'https://kostroma.cian.ru/kupit-kvartiru/',
+        'https://kazan.cian.ru/kupit-kvartiru/',
+        'https://ekb.cian.ru/kupit-kvartiru/',
+        'https://omsk.cian.ru/kupit-kvartiru/',
+        'https://spb.cian.ru/kupit-kvartiru/',
+        'https://sevastopol.cian.ru/kupit-kvartiru/',
+        'https://sochi.cian.ru/kupit-kvartiru/',
+        'https://kostroma.cian.ru/kupit-kvartiru/',
 
-        # 'https://kazan.cian.ru/kupit-kvartiru-novostroyki/',
-        # 'https://ekb.cian.ru/kupit-kvartiru-novostroyki/',
-        # 'https://omsk.cian.ru/kupit-kvartiru-novostroyki/',
-        # 'https://spb.cian.ru/kupit-kvartiru-novostroyki/',
-        # 'https://sevastopol.cian.ru/kupit-kvartiru-novostroyki/',
-        # 'https://sochi.cian.ru/kupit-kvartiru-novostroyki/',
-        # 'https://kostroma.cian.ru/kupit-kvartiru-novostroyki/',
+        'https://kazan.cian.ru/kupit-kvartiru-novostroyki/',
+        'https://ekb.cian.ru/kupit-kvartiru-novostroyki/',
+        'https://omsk.cian.ru/kupit-kvartiru-novostroyki/',
+        'https://spb.cian.ru/kupit-kvartiru-novostroyki/',
+        'https://sevastopol.cian.ru/kupit-kvartiru-novostroyki/',
+        'https://sochi.cian.ru/kupit-kvartiru-novostroyki/',
+        'https://kostroma.cian.ru/kupit-kvartiru-novostroyki/',
 
-        # 'https://kazan.cian.ru/kupit-dom/',
-        # 'https://ekb.cian.ru/kupit-dom/',
-        # 'https://omsk.cian.ru/kupit-dom/',
-        # 'https://spb.cian.ru/kupit-dom/',
-        # 'https://sevastopol.cian.ru/kupit-dom/',
-        # 'https://sochi.cian.ru/kupit-dom/',
-        # 'https://kostroma.cian.ru/kupit-dom/',
+        'https://kazan.cian.ru/kupit-dom/',
+        'https://ekb.cian.ru/kupit-dom/',
+        'https://omsk.cian.ru/kupit-dom/',
+        'https://spb.cian.ru/kupit-dom/',
+        'https://sevastopol.cian.ru/kupit-dom/',
+        'https://sochi.cian.ru/kupit-dom/',
+        'https://kostroma.cian.ru/kupit-dom/',
     ]
 
     allowed_domains = [
@@ -82,12 +82,15 @@ class CianSpider(scrapy.Spider):
         for id, val in enumerate(additional_details_titles):
             result.append('"'+val+'": "'+additional_details_values[id].replace(',', '.')+'"')
 
+        if offer == 'newBuildingFlatSale':
+            result.append('"Новостройка": "1"')
         offer = offer.replace('flatSale', 'Продам')
         offer = offer.replace('landSale', 'Продам')
         offer = offer.replace('houseSale', 'Продам')
         offer = offer.replace('houseShareSale', 'Продам')
         offer = offer.replace('cottageSale', 'Продам')
         offer = offer.replace('roomSale', 'Продам')
+        offer = offer.replace('newBuildingFlatSale', 'Продам')
         
         offer = offer.replace('flatRent', 'Сдам')
         offer = offer.replace('landRent', 'Сдам')
@@ -107,15 +110,15 @@ class CianSpider(scrapy.Spider):
         print("details: "+result)
         return result
 
-    def parse2(self, response):
+    def parse(self, response):
         # Определяем список ссылок со страницы
         links = response.css('a[class*="--header--"]::attr(href)').getall()
         links = list(set(links))
-        print('LINKS TO ADS FROM PAGE:')
+        print('LINKS TO ADS FROM PAGE ('+response.url+'):')
         print(links)
         for href in links:
             page = href
-            print("\tPARSING PAGE"+page)
+            print("\tPARSING PAGE: "+page)
             yield response.follow(page, self.parse_item)
 
         # ссылки на следующие страницы
@@ -125,7 +128,7 @@ class CianSpider(scrapy.Spider):
         except BaseException:
             print('bye')
         
-    def parse(self, response):
+    def parse_item(self, response):
         print('----------------------------------------------------------------')
         print(response.url)
         item = ItemLoader(item=Ad(), response=response)
@@ -158,7 +161,7 @@ class CianSpider(scrapy.Spider):
                 item.add_value('lattitude', '0')
                 item.add_value('longitude', '0')
         re.findall('"fullUrl":"https:.+?"',response.text)
-        images = ','.join(re.findall('"fullUrl":"https:.+?.jpg',response.text)).replace('"fullUrl":"','').replace('\\u002F','/')
+        images = ','.join(re.findall('"fullUrl":"https:\\\\[\w\\\\.\d-]+.jpg',response.text)).replace('"fullUrl":"','').replace('\\u002F','/')
         item.add_value('images', images)
         item.add_value('videos', '')
         item.add_value('site', '')
@@ -179,6 +182,7 @@ class CianSpider(scrapy.Spider):
         category = category.replace('flatRent', 'Квартиры, комнаты')
         category = category.replace('roomSale', 'Квартиры, комнаты')
         category = category.replace('roomRent', 'Квартиры, комнаты')
+        category = category.replace('newBuildingFlatSale', 'Квартиры, комнаты')
         category = category.replace('landSale', 'Земельные участки')
         category = category.replace('landRent', 'Земельные участки')
         category = category.replace('houseShareSale', 'Дома, дачи, коттеджи')
