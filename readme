@@ -1,3 +1,4 @@
+тестировалась на python 3.7.1
 
 install Microsoft visual c++ 14
 pip install --upgrade setuptools
@@ -5,7 +6,20 @@ pip install --upgrade setuptools
 you need mysql phyton:
 		pip install PyMySQL
 		
-		
-запускаем taskschd.exe
-импортируем задание irr.ru.xml
+=============================================
+Для работы в скрытом режиме по расписанию:
 
+1.запускаем taskschd.exe
+2.импортируем задание abrds.xml
+
+=============================================
+Для работы через Tor:
+		0. качаем tor expert bundle
+		1. устанавливаем как службу tor.exe --service install
+		2.ставим http proxy privoxy
+		3.добавляем строки в конфиг.тхт:
+forward-socks4 / localhost:9050 .
+forward-socks4a / localhost:9050 .
+forward-socks5t / localhost:9050 .
+		4.убеждаемся
+listen-address  127.0.0.1:8118
