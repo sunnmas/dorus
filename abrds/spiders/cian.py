@@ -16,10 +16,25 @@ class CianSpider(scrapy.Spider):
     start_preurls = [
         # 'https://check.torproject.org/'
         # 'https://saransk.cian.ru/sale/flat/198831288/'
-        # Продажа квартир
-        'cian.ru/kupit-kvartiru/',
-        'cian.ru/kupit-kvartiru-novostroyki/',
-        'cian.ru/kupit-dom/'
+        'kupit-kvartiru-novostroyki',
+
+        'kupit-kvartiru',
+        'snyat-kvartiru',
+        
+        'kupit-komnatu',
+        'snyat-komnatu',
+
+        'kupit-dom',
+        'snyat-dom',
+
+        'kupit-sklad',
+        'snyat-sklad',
+        
+        'kupit-ofis',
+        'snyat-ofis',
+
+        'kupit-torgovuyu-ploshad',
+        'snyat-torgovuyu-ploshad'
     ]
 
     start_urls = []
@@ -101,7 +116,7 @@ class CianSpider(scrapy.Spider):
 
     for subdomain in subdomains:
         for base_url in start_preurls:
-            start_urls.append('https://'+subdomain+'.'+base_url)
+            start_urls.append('https://'+subdomain+'.cian.ru/'+base_url+'/')
 
 
     allowed_domains = [
@@ -146,6 +161,12 @@ class CianSpider(scrapy.Spider):
 
         if offer == 'newBuildingFlatSale':
             result.append('"Новостройка": "1"')
+        if offer == 'warehouseSale' or offer == 'warehouseRent':
+            result.append('"Тип объекта": "Складское помещение"')
+        if offer == 'officeRent' or offer == 'officeRent':
+            result.append('"Тип объекта": "Офисное помещение"')
+        if offer == 'shoppingAreaRent' or offer == 'shoppingAreaSale':
+            result.append('"Тип объекта": "Торговое помещение"')
         offer = offer.replace('flatSale', 'Продам')
         offer = offer.replace('landSale', 'Продам')
         offer = offer.replace('houseSale', 'Продам')
@@ -153,6 +174,8 @@ class CianSpider(scrapy.Spider):
         offer = offer.replace('cottageSale', 'Продам')
         offer = offer.replace('roomSale', 'Продам')
         offer = offer.replace('newBuildingFlatSale', 'Продам')
+        offer = offer.replace('warehouseSale', 'Продам')
+        offer = offer.replace('shoppingAreaSale', 'Продам')
         
         offer = offer.replace('flatRent', 'Сдам')
         offer = offer.replace('landRent', 'Сдам')
@@ -160,6 +183,8 @@ class CianSpider(scrapy.Spider):
         offer = offer.replace('houseShareRent', 'Сдам')
         offer = offer.replace('cottageRent', 'Сдам')
         offer = offer.replace('roomRent', 'Сдам')
+        offer = offer.replace('warehouseRent', 'Сдам')
+        offer = offer.replace('shoppingAreaRent', 'Сдам')
 
         result.append('"Тип предложения": "'+offer+'"')
 
@@ -252,6 +277,12 @@ class CianSpider(scrapy.Spider):
         category = category.replace('houseRent', 'Дома, дачи, коттеджи')
         category = category.replace('cottageRent', 'Дома, дачи, коттеджи')
         category = category.replace('cottageSale', 'Дома, дачи, коттеджи')
+        category = category.replace('warehouseSale', 'Коммерческая недвижимость')
+        category = category.replace('warehouseRent', 'Коммерческая недвижимость')
+        category = category.replace('officeSale', 'Коммерческая недвижимость')
+        category = category.replace('officeRent', 'Коммерческая недвижимость')
+        category = category.replace('shoppingAreaSale', 'Коммерческая недвижимость')
+        category = category.replace('shoppingAreaRent', 'Коммерческая недвижимость')
         item.add_value('category', category)
 
 
