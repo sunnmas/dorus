@@ -13,34 +13,96 @@ class CianSpider(scrapy.Spider):
     custom_settings = {
         'LOG_FILE': 'cian.log',
     }
-    start_urls = [
+    start_preurls = [
         # 'https://check.torproject.org/'
         # 'https://saransk.cian.ru/sale/flat/198831288/'
         # Продажа квартир
-        'https://kazan.cian.ru/kupit-kvartiru/',
-        'https://ekb.cian.ru/kupit-kvartiru/',
-        'https://omsk.cian.ru/kupit-kvartiru/',
-        'https://spb.cian.ru/kupit-kvartiru/',
-        'https://sevastopol.cian.ru/kupit-kvartiru/',
-        'https://sochi.cian.ru/kupit-kvartiru/',
-        'https://kostroma.cian.ru/kupit-kvartiru/',
-
-        'https://kazan.cian.ru/kupit-kvartiru-novostroyki/',
-        'https://ekb.cian.ru/kupit-kvartiru-novostroyki/',
-        'https://omsk.cian.ru/kupit-kvartiru-novostroyki/',
-        'https://spb.cian.ru/kupit-kvartiru-novostroyki/',
-        'https://sevastopol.cian.ru/kupit-kvartiru-novostroyki/',
-        'https://sochi.cian.ru/kupit-kvartiru-novostroyki/',
-        'https://kostroma.cian.ru/kupit-kvartiru-novostroyki/',
-
-        'https://kazan.cian.ru/kupit-dom/',
-        'https://ekb.cian.ru/kupit-dom/',
-        'https://omsk.cian.ru/kupit-dom/',
-        'https://spb.cian.ru/kupit-dom/',
-        'https://sevastopol.cian.ru/kupit-dom/',
-        'https://sochi.cian.ru/kupit-dom/',
-        'https://kostroma.cian.ru/kupit-dom/',
+        'cian.ru/kupit-kvartiru/',
+        'cian.ru/kupit-kvartiru-novostroyki/',
+        'cian.ru/kupit-dom/'
     ]
+
+    start_urls = []
+
+    subdomains = ['spb',
+                'novosibirsk',
+                'ekb',
+                'nn',
+                'kazan',
+                'chelyabinsk',
+                'omsk',
+                'samara',
+                'rostov',
+                'ufa',
+                'krasnoyarsk',
+                'perm',
+                'voronezh',
+                'volgograd',
+                'krasnodar',
+                'saratov',
+                'tyumen',
+                'tolyatti',
+                'izhevsk',
+                'barnaul',
+                'ulyanovsk',
+                'irkutsk',
+                'habarovsk',
+                'yaroslavl',
+                'vladivostok',
+                'mahachkala'
+                'tomsk',
+                'orenburg',
+                'kemerovo',
+                'ryazan',
+                'astrahan',
+                'naberezhnye-chelny',
+                'penza',
+                'lipetsk',
+                'kirov',
+                'cheboksary',
+                'tula',
+                'kaliningrad',
+                'balashikha',
+                'kursk',
+                'sevastopol',
+                'ulan-ude',
+                'stavropol',
+                'sochi',
+                'tver',
+                'ivanovo',
+                'bryansk',
+                'belgorod',
+                'surgut',
+                'vladimir',
+                'arhangelsk',
+                'chita',
+                'krym',
+                'kaluga',
+                'smolensk',
+                'saransk',
+                'kurgan',
+                'cherepovec',
+                'orel',
+                'vologda',
+                'yakutsk',
+                'vladikavkaz',
+                'podolsk',
+                'groznyy',
+                'murmansk',
+                'tambov',
+                'petrozavodsk',
+                'kostroma',
+                'hmao',
+                'novorossiysk',
+                'yoshkar-ola',
+                'khimki',
+                'rostov'
+                ]
+
+    for subdomain in subdomains:
+        for base_url in start_preurls:
+            start_urls.append('https://'+subdomain+'.'+base_url)
+
 
     allowed_domains = [
         'cian.ru'
