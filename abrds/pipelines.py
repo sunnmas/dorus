@@ -26,16 +26,6 @@ class MysqlStore(object):
         # try:
 
         with connection.cursor() as cursor:
-            # Read a single record
-            sql = """INSERT INTO items (
-                            provider, external_id, date,
-                            title, description, price, address,
-                            coordinates, category,
-                            images, videos, site, details,
-                            author_external_id, author,
-                            phone, original_url)  
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, POINT(%s,%s), %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-
             params = (
                         item['provider'], 
                         item['external_id'],
@@ -57,12 +47,29 @@ class MysqlStore(object):
                         item['original_url']
                      )
             print(params)
+            sql = 'SELECT external_id FROM items WHERE external_id="'item['external_id']+'" AND provider='+item['provider']
+            sql = "INSERT INTO items (
+                            provider, external_id, date,
+                            title, description, price, address,
+                            coordinates, category,
+                            images, videos, site, details,
+                            author_external_id, author,
+                            phone, original_url)  
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, POINT(%s,%s), %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            sql = """UPDATE items SET (
+                            provider, external_id, date,
+                            title, description, price, address,
+                            coordinates, category,
+                            images, videos, site, details,
+                            author_external_id, author,
+                            phone, original_url) WHERE external_id="'item['external_id']+'" AND provider='+item['provider']
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, POINT(%s,%s), %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             cursor.execute(sql, params)
         connection.commit()
             # print(result)
-        # except MySQLdb.Error as e:
-            # print("Error %d: %s" % (e.args[0], e.args[1]))
-        # finally:
+        except MySQLdb.Error as e:
+            print("Error %d: %s" % (e.args[0], e.args[1]))
+        finally:
         connection.close()
 
         return item

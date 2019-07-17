@@ -25,3 +25,5 @@ forward-socks4a / localhost:9050 .
 forward-socks5t / localhost:9050 .
 		4.убеждаемся
 listen-address  127.0.0.1:8118
+
+		5. устанавливаем pip install toripchanger

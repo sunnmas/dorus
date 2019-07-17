@@ -105,6 +105,12 @@ class AbrdsDownloaderMiddleware(object):
 import os
 import random
 from scrapy.conf import settings
+from toripchanger import TorIpChanger
+
+# A Tor IP will be reused only after 10 different IPs were used.
+ip_changer = TorIpChanger(reuse_threshold=10)
+
+
 class RandomUserAgentMiddleware(object):
     def process_request(self, request, spider):
         ua  = random.choice(settings.get('USER_AGENT_LIST'))
@@ -112,5 +118,17 @@ class RandomUserAgentMiddleware(object):
             request.headers.setdefault('User-Agent', ua)
 
 class ProxyMiddleware(object):
+    _requests_count = 0
+
     def process_request(self, request, spider):
-        request.meta['proxy'] = settings.get('HTTP_PROXY')
+        use_tor = settings.get('USE_TOR')
+        if use_tor:
+            self._requests_count += 1
+            if self._requests_count > 10:
+                self._requests_count = 0 
+                ip_changer.get_new_ip()
+
+            request.meta['proxy'] = settings.get('HTTP_PROXY')
+            spider.log('Proxy : %s' % request.meta['proxy'])
+        else: 
+            spider.log('parsing without TOR!!')

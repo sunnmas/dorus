@@ -13,6 +13,7 @@ BOT_NAME = 'abrds'
 
 SPIDER_MODULES = ['abrds.spiders']
 NEWSPIDER_MODULE = 'abrds.spiders'
+USE_TOR = True
 HTTP_PROXY = 'http://127.0.0.1:8118'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -60,10 +61,10 @@ COOKIES_DEBUG = False
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-     'abrds.middlewares.RandomUserAgentMiddleware': 400,
-     'abrds.middlewares.ProxyMiddleware': 410,
-     'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None
-    # Disable compression middleware, so the actual HTML pages are cached
+    'abrds.middlewares.RandomUserAgentMiddleware': 400,
+    'abrds.middlewares.ProxyMiddleware': 410,
+    'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
+    'scrapy.contrib.downloadermiddleware.httpcompression.HttpCompressionMiddleware': None
 }
 
 # Enable or disable extensions
