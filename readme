@@ -1,10 +1,10 @@
 тестировалась на python 3.7.1
 
 install Microsoft visual c++ 14
+Для яйцевания ставим сетаптулс
 pip install --upgrade setuptools
-
-you need mysql phyton:
-		pip install PyMySQL
+pip install PyMySQL
+pip install toripchanger
 		
 =============================================
 Для работы в скрытом режиме по расписанию:
@@ -27,3 +27,8 @@ forward-socks5t / localhost:9050 .
 listen-address  127.0.0.1:8118
 
 		5. устанавливаем pip install toripchanger
+
+=============================================
+
+засовываем проект в яйцо:
+	python setup.py bdist_egg

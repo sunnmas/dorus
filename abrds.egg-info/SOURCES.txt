@@ -1,0 +1,17 @@
+setup.py
+abrds/__init__.py
+abrds/items.py
+abrds/middlewares.py
+abrds/pipelines.py
+abrds/settings.py
+abrds.egg-info/PKG-INFO
+abrds.egg-info/SOURCES.txt
+abrds.egg-info/dependency_links.txt
+abrds.egg-info/entry_points.txt
+abrds.egg-info/top_level.txt
+abrds/spiders/__init__.py
+abrds/spiders/cian.py
+abrds/spiders/cmlt.py
+abrds/spiders/dorus.py
+abrds/spiders/irr.py
+abrds/spiders/phtdsk.py

@@ -18,7 +18,7 @@ CREATE TABLE `items` (
 	`original_url` TEXT NOT NULL COLLATE 'utf8_bin',
 	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`processed` TINYINT(4) NOT NULL DEFAULT '0',
+	`processed` TINYINT(4) NOT NULL DEFAULT '0' COMMENT '3 разряда. 2 - продакшн, 1 - стейдж, 0 - девелоп',
 	UNIQUE INDEX `identify` (`external_id`, `provider`)
 )
 COLLATE='utf8_bin'

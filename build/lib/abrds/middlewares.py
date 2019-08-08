@@ -104,8 +104,8 @@ class AbrdsDownloaderMiddleware(object):
 
 import os
 import random
-from scrapy.conf import settings
-# from crawler.settings import settings
+from scrapy.utils.project import get_project_settings
+settings = get_project_settings()
 from toripchanger import TorIpChanger
 
 # A Tor IP will be reused only after 10 different IPs were used.
