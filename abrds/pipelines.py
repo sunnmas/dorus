@@ -72,7 +72,7 @@ class MysqlStore(object):
             print(result)
             if result:
                 print('update existing record..')
-                sql = "UPDATE items SET date=%s, title=%s, description=%s, price=%s, address=%s, coordinates=POINT(%s,%s), images=%s, videos=%s, site=%s, details=%s, phone=%s  WHERE provider=%s AND external_id=%s"
+                sql = "UPDATE items SET date=%s, title=%s, description=%s, price=%s, address=%s, coordinates=POINT(%s,%s), images=%s, videos=%s, site=%s, details=%s, phone=%s, processed=0, updated_at=NOW() WHERE provider=%s AND external_id=%s"
                 print(sql)
                 result = cursor.execute(sql, editable_params+select_condition)
                 print(result)
