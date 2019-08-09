@@ -1,1 +1,1 @@
-C:\Users\A\Anaconda3\Scripts\activate.bat base && python irr.py && conda.bat deactivate
+C:\Users\A\Anaconda3\Scripts\activate.bat base && python irr.py 62.33.3.10 http://127.0.0.1:8118 && conda.bat deactivate

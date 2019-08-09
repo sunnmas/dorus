@@ -16,13 +16,13 @@ DOCS: https://github.com/my8100/files/blob/master/scrapydweb/README.md
 # The default is '0.0.0.0'.
 SCRAPYDWEB_BIND = '0.0.0.0'
 # Accept connections on the specified port, the default is 5000.
-SCRAPYDWEB_PORT = 5000
+SCRAPYDWEB_PORT = 5555
 
 # The default is False, set it to True to enable basic auth for the web UI.
-ENABLE_AUTH = False
+ENABLE_AUTH = True
 # In order to enable basic auth, both USERNAME and PASSWORD should be non-empty strings.
-USERNAME = ''
-PASSWORD = ''
+USERNAME = 'admin'
+PASSWORD = 'coreAbrdsPwd2019'
 
 
 # Make sure that [Scrapyd](https://github.com/scrapy/scrapyd) has been installed
@@ -186,17 +186,17 @@ DAEMONSTATUS_REFRESH_INTERVAL = 10
 # https://www.alibabacloud.com/help/doc-detail/56130.htm
 
 # The default is False, set it to True to enable email notification.
-ENABLE_EMAIL = False
+ENABLE_EMAIL = True
 
 ########## smtp settings ##########
-SMTP_SERVER = ''
-SMTP_PORT = 0
-SMTP_OVER_SSL = False
+# SMTP_SERVER = ''
+# SMTP_PORT = 0
+# SMTP_OVER_SSL = False
 
-# Config for https://mail.google.com using SSL
-# SMTP_SERVER = 'smtp.gmail.com'
-# SMTP_PORT = 465
-# SMTP_OVER_SSL = True
+# Config for https://yandex.ru using SSL
+SMTP_SERVER = 'smtp.yandex.ru'
+SMTP_PORT = 587
+SMTP_OVER_SSL = True
 
 # Config for https://mail.google.com
 # SMTP_SERVER = 'smtp.gmail.com'
@@ -220,24 +220,24 @@ SMTP_CONNECTION_TIMEOUT = 10
 # Leave this option as '' to default to the FROM_ADDR option below; Otherwise, set it up
 # if your email service provider requires an username which is different from the FROM_ADDR option below to login.
 # e.g. 'username'
-EMAIL_USERNAME = ''
+EMAIL_USERNAME = 'scrapy44@yandex.ru'
 # As for different email service provider, you might have to get an APP password (like Gmail)
 # or an authorization code (like QQ mail) and set it as the EMAIL_PASSWORD.
 # Check out links below to get more help:
 # https://stackoverflow.com/a/27515833/10517783 How to send an email with Gmail as the provider using Python?
 # https://stackoverflow.com/a/26053352/10517783 Python smtplib proxy support
 # e.g. 'password4gmail'
-EMAIL_PASSWORD = ''
+EMAIL_PASSWORD = 'sdfwfbviuswynsuyelvlsjidfhviu346436'
 
 # e.g. 'username@gmail.com'
-FROM_ADDR = ''
+FROM_ADDR = 'scrapy44@yandex.ru'
 # e.g. ['username@gmail.com', ]
-TO_ADDRS = [FROM_ADDR]
+TO_ADDRS = ['masjanin@yandex.ru']
 
 ########## email working time ##########
 # Monday is 1 and Sunday is 7.
 # e.g, [1, 2, 3, 4, 5, 6, 7]
-EMAIL_WORKING_DAYS = []
+EMAIL_WORKING_DAYS = [1, 2, 3, 4, 5, 6, 7]
 
 # From 0 to 23.
 # e.g. [9] + list(range(15, 18)) >>> [9, 15, 16, 17], or range(24) for 24 hours
@@ -257,7 +257,7 @@ ON_JOB_RUNNING_INTERVAL = 0
 
 # Trigger email notice when a job is finished.
 # The default is False, set it to True to enable this trigger.
-ON_JOB_FINISHED = False
+ON_JOB_FINISHED = True
 
 ########## advanced triggers ##########
 # - LOG_XXX_THRESHOLD:

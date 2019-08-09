@@ -16,9 +16,9 @@ import base64
 
 class IrrSpider(scrapy.Spider):
     name = 'irr'
-    custom_settings = {
-        'LOG_FILE': 'irr.log',
-    }
+    # custom_settings = {
+    #     'LOG_FILE': 'irr.log',
+    # }
     start_urls = [
         # Продажа квартир и студий
         'https://irr.ru/real-estate/apartments-sale/moskovskaya-obl/'
@@ -101,7 +101,7 @@ class IrrSpider(scrapy.Spider):
         'https://perm.irr.ru/real-estate/out-of-town-rent/'
 
     ]
-    start_urls = ['https://irr.ru/real-estate/apartments-sale/secondary/prodaetsya-trehkomnatnaya-kvartira-na-vtorom-etazhe-advert711341141.html']
+    # start_urls = ['https://irr.ru/real-estate/apartments-sale/secondary/prodaetsya-trehkomnatnaya-kvartira-na-vtorom-etazhe-advert711341141.html']
 
     allowed_domains = [
         'irr.ru'
@@ -171,7 +171,7 @@ class IrrSpider(scrapy.Spider):
         print("details: "+result)
         return result
 
-    def parse2(self, response):
+    def parse(self, response):
         # Определяем список ссылок со страницы
         links = response.css('.listing .listing__item .listing__itemTitleWrapper a::attr(href)').getall()
         links = list(set(links))
@@ -191,7 +191,7 @@ class IrrSpider(scrapy.Spider):
         yield response.follow(nextPage, self.parse)
 
 
-    def parse(self, response):
+    def parse_item(self, response):
         print('----------------------------------------------------------------')
         print(response.url)
         item = ItemLoader(item=Ad(), response=response)

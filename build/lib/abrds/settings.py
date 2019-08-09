@@ -14,7 +14,7 @@ BOT_NAME = 'abrds'
 SPIDER_MODULES = ['abrds.spiders']
 NEWSPIDER_MODULE = 'abrds.spiders'
 USE_TOR = True
-HTTP_PROXY = 'http://127.0.0.1:8118'
+HTTP_PROXY = '172.10.0.23:8118'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'abrds (+http://www.yourdomain.com)'

@@ -13,12 +13,22 @@ from scrapy.http import Request
 class MysqlStore(object):
     def __init__(self):
         print("PIPELINE INIT")
+        try:
+            self.mysql_host = str(sys.argv[1])
+            if self.mysql_host == 'irr':
+                raise Exception("There no mysql host")
+        except:
+            self.mysql_host = '172.10.0.6'
+        print('Mysql host:', self.mysql_host)
 
 
-    def process_item(self, item, spider):    
-        print("STORE TO MYSQL")
-        connection = pymysql.connect(host='62.33.3.10',
-        # connection = pymysql.connect(host='172.10.0.6',
+    def process_item(self, item, spider):
+        try:
+            mysql_host = str(sys.argv[1])
+        except:
+            mysql_host = '172.10.0.6'
+        spider.log("STORE TO MYSQL on "+self.mysql_host)   
+        connection = pymysql.connect(host=self.mysql_host,
                              user='spider',
                              password='dfjglihdbvpguwpy04hbvdhvciudnvl',
                              db='scrapy',
