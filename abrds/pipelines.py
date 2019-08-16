@@ -9,14 +9,16 @@ import pymysql.cursors
 import hashlib
 from scrapy.exceptions import DropItem
 from scrapy.http import Request
+import re
 
 class MysqlStore(object):
     def __init__(self):
         print("PIPELINE INIT")
         try:
             self.mysql_host = str(sys.argv[1])
-            if self.mysql_host == 'irr':
+            if re.match('mysql:', self.mysql_host) == False:
                 raise Exception("There no mysql host")
+            self.mysql_host = self.mysql_host.replace('mysql:','')
         except:
             self.mysql_host = '172.10.0.6'
         print('Mysql host:', self.mysql_host)
@@ -34,7 +36,7 @@ class MysqlStore(object):
                              db='scrapy',
                              charset="utf8",
                              cursorclass=pymysql.cursors.DictCursor)
-        # try:
+
         with connection.cursor() as cursor:
             params = [
                         item['provider'], 

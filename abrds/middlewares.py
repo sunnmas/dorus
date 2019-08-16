@@ -6,6 +6,8 @@
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+import re
+
 class AbrdsSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
@@ -136,9 +138,13 @@ class ProxyMiddleware(object):
                 ip_changer.get_new_ip()
             try:
                 proxy = str(sys.argv[2])
+                if re.match('tor:', proxy) == False:
+                    raise Exception("There no tor proxy")
+                proxy = proxy.replace('tor:','')
             except:
                 proxy = settings.get('HTTP_PROXY')
-            request.meta['proxy'] = '172.10.0.23:8118'#proxy
-            spider.log('Proxy : %s' % request.meta['proxy'])
+
+            request.meta['proxy'] = proxy
+            spider.log('Proxy: %s' % request.meta['proxy'])
         else: 
             spider.log('parsing without TOR!!')
