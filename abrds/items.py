@@ -51,27 +51,11 @@ def clean_date(value):
     date = date.replace('вчера,', yesterday)
     date = date.replace('\xa0',' ')
     return date
-    # return datetime.datetime.today().strftime('%Y-%m-%d')
-    # today = datetime.datetime.today().strftime('%Y-%m-%d')
-    # yesterday = (datetime.datetime.today() - datetime.timedelta(1)).strftime('%Y-%m-%d')
-    # date = value.replace('Сегодня', today)
-    # date = date.replace('сегодня,', today)
-    # date = date.replace('Вчера', yesterday)
-    # date = date.replace('вчера,', yesterday)
-    # date = date.replace('\xa0',' ')
-    # print(date)
-    # try:
-    #     return datetime.datetime.strptime(date, "%d.%m.%Y %H:%M").strftime("%Y-%m-%d %H:%M:%S")
-    # except BaseException:
-    #     return None
-
-    
 
 class Ad(scrapy.Item):
     provider = scrapy.Field()
     external_id = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_double_spaces, strip))
     date = scrapy.Field(input_processor=MapCompose(clean_date))
-    # date = scrapy.Field()
     title = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_double_spaces, strip))
     description = scrapy.Field(input_processor=MapCompose(concat, remove_double_spaces), output_processor=TakeFirst())
     price = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_spaces, strip, clean_price))
@@ -89,3 +73,4 @@ class Ad(scrapy.Item):
     original_url = scrapy.Field()
     created_at = scrapy.Field()
     processed = scrapy.Field(default=False)
+    actual = scrapy.Field(default=True)

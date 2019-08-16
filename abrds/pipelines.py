@@ -56,7 +56,8 @@ class MysqlStore(object):
                         item['author_external_id'],
                         item['author'],
                         item['phone'],
-                        item['original_url']
+                        item['original_url'],
+                        item['actual']
                      ]
             editable_params = [
                         item['date'],
@@ -70,7 +71,8 @@ class MysqlStore(object):
                         item['videos'],
                         item['site'],
                         item['details'],
-                        item['phone']
+                        item['phone'],
+                        item['actual']
                      ]
             select_condition = [
                         item['provider'],
@@ -84,9 +86,14 @@ class MysqlStore(object):
             print(result)
             if result:
                 print('update existing record..')
-                sql = "UPDATE items SET date=%s, title=%s, description=%s, price=%s, address=%s, coordinates=POINT(%s,%s), images=%s, videos=%s, site=%s, details=%s, phone=%s, processed=0, updated_at=NOW() WHERE provider=%s AND external_id=%s"
-                print(sql)
-                result = cursor.execute(sql, editable_params+select_condition)
+                if item['actual'] == True:
+                    sql = "UPDATE items SET date=%s, title=%s, description=%s, price=%s, address=%s, coordinates=POINT(%s,%s), images=%s, videos=%s, site=%s, details=%s, phone=%s, processed=0, updated_at=NOW() WHERE provider=%s AND external_id=%s"
+                    print(sql)
+                    result = cursor.execute(sql, editable_params+select_condition)
+                else:
+                    sql = "UPDATE items SET actual=0, processed=0, updated_at=NOW() WHERE provider=%s AND external_id=%s"
+                    print(sql)
+                    result = cursor.execute(sql, select_condition)
                 print(result)
             else:
                 print('insert new record..')
@@ -96,18 +103,14 @@ class MysqlStore(object):
                             coordinates, category,
                             images, videos, site, details,
                             author_external_id, author,
-                            phone, original_url)  
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, POINT(%s,%s), %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                            phone, original_url, actual)  
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, POINT(%s,%s), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
                 print(sql)
                 cursor.execute(sql, params)
                 print('inserted')
 
             connection.commit()
             connection.close()
-
-                # print(result)
-        # except MySQLdb.Error as e:
-        #     print("Error %d: %s" % (e.args[0], e.args[1]))
-        # finally:
+        #end with connection.cursor()
 
         return item
