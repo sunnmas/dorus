@@ -72,5 +72,5 @@ class Ad(scrapy.Item):
     phone = scrapy.Field(input_processor=MapCompose(clean_phone))
     original_url = scrapy.Field()
     created_at = scrapy.Field()
-    processed = scrapy.Field(default=False)
-    actual = scrapy.Field(default=True)
+    processed = scrapy.Field()
+    actual = scrapy.Field()

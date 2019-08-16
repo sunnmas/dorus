@@ -163,6 +163,8 @@ class CianSpider(scrapy.Spider):
         actual = response.css('div[class*="--offer_card_page-top--"]>div[class*="--container--"]::text').get()
         if actual == 'Объявление снято с публикации':
             item.add_value('actual', False)
+        else:
+            item.add_value('actual', True)
 
         id = re.search("/\d+/", response.url).group(0).replace('/','')
         item.add_value('external_id', id)
