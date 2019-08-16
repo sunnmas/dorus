@@ -20,121 +20,121 @@ class CianSpider(scrapy.Spider):
     # custom_settings = {
     #     'LOG_FILE': 'cian1.log',
     # }
-    # start_preurls = [
-    #     'kupit-kvartiru-novostroyki',
+    start_preurls = [
+        'kupit-kvartiru-novostroyki',
 
-    #     'kupit-kvartiru',
-    #     'snyat-kvartiru',
+        'kupit-kvartiru',
+        'snyat-kvartiru',
         
-    #     'kupit-komnatu',
-    #     'snyat-komnatu',
+        'kupit-komnatu',
+        'snyat-komnatu',
 
-    #     'kupit-dom',
-    #     'snyat-dom',
+        'kupit-dom',
+        'snyat-dom',
 
-    #     'kupit-sklad',
-    #     'snyat-sklad',
+        'kupit-sklad',
+        'snyat-sklad',
         
-    #     'kupit-ofis',
-    #     'snyat-ofis',
+        'kupit-ofis',
+        'snyat-ofis',
 
-    #     'kupit-torgovuyu-ploshad',
-    #     'snyat-torgovuyu-ploshad',
+        'kupit-torgovuyu-ploshad',
+        'snyat-torgovuyu-ploshad',
 
-    #     'kupit-pomeshenie-svobodnogo-naznachenija',
-    #     'snyat-pomeshenie-svobodnogo-naznachenija',
+        'kupit-pomeshenie-svobodnogo-naznachenija',
+        'snyat-pomeshenie-svobodnogo-naznachenija',
 
-    #     'kupit-garazh',
-    #     'snyat-garazh'
-    # ]
+        'kupit-garazh',
+        'snyat-garazh'
+    ]
 
-    # start_urls = []
-    # subdomains = ['spb',
-    #             'novosibirsk',
-    #             'ekb',
-    #             'nn',
-    #             'kazan',
-    #             'chelyabinsk',
-    #             'omsk',
-    #             'samara',
-    #             'rostov',
-    #             'ufa',
-    #             'krasnoyarsk',
-    #             'perm',
-    #             'voronezh',
-    #             'volgograd',
-    #             'krasnodar',
-    #             'saratov',
-    #             'tyumen',
-    #             'tolyatti',
-    #             'izhevsk',
-    #             'barnaul',
-    #             'ulyanovsk',
-    #             'irkutsk',
-    #             'habarovsk',
-    #             'yaroslavl',
-    #             'vladivostok',
-    #             'mahachkala'
-    #             'tomsk',
-    #             'orenburg',
-    #             'kemerovo',
-    #             'ryazan',
-    #             'astrahan',
-    #             'naberezhnye-chelny',
-    #             'penza',
-    #             'lipetsk',
-    #             'kirov',
-    #             'cheboksary',
-    #             'tula',
-    #             'kaliningrad',
-    #             'balashikha',
-    #             'kursk',
-    #             'sevastopol',
-    #             'ulan-ude',
-    #             'stavropol',
-    #             'sochi',
-    #             'tver',
-    #             'ivanovo',
-    #             'bryansk',
-    #             'belgorod',
-    #             'surgut',
-    #             'vladimir',
-    #             'arhangelsk',
-    #             'chita',
-    #             'krym',
-    #             'kaluga',
-    #             'smolensk',
-    #             'saransk',
-    #             'kurgan',
-    #             'cherepovec',
-    #             'orel',
-    #             'vologda',
-    #             'yakutsk',
-    #             'vladikavkaz',
-    #             'podolsk',
-    #             'groznyy',
-    #             'murmansk',
-    #             'tambov',
-    #             'petrozavodsk',
-    #             'kostroma',
-    #             'hmao',
-    #             'novorossiysk',
-    #             'yoshkar-ola',
-    #             'khimki'
-    #             ]
+    start_urls = []
+    subdomains = ['spb',
+                'novosibirsk',
+                'ekb',
+                'nn',
+                'kazan',
+                'chelyabinsk',
+                'omsk',
+                'samara',
+                'rostov',
+                'ufa',
+                'krasnoyarsk',
+                'perm',
+                'voronezh',
+                'volgograd',
+                'krasnodar',
+                'saratov',
+                'tyumen',
+                'tolyatti',
+                'izhevsk',
+                'barnaul',
+                'ulyanovsk',
+                'irkutsk',
+                'habarovsk',
+                'yaroslavl',
+                'vladivostok',
+                'mahachkala'
+                'tomsk',
+                'orenburg',
+                'kemerovo',
+                'ryazan',
+                'astrahan',
+                'naberezhnye-chelny',
+                'penza',
+                'lipetsk',
+                'kirov',
+                'cheboksary',
+                'tula',
+                'kaliningrad',
+                'balashikha',
+                'kursk',
+                'sevastopol',
+                'ulan-ude',
+                'stavropol',
+                'sochi',
+                'tver',
+                'ivanovo',
+                'bryansk',
+                'belgorod',
+                'surgut',
+                'vladimir',
+                'arhangelsk',
+                'chita',
+                'krym',
+                'kaluga',
+                'smolensk',
+                'saransk',
+                'kurgan',
+                'cherepovec',
+                'orel',
+                'vologda',
+                'yakutsk',
+                'vladikavkaz',
+                'podolsk',
+                'groznyy',
+                'murmansk',
+                'tambov',
+                'petrozavodsk',
+                'kostroma',
+                'hmao',
+                'novorossiysk',
+                'yoshkar-ola',
+                'khimki'
+                ]
 
-    # for subdomain in subdomains:
-    #     for base_url in start_preurls:
-    #         start_urls.append('https://'+subdomain+'.cian.ru/'+base_url+'/')
+    for subdomain in subdomains:
+        for base_url in start_preurls:
+            start_urls.append('https://'+subdomain+'.cian.ru/'+base_url+'/')
 
-    sitemap_urls = ['https://www.cian.ru/sitemap.xml']
+    # sitemap_urls = ['https://www.cian.ru/sitemap.xml']
     # sitemap_follow = True
 
-    start_urls = ['https://sevastopol.cian.ru/sale/flat/212247070/']
+    # start_urls = ['https://sevastopol.cian.ru/sale/flat/212247070/']
         
 
-    # def parse(self, response):
-    def parse_dummy(self, response):
+    def parse(self, response):
+    # def parse_dummy(self, response):
         # Определяем список ссылок со страницы
         links = response.css('a[class*="--header--"]::attr(href)').getall()
         links = list(set(links))
@@ -152,8 +152,8 @@ class CianSpider(scrapy.Spider):
         except BaseException:
             print('bye')
   
-    # def parse_item(self, response):
-    def parse(self, response):
+    def parse_item(self, response):
+    # def parse(self, response):
         print('----------------------------------------------------------------')
         print(response.url)
         item = ItemLoader(item=Ad(), response=response)
