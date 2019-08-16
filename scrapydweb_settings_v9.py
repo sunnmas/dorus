@@ -194,14 +194,14 @@ ENABLE_EMAIL = True
 # SMTP_OVER_SSL = False
 
 # Config for https://yandex.ru using SSL
-SMTP_SERVER = 'smtp.yandex.ru'
-SMTP_PORT = 587
-SMTP_OVER_SSL = True
+# SMTP_SERVER = 'smtp.yandex.ru'
+# SMTP_PORT = 587
+# SMTP_OVER_SSL = True
 
 # Config for https://mail.google.com
-# SMTP_SERVER = 'smtp.gmail.com'
-# SMTP_PORT = 587
-# SMTP_OVER_SSL = False
+SMTP_SERVER = 'smtp.gmail.com'
+SMTP_PORT = 587
+SMTP_OVER_SSL = True
 
 # Config for https://mail.qq.com/ using SSL
 # SMTP_SERVER = 'smtp.qq.com'
@@ -220,17 +220,17 @@ SMTP_CONNECTION_TIMEOUT = 10
 # Leave this option as '' to default to the FROM_ADDR option below; Otherwise, set it up
 # if your email service provider requires an username which is different from the FROM_ADDR option below to login.
 # e.g. 'username'
-EMAIL_USERNAME = 'scrapy44@yandex.ru'
+EMAIL_USERNAME = 'scrapyvich73@gmail.com'
 # As for different email service provider, you might have to get an APP password (like Gmail)
 # or an authorization code (like QQ mail) and set it as the EMAIL_PASSWORD.
 # Check out links below to get more help:
 # https://stackoverflow.com/a/27515833/10517783 How to send an email with Gmail as the provider using Python?
 # https://stackoverflow.com/a/26053352/10517783 Python smtplib proxy support
 # e.g. 'password4gmail'
-EMAIL_PASSWORD = 'sdfwfbviuswynsuyelvlsjidfhviu346436'
+EMAIL_PASSWORD = 'sdfwfbviu436'
 
 # e.g. 'username@gmail.com'
-FROM_ADDR = 'scrapy44@yandex.ru'
+FROM_ADDR = 'scrapyvich73@gmail.com'
 # e.g. ['username@gmail.com', ]
 TO_ADDRS = ['masjanin@yandex.ru']
 
@@ -241,7 +241,7 @@ EMAIL_WORKING_DAYS = [1, 2, 3, 4, 5, 6, 7]
 
 # From 0 to 23.
 # e.g. [9] + list(range(15, 18)) >>> [9, 15, 16, 17], or range(24) for 24 hours
-EMAIL_WORKING_HOURS = []
+EMAIL_WORKING_HOURS = [11, 16, 19, 22]
 
 ########## poll interval ##########
 # Sleep N seconds before starting next round of poll, the default is 300.
