@@ -32,3 +32,7 @@ listen-address  127.0.0.1:8118
 
 засовываем проект в яйцо:
 	python setup.py bdist_egg
+
+=============================================
+поиграться со страницей:
+scrapy shell https://sevastopol.cian.ru/sale/flat/212247070/

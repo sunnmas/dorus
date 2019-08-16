@@ -1,3 +1,4 @@
 *.pyc
 /abrds/__pycache__/*.pyc
+/dist/*
 *.log
