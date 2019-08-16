@@ -16,7 +16,7 @@ class MysqlStore(object):
         print("PIPELINE INIT")
         try:
             self.mysql_host = str(sys.argv[1])
-            if re.match('mysql:', self.mysql_host) == False:
+            if re.match('mysql:', self.mysql_host) == None:
                 raise Exception("There no mysql host")
             self.mysql_host = self.mysql_host.replace('mysql:','')
         except:

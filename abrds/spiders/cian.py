@@ -120,8 +120,7 @@ class CianSpider(scrapy.Spider):
     #             'hmao',
     #             'novorossiysk',
     #             'yoshkar-ola',
-    #             'khimki',
-    #             'rostov'
+    #             'khimki'
     #             ]
 
     # for subdomain in subdomains:

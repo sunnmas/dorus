@@ -9,9 +9,10 @@ import json
 import base64
 
 from scrapy.spiders import SitemapSpider
-class CianSpider(SitemapSpider):
 
-# class CianSpider(scrapy.Spider):
+# class CianSpider(SitemapSpider):
+class CianSpider(scrapy.Spider):
+
     name = 'cian'
     allowed_domains = [
         'cian.ru'
@@ -119,8 +120,7 @@ class CianSpider(SitemapSpider):
     #             'hmao',
     #             'novorossiysk',
     #             'yoshkar-ola',
-    #             'khimki',
-    #             'rostov'
+    #             'khimki'
     #             ]
 
     # for subdomain in subdomains:
@@ -129,9 +129,12 @@ class CianSpider(SitemapSpider):
 
     sitemap_urls = ['https://www.cian.ru/sitemap.xml']
     # sitemap_follow = True
-    # sitemap_rules = [('/kupit-kvartiru/', 'parse_item')]
 
-    def parse(self, response):
+    start_urls = ['https://sevastopol.cian.ru/sale/flat/212247070/']
+        
+
+    # def parse(self, response):
+    def parse_dummy(self, response):
         # Определяем список ссылок со страницы
         links = response.css('a[class*="--header--"]::attr(href)').getall()
         links = list(set(links))
@@ -149,13 +152,20 @@ class CianSpider(SitemapSpider):
         except BaseException:
             print('bye')
   
-    def parse_item(self, response):
+    # def parse_item(self, response):
+    def parse(self, response):
         print('----------------------------------------------------------------')
         print(response.url)
         item = ItemLoader(item=Ad(), response=response)
 
         item.add_value('provider',  'cian')
-        id = re.search("объявление №\d+", response.css('title::text').get()).group(0).replace('объявление №','')
+        actual = response.css('div[class*="--offer_card_page-top--"]>div[class*="--container--"]::text').get()
+        if actual == 'Объявление снято с публикации':
+            item.add_value('actual', False)
+        else:
+            item.add_value('actual', True)
+
+        id = re.search("/\d+/", response.url).group(0).replace('/','')
         item.add_value('external_id', id)
 
         item.add_css('date', 'div[class*="--container--"]::text')

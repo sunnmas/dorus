@@ -138,13 +138,13 @@ class ProxyMiddleware(object):
                 ip_changer.get_new_ip()
             try:
                 proxy = str(sys.argv[2])
-                if re.match('tor:', proxy) == False:
+                if re.match('tor:', proxy) == None:
                     raise Exception("There no tor proxy")
                 proxy = proxy.replace('tor:','')
             except:
                 proxy = settings.get('HTTP_PROXY')
 
             request.meta['proxy'] = proxy
-            spider.log('Proxy: %s' % request.meta['proxy'])
+            spider.log('proxy: %s' % request.meta['proxy'])
         else: 
             spider.log('parsing without TOR!!')
