@@ -20,14 +20,14 @@ class IrrSpider(scrapy.Spider):
     #     'LOG_FILE': 'irr.log',
     # }
     start_preurls = [
-        'real-estate/apartments-sale/',     # Продажа квартир и студий
-        'real-estate/rent/',                # Аренда квартир и студий
-        'real-estate/rooms-sale/',          # Продажа комнат
-        'real-estate/rooms-rent/',          # Аренда комнат
-        'real-estate/commercial-sale/',     # Продажа коммерческой недвижимости
-        'real-estate/commercial/',          # Аренда коммерческой недвижимости
-        'real-estate/out-of-town/',         # Дома, коттеджи, участки продажа
-        'real-estate/out-of-town-rent/',    # Дома, коттеджи, участки аренда
+        'real-estate/apartments-sale',     # Продажа квартир и студий
+        'real-estate/rent',                # Аренда квартир и студий
+        'real-estate/rooms-sale',          # Продажа комнат
+        'real-estate/rooms-rent',          # Аренда комнат
+        'real-estate/commercial-sale',     # Продажа коммерческой недвижимости
+        'real-estate/commercial',          # Аренда коммерческой недвижимости
+        'real-estate/out-of-town',         # Дома, коттеджи, участки продажа
+        'real-estate/out-of-town-rent',    # Дома, коттеджи, участки аренда
     ]
 
 
@@ -97,7 +97,7 @@ class IrrSpider(scrapy.Spider):
         'novorossiysk',
         'yoshkarola'
     ]
-
+    start_urls = []
     for subdomain in subdomains:
         for base_url in start_preurls:
             start_urls.append('https://'+subdomain+'.irr.ru/'+base_url+'/')
@@ -175,8 +175,8 @@ class IrrSpider(scrapy.Spider):
         print("details: "+result)
         return result
 
-    def parse_dummy(self, response):
-    # def parse(self, response):
+    # def parse_dummy(self, response):
+    def parse(self, response):
         # Определяем список ссылок со страницы
         links = response.css('.listing .listing__item .listing__itemTitleWrapper a::attr(href)').getall()
         links = list(set(links))
@@ -196,8 +196,8 @@ class IrrSpider(scrapy.Spider):
         yield response.follow(nextPage, self.parse)
 
 
-    # def parse_item(self, response):
-    def parse(self, response):
+    def parse_item(self, response):
+    # def parse(self, response):
         print('----------------------------------------------------------------')
         print(response.url)
         item = ItemLoader(item=Ad(), response=response)
