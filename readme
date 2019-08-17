@@ -35,4 +35,4 @@ listen-address  127.0.0.1:8118
 
 =============================================
 поиграться со страницей:
-scrapy shell https://sevastopol.cian.ru/sale/flat/212247070/
+scrapy shell https://sevastopol.cian.ru/sale/flat/212247070/ tor:127.0.0.1:8118 mysql:62.33.3.10

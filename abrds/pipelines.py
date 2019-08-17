@@ -14,10 +14,17 @@ import re
 class MysqlStore(object):
     def __init__(self):
         print("PIPELINE INIT")
+
         try:
             self.mysql_host = str(sys.argv[1])
             if re.match('mysql:', self.mysql_host) == None:
-                raise Exception("There no mysql host")
+                self.mysql_host = str(sys.argv[2])
+                if re.match('mysql:', self.mysql_host) == None:
+                    self.mysql_host = str(sys.argv[3])
+                    if re.match('mysql:', self.mysql_host) == None:
+                        self.mysql_host = str(sys.argv[4])
+                        if re.match('mysql:', self.mysql_host) == None:
+                            raise Exception("There no mysql host")
             self.mysql_host = self.mysql_host.replace('mysql:','')
         except:
             self.mysql_host = '172.10.0.6'

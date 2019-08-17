@@ -231,7 +231,7 @@ class IrrSpider(scrapy.Spider):
             print('coords not found')
             item.add_value('lattitude', '0')
             item.add_value('longitude', '0')
-        images = ','.join(response.css('.lineGallery img::attr(data-src)').getall())
+        images = ','.join(response.css('.lineGallery img::attr(data-src)').getall()[:10])
         item.add_value('images', images)
         item.add_value('videos', '')
         try:
