@@ -137,9 +137,15 @@ class ProxyMiddleware(object):
                 self._requests_count = 0 
                 ip_changer.get_new_ip()
             try:
-                proxy = str(sys.argv[2])
+                proxy = str(sys.argv[1])
                 if re.match('tor:', proxy) == None:
-                    raise Exception("There no tor proxy")
+                    proxy = str(sys.argv[2])
+                    if re.match('tor:', proxy) == None:
+                        proxy = str(sys.argv[3])
+                        if re.match('tor:', proxy) == None:
+                            proxy = str(sys.argv[4])
+                            if re.match('tor:', proxy) == None:
+                                raise Exception("There no tor proxy")
                 proxy = proxy.replace('tor:','')
             except:
                 proxy = settings.get('HTTP_PROXY')
