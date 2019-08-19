@@ -191,8 +191,8 @@ class CianSpider(scrapy.Spider):
                 print('coords not found')
                 item.add_value('lattitude', '0')
                 item.add_value('longitude', '0')
-        re.findall('"fullUrl":"https:.+?"',response.text)
-        images = ','.join(re.findall('"fullUrl":"https:\\\\[\w\\\\.\d-]+.jpg',response.text)).replace('"fullUrl":"','').replace('\\u002F','/')
+
+        images = ','.join(re.findall('"fullUrl":"https:\\\\[\w\\\\.\d-]+.jpg',response.text)[:10]).replace('"fullUrl":"','').replace('\\u002F','/')
         item.add_value('images', images)
         item.add_value('videos', '')
         item.add_value('site', '')
