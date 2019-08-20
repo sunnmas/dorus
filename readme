@@ -1,8 +1,14 @@
 тестировалась на python 3.7.1
+ставим пип на питон 3.7
+sudo apt install python3-pip
+python3.7 -m pip install pip
 
-install Microsoft visual c++ 14
 Для яйцевания ставим сетаптулс
-pip install --upgrade setuptools
+	python3.7 -m pip install setuptools
+
+	на винде для установки сетаптулс: install Microsoft visual c++ 14
+	pip install --upgrade setuptools
+
 pip install PyMySQL
 pip install toripchanger
 		
@@ -32,6 +38,7 @@ listen-address  127.0.0.1:8118
 
 засовываем проект в яйцо:
 	python setup.py bdist_egg
+	python3.7 setup.py bdist_egg
 
 =============================================
 поиграться со страницей:
