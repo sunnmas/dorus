@@ -257,6 +257,7 @@ class IrrSpider(scrapy.Spider):
         else:
             item.add_value('author', 'Unknown')
             item.add_value('phone', 'None')
+        item.add_value('company', False)
         url = response.url
         draft_category = re.search("irr.ru/.*?/.*?/", url).group(0)[0:-1].replace('irr.ru/','').replace('/','::')
         details = response.css('.productPage__infoColumnBlockText::text').getall()

@@ -69,6 +69,7 @@ class Ad(scrapy.Item):
     details = scrapy.Field()
     author_external_id = scrapy.Field(input_processor=MapCompose(clean_author_id))
     author = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_double_spaces, strip), output_processor=TakeFirst())
+    company = scrapy.Field()
     phone = scrapy.Field(input_processor=MapCompose(clean_phone))
     original_url = scrapy.Field()
     created_at = scrapy.Field()
