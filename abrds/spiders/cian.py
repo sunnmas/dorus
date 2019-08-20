@@ -203,6 +203,11 @@ class CianSpider(scrapy.Spider):
             item.add_value('author', 'Нет имени')
         else:
             item.add_css('author', 'h2[class*="--title--"]::text')
+        
+        if  response.css('span[class*="--tag-pro--"]::text').get() == 'Pro':
+            item.add_value('company', True)
+        else:
+            item.add_value('company', False)
 
         phone = re.search('\+7\d+',response.text).group(0)
         item.add_value('phone', phone)

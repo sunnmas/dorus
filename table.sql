@@ -14,6 +14,7 @@ CREATE TABLE `items` (
 	`details` TEXT NULL COLLATE 'utf8_bin',
 	`author_external_id` VARCHAR(50) NOT NULL COLLATE 'utf8_bin',
 	`author` VARCHAR(255) NOT NULL COLLATE 'utf8_bin',
+	`company` TINYINT(1) NOT NULL DEFAULT '0',
 	`phone` CHAR(11) NOT NULL COLLATE 'utf8_bin',
 	`original_url` TEXT NOT NULL COLLATE 'utf8_bin',
 	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
