@@ -104,7 +104,7 @@ class IrrSpider(scrapy.Spider):
         for base_url in start_preurls:
             start_urls.append('https://'+subdomain+'.irr.ru/'+base_url+'/')
     for base_url in start_preurls:
-        start_urls.append('https://.irr.ru/'+base_url+'moskovskaya-obl/')
+        start_urls.append('https://irr.ru/'+base_url+'moskovskaya-obl/')
         start_urls.append('https://saint-petersburg.irr.ru/'+base_url+'leningradskaya-obl/')
 
     # start_urls = ['https://perm.irr.ru/real-estate/commercial-sale/offices/ofis-152-6-kv-m-zhiloy-dom-otdel-nyy-vhod-semchenko-advert520921405.html']
@@ -193,10 +193,10 @@ class IrrSpider(scrapy.Spider):
         # ссылки на следующие страницы
         try:
             cur_page_id = int(re.search('/page\d+', response.url).group(0).replace('/page',''))
-            nextPage = response.url.replace('page'+str(cur_page_id),'')+'page'+str(cur_page_id + 1)
+            nextPage = response.url.replace('page'+str(cur_page_id)+'/','')+'page'+str(cur_page_id + 1)+'/'
         except BaseException:
-            next_page_id = 2
-            nextPage = response.url+'page2'
+            nextPage = response.url+'page2/'
+        print("next page is: "+nextPage)
         yield response.follow(nextPage, self.parse)
 
 
