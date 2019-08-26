@@ -20,14 +20,16 @@ class IrrSpider(scrapy.Spider):
     #     'LOG_FILE': 'irr.log',
     # }
     start_preurls = [
-        'real-estate/apartments-sale',     # Продажа квартир и студий
-        'real-estate/rent',                # Аренда квартир и студий
-        'real-estate/rooms-sale',          # Продажа комнат
-        'real-estate/rooms-rent',          # Аренда комнат
-        'real-estate/commercial-sale',     # Продажа коммерческой недвижимости
-        'real-estate/commercial',          # Аренда коммерческой недвижимости
-        'real-estate/out-of-town',         # Дома, коттеджи, участки продажа
-        'real-estate/out-of-town-rent',    # Дома, коттеджи, участки аренда
+        # 'real-estate/apartments-sale',     # Продажа квартир и студий
+        # 'real-estate/rent',                # Аренда квартир и студий
+        # 'real-estate/rooms-sale',          # Продажа комнат
+        # 'real-estate/rooms-rent',          # Аренда комнат
+        # 'real-estate/commercial-sale',     # Продажа коммерческой недвижимости
+        # 'real-estate/commercial',          # Аренда коммерческой недвижимости
+        # 'real-estate/out-of-town',         # Дома, коттеджи, участки продажа
+        # 'real-estate/out-of-town-rent',    # Дома, коттеджи, участки аренда
+        'real-estate/garage/',             # Продажа гаражей и машиномест
+        'real-estate/garage-rent/'         # Аренда гаражей и машиномест   
     ]
 
 
@@ -153,6 +155,8 @@ class IrrSpider(scrapy.Spider):
         offer = offer.replace('commercial', 'Сдам в аренду')
         offer = offer.replace('out-of-town-rent', 'Сдам')
         offer = offer.replace('out-of-town', 'Продам')
+        offer = offer.replace('garage-rent', 'Сдам')
+        offer = offer.replace('garage', 'Продам')
         offer = offer.replace('rent', 'Сдам')
         result.append('"Тип предложения": "'+offer+'"')
         if (category == 'real-estate::apartments-sale') or (category == "real-estate::rent"):
@@ -280,6 +284,8 @@ class IrrSpider(scrapy.Spider):
             else:
                 category = category.replace('real-estate::out-of-town', 'Дома, дачи, коттеджи')
         category = category.replace('real-estate::out-of-town', 'Дома, дачи, коттеджи')
+        category = category.replace('real-estate::garage-rent', 'Гаражи и машиноместа')
+        category = category.replace('real-estate::garage', 'Гаражи и машиноместа')
         item.add_value('category', category)
 
         item.add_value('original_url', url)
