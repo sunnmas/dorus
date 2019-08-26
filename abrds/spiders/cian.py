@@ -204,7 +204,7 @@ class CianSpider(scrapy.Spider):
         else:
             item.add_css('author', 'h2[class*="--title--"]::text')
         
-        if  response.css('span[class*="--tag-pro--"]::text').get() == 'Pro':
+        if response.css('span[class*="--tag-pro--"]::text').get() == 'Pro':
             item.add_value('company', True)
         else:
             item.add_value('company', False)
