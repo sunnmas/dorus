@@ -28,6 +28,8 @@ class IrrSpider(scrapy.Spider):
         'real-estate/commercial',          # Аренда коммерческой недвижимости
         'real-estate/out-of-town',         # Дома, коттеджи, участки продажа
         'real-estate/out-of-town-rent',    # Дома, коттеджи, участки аренда
+        'real-estate/garage/',             # Продажа гаражей и машиномест
+        'real-estate/garage-rent/'         # Аренда гаражей и машиномест   
     ]
 
 
@@ -280,6 +282,8 @@ class IrrSpider(scrapy.Spider):
             else:
                 category = category.replace('real-estate::out-of-town', 'Дома, дачи, коттеджи')
         category = category.replace('real-estate::out-of-town', 'Дома, дачи, коттеджи')
+        category = category.replace('real-estate::garage', 'Гаражи и машиноместа')
+        category = category.replace('real-estate::garage-rent', 'Гаражи и машиноместа')
         item.add_value('category', category)
 
         item.add_value('original_url', url)
