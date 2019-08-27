@@ -62,6 +62,7 @@ class MysqlStore(object):
                         item['details'],
                         item['author_external_id'],
                         item['author'],
+                        item['company'],
                         item['phone'],
                         item['original_url'],
                         item['actual']
@@ -109,9 +110,9 @@ class MysqlStore(object):
                             title, description, price, address,
                             coordinates, category,
                             images, videos, site, details,
-                            author_external_id, author,
+                            author_external_id, author, company,
                             phone, original_url, actual)  
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, POINT(%s,%s), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, POINT(%s,%s), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
                 print(sql)
                 cursor.execute(sql, params)
                 print('inserted')

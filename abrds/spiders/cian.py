@@ -130,7 +130,7 @@ class CianSpider(scrapy.Spider):
     # sitemap_urls = ['https://www.cian.ru/sitemap.xml']
     # sitemap_follow = True
 
-    # start_urls = ['https://sevastopol.cian.ru/sale/flat/212247070/']
+    # start_urls = ['https://spb.cian.ru/rent/suburban/208278339/']
         
 
     def parse(self, response):
@@ -168,11 +168,20 @@ class CianSpider(scrapy.Spider):
         id = re.search("/\d+/", response.url).group(0).replace('/','')
         item.add_value('external_id', id)
 
-        item.add_css('date', 'div[class*="--container--"]::text')
+
+        date = response.css('div[class*="--container--"]::text').get()
+        date = date.replace('янв,', 'Jan').replace('фев,', 'Feb').replace('мар,', 'Mar')
+        date = date.replace('апр,', 'Apr').replace('мая,', 'May').replace('июня,', 'Jun')
+        date = date.replace('июля,', 'Jul').replace('авг,', 'Aug').replace('сент,', 'Sep')
+        date = date.replace('окт,', 'Oct').replace('нояб,', 'Nov').replace('дек,', 'Dec')
+        date = str(datetime.datetime.now().year)+'-'+datetime.datetime.strptime(date, '%d %b %H:%M').strftime('%m-%d')
+        item.add_value('date', date)
+        # item.add_css('date', 'div[class*="--container--"]::text')
         item.add_css('title', 'h1::text')
         description = "\x0d".join(response.css('p[class*="--description-text--"]::text').getall())
         item.add_value('description', description)
         item.add_css('price', 'span[class*="--price_value--"] span::text')
+        item.add_css('price_unit', 'span[class*="--price_value--"] span::text')
         address = ', '.join(response.css('address[class*="--address--"] a::text').getall())
         item.add_value('address', address)
         
@@ -313,6 +322,14 @@ class CianSpider(scrapy.Spider):
         offer = offer.replace('freeAppointmentObjectRent', 'Сдам')
 
         result.append('"Тип предложения": "'+offer+'"')
+
+        title = response.css('h1::text').get()
+        if re.match('1-комн. ', title) != None:
+            result.append('"Количество комнат": "1"')
+        elif re.match('2-комн. ', title) != None:
+            result.append('"Количество комнат": "2"')
+        elif re.match('3-комн. ', title) != None:
+            result.append('"Количество комнат": "3"')
 
         result = '{'+', '.join(result)+'}'
         result = result.replace(' м²"', '"')

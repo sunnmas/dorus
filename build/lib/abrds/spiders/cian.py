@@ -204,7 +204,7 @@ class CianSpider(scrapy.Spider):
         else:
             item.add_css('author', 'h2[class*="--title--"]::text')
         
-        if  response.css('span[class*="--tag-pro--"]::text').get() == 'Pro':
+        if response.css('span[class*="--tag-pro--"]::text').get() == 'Pro':
             item.add_value('company', True)
         else:
             item.add_value('company', False)
@@ -313,6 +313,14 @@ class CianSpider(scrapy.Spider):
         offer = offer.replace('freeAppointmentObjectRent', 'Сдам')
 
         result.append('"Тип предложения": "'+offer+'"')
+
+        title = response.css('h1::text').get()
+        if re.match('1-комн. ', title) != None:
+            result.append('"Количество комнат": "1"')
+        elif re.match('2-комн. ', title) != None:
+            result.append('"Количество комнат": "2"')
+        elif re.match('3-комн. ', title) != None:
+            result.append('"Количество комнат": "3"')
 
         result = '{'+', '.join(result)+'}'
         result = result.replace(' м²"', '"')

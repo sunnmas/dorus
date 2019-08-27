@@ -52,6 +52,7 @@ class MysqlStore(object):
                         item['title'],
                         item['description'],
                         item['price'],
+                        item['price_unit'],
                         item['address'],
                         item['lattitude'],
                         item['longitude'],
@@ -72,6 +73,7 @@ class MysqlStore(object):
                         item['title'],
                         item['description'],
                         item['price'],
+                        item['price_unit'],
                         item['address'],
                         item['lattitude'],
                         item['longitude'],
@@ -95,7 +97,7 @@ class MysqlStore(object):
             if result:
                 print('update existing record..')
                 if item['actual'] == True:
-                    sql = "UPDATE items SET date=%s, title=%s, description=%s, price=%s, address=%s, coordinates=POINT(%s,%s), images=%s, videos=%s, site=%s, details=%s, phone=%s, processed=0, updated_at=NOW() WHERE provider=%s AND external_id=%s"
+                    sql = "UPDATE items SET date=%s, title=%s, description=%s, price=%s, price_unit=%s, address=%s, coordinates=POINT(%s,%s), images=%s, videos=%s, site=%s, details=%s, phone=%s, processed=0, updated_at=NOW() WHERE provider=%s AND external_id=%s"
                     print(sql)
                     result = cursor.execute(sql, editable_params+select_condition)
                 else:
@@ -107,12 +109,12 @@ class MysqlStore(object):
                 print('insert new record..')
                 sql = """INSERT INTO items (
                             provider, external_id, date,
-                            title, description, price, address,
+                            title, description, price, price_unit, address,
                             coordinates, category,
                             images, videos, site, details,
                             author_external_id, author, company,
                             phone, original_url, actual)  
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, POINT(%s,%s), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, POINT(%s,%s), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
                 print(sql)
                 cursor.execute(sql, params)
                 print('inserted')

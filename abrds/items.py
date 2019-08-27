@@ -32,9 +32,15 @@ def clean_address(value):
         return value
 def clean_price(value):
     try:
-        return value.replace("\xa0", '').replace('₽','')
+        return value.replace("\xa0", '').replace('₽','').replace('/мес.','')
     except BaseException:
         return value
+
+def detect_price_unit(value):
+    if re.search('/мес.', value) != None:
+        return '₽ в месяц'
+    else:
+        return '₽'
 
 def clean_author_id(value):
     return value.replace('ID ','')
@@ -59,6 +65,7 @@ class Ad(scrapy.Item):
     title = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_double_spaces, strip))
     description = scrapy.Field(input_processor=MapCompose(concat, remove_double_spaces), output_processor=TakeFirst())
     price = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_spaces, strip, clean_price))
+    price_unit = scrapy.Field(input_processor=MapCompose(detect_price_unit))
     address = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_double_spaces, strip, clean_address), output_processor=Join(', '))
     lattitude = scrapy.Field()
     longitude = scrapy.Field()

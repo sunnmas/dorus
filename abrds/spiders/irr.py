@@ -28,8 +28,8 @@ class IrrSpider(scrapy.Spider):
         # 'real-estate/commercial',          # Аренда коммерческой недвижимости
         # 'real-estate/out-of-town',         # Дома, коттеджи, участки продажа
         # 'real-estate/out-of-town-rent',    # Дома, коттеджи, участки аренда
-        'real-estate/garage/',             # Продажа гаражей и машиномест
-        'real-estate/garage-rent/'         # Аренда гаражей и машиномест   
+        'real-estate/garage',                # Продажа гаражей и машиномест
+        'real-estate/garage-rent'            # Аренда гаражей и машиномест   
     ]
 
 
@@ -223,6 +223,7 @@ class IrrSpider(scrapy.Spider):
         item.add_value('title', title)
         item.add_value('description', adv['text'])
         item.add_css('price', '.productPage__price::attr(content)')
+        item.add_css('price_unit', '.productPage__price::attr(content)')
         item.add_css('address', '.js-scrollToMap::text')
         item.add_css('address', '.productPage__metro::text')
         
