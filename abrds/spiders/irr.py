@@ -166,9 +166,9 @@ class IrrSpider(scrapy.Spider):
                 result.append('"Студия": "0"')
 
             if re.search('/secondary/', url) != None:
-                result.append('"Вторичное жилье": "1"')
+                result.append('"Тип жилья": "Вторичное жилье"')
             else:
-                result.append('"Вторичное жилье": "0"')
+                result.append('"Тип жилья": "Новостройка"')
 
         result = '{'+', '.join(result)+'}'
         result = result.replace(' м"', '"')
@@ -179,8 +179,8 @@ class IrrSpider(scrapy.Spider):
         print("details: "+result)
         return result
 
-    # def parse_dummy(self, response):
-    def parse(self, response):
+    def parse_dummy(self, response):
+    # def parse(self, response):
         # Определяем список ссылок со страницы
         links = response.css('.listing .listing__item .listing__itemTitleWrapper a::attr(href)').getall()
         links = list(set(links))
@@ -200,8 +200,8 @@ class IrrSpider(scrapy.Spider):
         yield response.follow(nextPage, self.parse)
 
 
-    def parse_item(self, response):
-    # def parse(self, response):
+    # def parse_item(self, response):
+    def parse(self, response):
         print('----------------------------------------------------------------')
         print(response.url)
         item = ItemLoader(item=Ad(), response=response)
