@@ -20,16 +20,16 @@ class IrrSpider(scrapy.Spider):
     #     'LOG_FILE': 'irr.log',
     # }
     start_preurls = [
-        # 'real-estate/apartments-sale',     # Продажа квартир и студий
-        # 'real-estate/rent',                # Аренда квартир и студий
-        # 'real-estate/rooms-sale',          # Продажа комнат
-        # 'real-estate/rooms-rent',          # Аренда комнат
+        'real-estate/apartments-sale',     # Продажа квартир и студий
+        'real-estate/rent',                # Аренда квартир и студий
+        'real-estate/rooms-sale',          # Продажа комнат
+        'real-estate/rooms-rent',          # Аренда комнат
         # 'real-estate/commercial-sale',     # Продажа коммерческой недвижимости
         # 'real-estate/commercial',          # Аренда коммерческой недвижимости
         # 'real-estate/out-of-town',         # Дома, коттеджи, участки продажа
         # 'real-estate/out-of-town-rent',    # Дома, коттеджи, участки аренда
-        'real-estate/garage',                # Продажа гаражей и машиномест
-        'real-estate/garage-rent'            # Аренда гаражей и машиномест   
+        # 'real-estate/garage',                # Продажа гаражей и машиномест
+        # 'real-estate/garage-rent'            # Аренда гаражей и машиномест   
     ]
 
 
@@ -107,7 +107,7 @@ class IrrSpider(scrapy.Spider):
         start_urls.append('https://irr.ru/'+base_url+'moskovskaya-obl/')
         start_urls.append('https://saint-petersburg.irr.ru/'+base_url+'leningradskaya-obl/')
 
-    # start_urls = ['https://perm.irr.ru/real-estate/commercial-sale/offices/ofis-152-6-kv-m-zhiloy-dom-otdel-nyy-vhod-semchenko-advert520921405.html']
+    start_urls = ['https://irr.ru/real-estate/apartments-sale/secondary/prodam-2-k-kvartiru-moskva-g-rublevskoe-shosse-advert718368835.html']
 
     allowed_domains = [
         'irr.ru'
