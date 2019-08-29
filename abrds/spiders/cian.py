@@ -269,8 +269,6 @@ class CianSpider(scrapy.Spider):
                 [u'Тип дома', u'Тип здания'],
                 [u'Этажей в доме', u'Этажей'],
                 [u'Этажей в доме', u'Этажей'],
-                [u'"Новостройка": "1"', u'"Вторичное жилье": "0"'],
-                [u'"Новостройка": "0"', u'"Вторичное жилье": "1"'],
             ]
         result = []
         general_details_titles = response.css('div[class*="--info-title--"]::text').getall()
@@ -291,7 +289,9 @@ class CianSpider(scrapy.Spider):
             result.append('"'+val+'": "'+additional_details_values[id].replace(',', '.')+'"')
 
         if offer == 'newBuildingFlatSale':
-            result.append('"Новостройка": "1"')
+            result.append('"Тип жилья": "Новостройка"')
+        else:
+            result.append('"Тип жилья": "Вторичное жилье"')
         if offer == 'warehouseSale' or offer == 'warehouseRent':
             result.append('"Тип объекта": "Складское помещение"')
         if offer == 'officeRent' or offer == 'officeRent':
