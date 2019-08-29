@@ -130,7 +130,7 @@ class CianSpider(scrapy.Spider):
     # sitemap_urls = ['https://www.cian.ru/sitemap.xml']
     # sitemap_follow = True
 
-    # start_urls = ['https://spb.cian.ru/rent/suburban/208278339/']
+    # start_urls = ['https://kaluga.cian.ru/sale/flat/215250718/']
         
 
     def parse(self, response):
@@ -170,13 +170,15 @@ class CianSpider(scrapy.Spider):
 
 
         date = response.css('div[class*="--container--"]::text').get()
-        date = date.replace('янв,', 'Jan').replace('фев,', 'Feb').replace('мар,', 'Mar')
-        date = date.replace('апр,', 'Apr').replace('мая,', 'May').replace('июня,', 'Jun')
-        date = date.replace('июля,', 'Jul').replace('авг,', 'Aug').replace('сент,', 'Sep')
-        date = date.replace('окт,', 'Oct').replace('нояб,', 'Nov').replace('дек,', 'Dec')
-        date = str(datetime.datetime.now().year)+'-'+datetime.datetime.strptime(date, '%d %b %H:%M').strftime('%m-%d')
-        item.add_value('date', date)
-        # item.add_css('date', 'div[class*="--container--"]::text')
+        try:
+            date = date.replace('янв,', 'Jan').replace('фев,', 'Feb').replace('мар,', 'Mar')
+            date = date.replace('апр,', 'Apr').replace('мая,', 'May').replace('июня,', 'Jun')
+            date = date.replace('июля,', 'Jul').replace('авг,', 'Aug').replace('сент,', 'Sep')
+            date = date.replace('окт,', 'Oct').replace('нояб,', 'Nov').replace('дек,', 'Dec')
+            date = str(datetime.datetime.now().year)+'-'+datetime.datetime.strptime(date, '%d %b %H:%M').strftime('%m-%d')
+            item.add_value('date', date)
+        except BaseException:
+            item.add_css('date', 'div[class*="--container--"]::text')
         item.add_css('title', 'h1::text')
         description = "\x0d".join(response.css('p[class*="--description-text--"]::text').getall())
         item.add_value('description', description)
