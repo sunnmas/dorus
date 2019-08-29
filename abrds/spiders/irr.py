@@ -113,72 +113,6 @@ class IrrSpider(scrapy.Spider):
         'irr.ru'
     ]
 
-    def parse_details(self, details, category, title, url):
-        arr = [u'Этаж', u'Всего комнат', u'Комнат в квартире', u'Площадь кухни',
-            u'Год постройки', u'Общая площадь', u'Жилая площадь', u'Высота потолков', u'До метро',
-           u'Лифты в здании', u'Материал стен', u'Санузел', u'Приватизированная квартира', 
-           u'Площадь арендуемой комнаты', u'Можно с животными', u'Комиссия', u'Период аренды',
-           u'Комнат сдается', u'Доля', u'Тип здания',
-           u'Площадь участка', u'Категория земли', u'Вид разрешенного использования',
-           u'Отапливаемый', u'Мебель', u'Бытовая техника', u'Интернет',
-           u'Количество этажей', u'Количество комнат', u'Количество спален',
-           u'Гараж', u'Охрана']
-        subs = [
-                [u' м,', u','], [u' г.', u''],
-                [u' мин/пеш', u''], [u' км', u''],
-                [u'Этажей в здании', u'Этажей'],
-                [u'Комнат в квартире', u'Количество комнат'],
-                [u'Год постройки', u'Год постройки'],
-                [u'До метро, минут(пешком)', u'До метро пешком'],
-                [u'Материал стен', u'Тип здания'],
-                [u'Приватизированная квартира', u'Приватизированная квартира": "1'],
-                [u'Можно с животными', u'Можно с животными": "1'],
-                [u'Лифты в здании', u'Лифт": "1'],
-                [u'Отапливаемый', u'Отапливаемый": "1'],
-                [u'Мебель', u'Мебель": "1'],
-                [u'Бытовая техника', u'Бытовая техника": "1'],
-                [u'Интернет', u'Интернет": "1'],
-                [u'Гараж', u'Гараж": "1'],
-                [u'Охрана', u'Охрана": "1']
-            ]
-        result = []
-        print('draft details: '+'='.join(details))
-        for i in details:
-            for j in arr:
-                if not (re.search(j, i) is None):
-                    result.append('"'+i.strip().replace(': ','": "')+'"')
-        offer = re.search("::.+", category).group(0).replace('::','')
-        offer = offer.replace('apartments-sale', 'Продам')
-        offer = offer.replace('rooms-sale', 'Продам')
-        offer = offer.replace('rooms-rent', 'Сдам')
-        offer = offer.replace('commercial-sale', 'Продам')
-        offer = offer.replace('commercial', 'Сдам в аренду')
-        offer = offer.replace('out-of-town-rent', 'Сдам')
-        offer = offer.replace('out-of-town', 'Продам')
-        offer = offer.replace('garage-rent', 'Сдам')
-        offer = offer.replace('garage', 'Продам')
-        offer = offer.replace('rent', 'Сдам')
-        result.append('"Тип предложения": "'+offer+'"')
-        if (category == 'real-estate::apartments-sale') or (category == "real-estate::rent"):
-            if re.search('Студия, ', title) != None:
-                result.append('"Студия": "1"')
-            else:
-                result.append('"Студия": "0"')
-
-            if re.search('/secondary/', url) != None:
-                result.append('"Тип жилья": "Вторичное жилье"')
-            else:
-                result.append('"Тип жилья": "Новостройка"')
-
-        result = '{'+', '.join(result)+'}'
-        result = result.replace(' м"', '"')
-        result = result.replace(' сот"', '"')
-
-        for k in subs:
-            result = result.replace(k[0], k[1])
-        print("details: "+result)
-        return result
-
     def parse_dummy(self, response):
     # def parse(self, response):
         # Определяем список ссылок со страницы
@@ -295,3 +229,73 @@ class IrrSpider(scrapy.Spider):
         item.add_value('processed', False)
         print('======================================================')
         return item.load_item()
+
+    def parse_details(self, details, category, title, url):
+        arr = [u'Этаж', u'Всего комнат', u'Комнат в квартире', u'Площадь кухни',
+            u'Год постройки', u'Общая площадь', u'Жилая площадь', u'Высота потолков', u'До метро',
+           u'Лифты в здании', u'Материал стен', u'Санузел', u'Приватизированная квартира', 
+           u'Площадь арендуемой комнаты', u'Можно с животными', u'Комиссия', u'Период аренды',
+           u'Комнат сдается', u'Доля', u'Тип здания',
+           u'Площадь участка', u'Категория земли', u'Вид разрешенного использования',
+           u'Отапливаемый', u'Мебель', u'Бытовая техника', u'Интернет',
+           u'Количество этажей', u'Количество комнат', u'Количество спален',
+           u'Гараж', u'Охрана']
+        subs = [
+                [u' м,', u','], [u' г.', u''],
+                [u' мин/пеш', u''], [u' км', u''],
+                [u'Этажей в здании', u'Этажей'],
+                [u'Комнат в квартире', u'Количество комнат'],
+                [u'Год постройки', u'Год постройки'],
+                [u'До метро, минут(пешком)', u'До метро пешком'],
+                [u'Материал стен', u'Тип здания'],
+                [u'Приватизированная квартира', u'Приватизированная квартира": "1'],
+                [u'Можно с животными', u'Можно с животными": "1'],
+                [u'Лифты в здании', u'Лифт": "1'],
+                [u'Отапливаемый', u'Отапливаемый": "1'],
+                [u'Мебель', u'Мебель": "1'],
+                [u'Бытовая техника', u'Бытовая техника": "1'],
+                [u'Интернет', u'Интернет": "1'],
+                [u'Гараж', u'Гараж": "1'],
+                [u'Охрана', u'Охрана": "1']
+            ]
+        result = []
+        print('draft details: '+'='.join(details))
+        for i in details:
+            for j in arr:
+                if not (re.search(j, i) is None):
+                    result.append('"'+i.strip().replace(': ','": "')+'"')
+        offer = re.search("::.+", category).group(0).replace('::','')
+        offer = offer.replace('apartments-sale', 'Продам')
+        offer = offer.replace('rooms-sale', 'Продам')
+        offer = offer.replace('rooms-rent', 'Сдам')
+        offer = offer.replace('commercial-sale', 'Продам')
+        offer = offer.replace('commercial', 'Сдам в аренду')
+        offer = offer.replace('out-of-town-rent', 'Сдам')
+        offer = offer.replace('out-of-town', 'Продам')
+        offer = offer.replace('garage-rent', 'Сдам')
+        offer = offer.replace('garage', 'Продам')
+        offer = offer.replace('rent', 'Сдам')
+        result.append('"Тип предложения": "'+offer+'"')
+        if (category == 'real-estate::apartments-sale') or (category == "real-estate::rent"):
+            if re.search('Студия, ', title) != None:
+                result.append('"Студия": "1"')
+            else:
+                result.append('"Студия": "0"')
+
+            if re.search('/secondary/', url) != None:
+                result.append('"Тип жилья": "Вторичное жилье"')
+            else:
+                result.append('"Тип жилья": "Новостройка"')
+
+        if (category == 'real-estate::rooms-sale') or (category == "real-estate::rooms-rent"):
+            result.append('"Тип квартиры": "Комната"')
+        if (category == 'real-estate::apartments-sale') or (category == "real-estate::rent"):
+            result.append('"Тип квартиры": "Квартира"')
+        result = '{'+', '.join(result)+'}'
+        result = result.replace(' м"', '"')
+        result = result.replace(' сот"', '"')
+
+        for k in subs:
+            result = result.replace(k[0], k[1])
+        print("details: "+result)
+        return result
