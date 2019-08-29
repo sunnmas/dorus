@@ -130,7 +130,7 @@ class CianSpider(scrapy.Spider):
     # sitemap_urls = ['https://www.cian.ru/sitemap.xml']
     # sitemap_follow = True
 
-    # start_urls = ['https://kaluga.cian.ru/sale/flat/215250718/']
+    # start_urls = ['https://kaluga.cian.ru/sale/flat/211799228/']
         
 
     def parse(self, response):
@@ -287,7 +287,7 @@ class CianSpider(scrapy.Spider):
 
         for id, val in enumerate(additional_details_titles):
             result.append('"'+val+'": "'+additional_details_values[id].replace(',', '.')+'"')
-
+        category = offer
         if offer == 'newBuildingFlatSale':
             result.append('"Тип жилья": "Новостройка"')
         else:
@@ -332,6 +332,11 @@ class CianSpider(scrapy.Spider):
             result.append('"Количество комнат": "2"')
         elif re.match('3-комн. ', title) != None:
             result.append('"Количество комнат": "3"')
+
+        if (category == 'roomSale') or (category == "roomSale"):
+            result.append('"Тип квартиры": "Комната"')
+        if (category == 'flatSale') or (category == "flatSale"):
+            result.append('"Тип квартиры": "Квартира"')
 
         result = '{'+', '.join(result)+'}'
         result = result.replace(' м²"', '"')
