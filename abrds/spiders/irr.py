@@ -107,7 +107,7 @@ class IrrSpider(scrapy.Spider):
         start_urls.append('https://irr.ru/'+base_url+'moskovskaya-obl/')
         start_urls.append('https://saint-petersburg.irr.ru/'+base_url+'leningradskaya-obl/')
 
-    # start_urls = ['https://irr.ru/real-estate/apartments-sale/secondary/prodaetsya-6-k-kvartira-moskva-moskva-savvinskaya-advert709705857.html']
+    start_urls = ['https://saint-petersburg.irr.ru/real-estate/garage/parking/prodam-mashinomesto-stoyanka-zakrytaya-shosse-v-advert715468417.html']
 
     allowed_domains = [
         'irr.ru'
@@ -189,6 +189,7 @@ class IrrSpider(scrapy.Spider):
         if actual == True:
             item.add_css('author', '.productPage__inlineWrapper a::text')
             item.add_css('author', '.productPage__infoTextBold.productPage__infoTextBold_inline::text')
+            item.add_css('author', 'input[name="contactFace"]::attr(value)')
 
             phone = response.css('input[name="phoneBase64"]::attr(value)').get()
             phone = base64.b64decode(phone).decode("utf-8").replace('(','').replace(')','').replace('-','').replace(' ','')[2:]
@@ -231,39 +232,38 @@ class IrrSpider(scrapy.Spider):
         return item.load_item()
 
     def parse_details(self, details, category, title, url):
-        arr = [u'Этаж', u'Всего комнат', u'Комнат в квартире', u'Площадь кухни',
-            u'Год постройки', u'Общая площадь', u'Жилая площадь', u'Высота потолков', u'До метро',
-           u'Лифты в здании', u'Материал стен', u'Санузел', u'Приватизированная квартира', 
-           u'Площадь арендуемой комнаты', u'Можно с животными', u'Комиссия', u'Период аренды',
-           u'Комнат сдается', u'Доля', u'Тип здания',
-           u'Площадь участка', u'Категория земли', u'Вид разрешенного использования',
-           u'Отапливаемый', u'Мебель', u'Бытовая техника', u'Интернет',
-           u'Количество этажей', u'Количество комнат', u'Количество спален',
-           u'Гараж', u'Охрана']
         subs = [
                 [u' м,', u','], [u' г.', u''],
-                [u' мин/пеш', u''], [u' км', u''],
+                [u' сот', u''], [u' м2', u''],
                 [u'Этажей в здании', u'Этажей'],
+                [u'Количество этажей', u'Этажей'],
                 [u'Комнат в квартире', u'Количество комнат'],
-                [u'Год постройки', u'Год постройки'],
+                [u'Год постройки/сдачи', u'Год постройки'],
                 [u'До метро, минут(пешком)', u'До метро пешком'],
-                [u'Материал стен', u'Тип здания'],
+                [u'Материал стен', u'Материал здания'],
+                [u'Площадь строения', u'Общая площадь'],
+                [u'Площадь арендуемой комнаты', u'Жилая площадь'],
+                [u'Удаленность', u'Расстояние до города'],
+                [u'Часть дома', u'Часть дома": "1'],
                 [u'Приватизированная квартира', u'Приватизированная квартира": "1'],
                 [u'Можно с животными', u'Можно с животными": "1'],
                 [u'Лифты в здании', u'Лифт": "1'],
-                [u'Отапливаемый', u'Отапливаемый": "1'],
+                [u'Отапливаемый', u'Отопление": "1'],
                 [u'Мебель', u'Мебель": "1'],
                 [u'Бытовая техника', u'Бытовая техника": "1'],
                 [u'Интернет', u'Интернет": "1'],
                 [u'Гараж', u'Гараж": "1'],
-                [u'Охрана', u'Охрана": "1']
+                [u'Охрана', u'Охрана": "1'],
+                [u'Газ в доме', u'Газ": "1'],
+                [u'Канализация', u'Канализация": "1'],
+                [u'Водопровод', u'Центральное водоснабжение": "1'],
+                [u'Электричество (подведено)', u'Электричество": "1'],
+                [u'Охрана', u'Охрана": "1'],
             ]
         result = []
         print('draft details: '+'='.join(details))
         for i in details:
-            for j in arr:
-                if not (re.search(j, i) is None):
-                    result.append('"'+i.strip().replace(': ','": "')+'"')
+            result.append('"'+i.strip().replace(': ','": "')+'"')
         offer = re.search("::.+", category).group(0).replace('::','')
         offer = offer.replace('apartments-sale', 'Продам')
         offer = offer.replace('rooms-sale', 'Продам')

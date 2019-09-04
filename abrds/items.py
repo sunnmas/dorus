@@ -26,7 +26,7 @@ def strip(value):
 
 def clean_address(value):
     try:
-        shit = re.search("\d+ минут от ", value)[0]
+        shit = re.search("\d+ минут[ы]? от ", value)[0]
         return value.replace(shit, '')
     except BaseException:
         return value
@@ -65,7 +65,7 @@ class Ad(scrapy.Item):
     title = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_double_spaces, strip))
     description = scrapy.Field(input_processor=MapCompose(concat, remove_double_spaces), output_processor=TakeFirst())
     price = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_spaces, strip, clean_price))
-    price_unit = scrapy.Field(input_processor=MapCompose(detect_price_unit))
+    price_unit = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_spaces, strip, detect_price_unit))
     address = scrapy.Field(input_processor=MapCompose(concat, remove_rnt, remove_double_spaces, strip, clean_address), output_processor=Join(', '))
     lattitude = scrapy.Field()
     longitude = scrapy.Field()
