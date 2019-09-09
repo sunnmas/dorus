@@ -1,0 +1,1 @@
+C:\Users\A\Anaconda3\Scripts\activate.bat base && python auto.py mysql:62.33.3.10 tor:http://127.0.0.1:8118 && conda.bat deactivate
