@@ -3,9 +3,9 @@
 sudo apt install python3-pip
 python3.7 -m pip install pip
 
-Для яйцевания ставим сетаптулс
-	python3.7 -m pip install setuptools
-
+Для яйцевания и деплоя ставим setuptools и scrapyd-client 
+	sudo python3.7 -m pip install setuptools
+        sudo python3.7 -m pip install git+https://github.com/scrapy/scrapyd-client
 	на винде для установки сетаптулс: install Microsoft visual c++ 14
 	pip install --upgrade setuptools
 
