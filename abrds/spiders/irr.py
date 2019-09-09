@@ -107,14 +107,14 @@ class IrrSpider(scrapy.Spider):
         start_urls.append('https://irr.ru/'+base_url+'moskovskaya-obl/')
         start_urls.append('https://saint-petersburg.irr.ru/'+base_url+'leningradskaya-obl/')
 
-    start_urls = ['https://saint-petersburg.irr.ru/real-estate/garage/parking/prodam-mashinomesto-stoyanka-zakrytaya-shosse-v-advert715468417.html']
+    # start_urls = ['https://saint-petersburg.irr.ru/real-estate/garage/parking/prodam-mashinomesto-stoyanka-zakrytaya-shosse-v-advert715468417.html']
 
     allowed_domains = [
         'irr.ru'
     ]
 
-    def parse_dummy(self, response):
-    # def parse(self, response):
+    # def parse_dummy(self, response):
+    def parse(self, response):
         # Определяем список ссылок со страницы
         links = response.css('.listing .listing__item .listing__itemTitleWrapper a::attr(href)').getall()
         links = list(set(links))
@@ -134,8 +134,8 @@ class IrrSpider(scrapy.Spider):
         yield response.follow(nextPage, self.parse)
 
 
-    # def parse_item(self, response):
-    def parse(self, response):
+    def parse_item(self, response):
+    # def parse(self, response):
         print('----------------------------------------------------------------')
         print(response.url)
         item = ItemLoader(item=Ad(), response=response)
@@ -244,25 +244,17 @@ class IrrSpider(scrapy.Spider):
                 [u'Площадь строения', u'Общая площадь'],
                 [u'Площадь арендуемой комнаты', u'Жилая площадь'],
                 [u'Удаленность', u'Расстояние до города'],
-                [u'Часть дома', u'Часть дома": "1'],
-                [u'Приватизированная квартира', u'Приватизированная квартира": "1'],
-                [u'Можно с животными', u'Можно с животными": "1'],
-                [u'Лифты в здании', u'Лифт": "1'],
-                [u'Отапливаемый', u'Отопление": "1'],
-                [u'Мебель', u'Мебель": "1'],
-                [u'Бытовая техника', u'Бытовая техника": "1'],
-                [u'Интернет', u'Интернет": "1'],
-                [u'Гараж', u'Гараж": "1'],
-                [u'Охрана', u'Охрана": "1'],
-                [u'Газ в доме', u'Газ": "1'],
-                [u'Канализация', u'Канализация": "1'],
-                [u'Водопровод', u'Центральное водоснабжение": "1'],
-                [u'Электричество (подведено)', u'Электричество": "1'],
-                [u'Охрана', u'Охрана": "1'],
+                [u'Лифты в здании', u'Лифт: 1'],
+                [u'Отапливаемый', u'Отопление: 1'],
+                [u'Газ в доме', u'Газ: 1'],
+                [u'Водопровод', u'Центральное водоснабжение: 1'],
+                [u'Электричество (подведено)', u'Электричество: 1']
             ]
         result = []
         print('draft details: '+'='.join(details))
         for i in details:
+            if re.search(': ', i) == None:
+                i = i + ': 1'
             result.append('"'+i.strip().replace(': ','": "')+'"')
         offer = re.search("::.+", category).group(0).replace('::','')
         offer = offer.replace('apartments-sale', 'Продам')
