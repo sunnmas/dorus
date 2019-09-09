@@ -29,7 +29,9 @@ class IrrSpider(scrapy.Spider):
         'real-estate/out-of-town',         # Дома, коттеджи, участки продажа
         'real-estate/out-of-town-rent',    # Дома, коттеджи, участки аренда
         'real-estate/garage',              # Продажа гаражей и машиномест
-        'real-estate/garage-rent'          # Аренда гаражей и машиномест   
+        'real-estate/garage-rent',         # Аренда гаражей и машиномест
+
+        'cars/passenger/'                  # Легковые автомобили
     ]
 
 
@@ -107,14 +109,14 @@ class IrrSpider(scrapy.Spider):
         start_urls.append('https://irr.ru/'+base_url+'moskovskaya-obl/')
         start_urls.append('https://saint-petersburg.irr.ru/'+base_url+'leningradskaya-obl/')
 
-    # start_urls = ['https://saint-petersburg.irr.ru/real-estate/garage/parking/prodam-mashinomesto-stoyanka-zakrytaya-shosse-v-advert715468417.html']
+    start_urls = ['https://irr.ru/cars/passenger/used/volkswagen-touareg-vnedorozhnik-2014-g-v-probeg-advert719951693.html']
 
     allowed_domains = [
         'irr.ru'
     ]
 
-    # def parse_dummy(self, response):
-    def parse(self, response):
+    def parse_dummy(self, response):
+    # def parse(self, response):
         # Определяем список ссылок со страницы
         links = response.css('.listing .listing__item .listing__itemTitleWrapper a::attr(href)').getall()
         links = list(set(links))
@@ -134,8 +136,8 @@ class IrrSpider(scrapy.Spider):
         yield response.follow(nextPage, self.parse)
 
 
-    def parse_item(self, response):
-    # def parse(self, response):
+    # def parse_item(self, response):
+    def parse(self, response):
         print('----------------------------------------------------------------')
         print(response.url)
         item = ItemLoader(item=Ad(), response=response)
@@ -223,6 +225,7 @@ class IrrSpider(scrapy.Spider):
         category = category.replace('real-estate::out-of-town', 'Дома, дачи, коттеджи')
         category = category.replace('real-estate::garage-rent', 'Гаражи и машиноместа')
         category = category.replace('real-estate::garage', 'Гаражи и машиноместа')
+        category = category.replace('cars::passenger', 'Автомобили')
         item.add_value('category', category)
 
         item.add_value('original_url', url)
@@ -235,6 +238,7 @@ class IrrSpider(scrapy.Spider):
         subs = [
                 [u' м,', u','], [u' г.', u''],
                 [u' сот', u''], [u' м2', u''],
+                [u' км', u''],
                 [u'Этажей в здании', u'Этажей'],
                 [u'Количество этажей', u'Этажей'],
                 [u'Комнат в квартире', u'Количество комнат'],
@@ -248,7 +252,22 @@ class IrrSpider(scrapy.Spider):
                 [u'Отапливаемый', u'Отопление: 1'],
                 [u'Газ в доме', u'Газ: 1'],
                 [u'Водопровод', u'Центральное водоснабжение: 1'],
-                [u'Электричество (подведено)', u'Электричество: 1']
+                [u'Электричество (подведено)', u'Электричество: 1'],
+                #Автомобили
+                [u'Тип кузова', u'Кузов'],
+                [u'Тип трансмиссии', u'Трансмиссия'],
+                [u'Автозапуск', u'Дистанционный запуск'],
+                [u'Салон: кожаный', u'Салон: Кожа'],
+                [u'Кол-во дверей', u'Количество дверей'],
+                [u'Стеклоподъемники: всех окон', u'Электростеклоподъемники передние: 1, Электростеклоподъемники задние: 1'],
+                [u'Зеркала: регулировка и обогрев и складывание', u'Электропривод зеркал:1, Привод складывания зеркал: 1, Электрообогрев зеркал: 1'],
+                [u'Зеркала: обогрев и складывание', u'Привод складывания зеркал: 1, Электрообогрев зеркал: 1'],
+                [u'Зеркала: обогрев', u'Электрообогрев зеркал: 1'],
+                [u'Зеркала: складывание', u'Привод складывания зеркал: 1'],
+                [u'Обогрев стекол: заднего и переднего', u'Электрообогрев лобового стекла: 1'],
+                [u'Обогрев стекол: переднего', u'Электрообогрев лобового стекла: 1'],
+                [u'Обогрев сидений: всех', u'Подогрев водительского сидения: 1, Подогрев пассажирского сидения: 1, Подогрев задних сидений: 1'],
+                [u'Противотуманные фары', u'Противотуманные'],
             ]
         result = []
         print('draft details: '+'='.join(details))
