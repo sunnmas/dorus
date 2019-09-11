@@ -16,90 +16,41 @@ import base64
 
 class IrrSpider(scrapy.Spider):
     name = 'irr'
-    # custom_settings = {
-    #     'LOG_FILE': 'irr.log',
-    # }
     start_preurls = [
-        'real-estate/apartments-sale',     # Продажа квартир и студий
-        'real-estate/rent',                # Аренда квартир и студий
-        'real-estate/rooms-sale',          # Продажа комнат
-        'real-estate/rooms-rent',          # Аренда комнат
-        'real-estate/commercial-sale',     # Продажа коммерческой недвижимости
-        'real-estate/commercial',          # Аренда коммерческой недвижимости
-        'real-estate/out-of-town',         # Дома, коттеджи, участки продажа
-        'real-estate/out-of-town-rent',    # Дома, коттеджи, участки аренда
-        'real-estate/garage',              # Продажа гаражей и машиномест
-        'real-estate/garage-rent',         # Аренда гаражей и машиномест
-
-        'cars/passenger/'                  # Легковые автомобили
+    #Недвижимость
+        'real-estate/apartments-sale',      # Продажа квартир и студий
+        'real-estate/rent',                 # Аренда квартир и студий
+        'real-estate/rooms-sale',           # Продажа комнат
+        'real-estate/rooms-rent',           # Аренда комнат
+        'real-estate/commercial-sale',      # Продажа коммерческой недвижимости
+        'real-estate/commercial',           # Аренда коммерческой недвижимости
+        'real-estate/out-of-town',          # Дома, коттеджи, участки продажа
+        'real-estate/out-of-town-rent',     # Дома, коттеджи, участки аренда
+        'real-estate/garage',               # Продажа гаражей и машиномест
+        'real-estate/garage-rent',          # Аренда гаражей и машиномест
+    #Транспорт
+        'cars/passenger/',                  # Легковые автомобили
+        'cars/misc/'                        # Мототехника
     ]
 
 
     subdomains = [
-        'saint-petersburg',
-        'novosibirsk',
-        'ekaterinburg',
-        'nizhniynovgorod',
-        'kazan',
-        'chelyabinsk',
-        'omsk',
-        'samara',
-        'rostovnadonu',
-        'ufa',
-        'krasnoyarsk',
-        'perm',
-        'voronezh',
-        'volgograd',
-        'krasnodar',
-        'saratov',
-        'tyumen',
-        'tolyatti',
-        'izhevsk',
-        'barnaul',
-        'ulyanovsk',
-        'irkutsk',
-        'yaroslavl',
-        'vladivostok',
-        'mahachkala'
-        'tomsk',
-        'orenburg',
-        'kemerovo',
-        'ryazan',
-        'astrahan',
-        'nabchelny',
-        'penza',
-        'lipetsk',
-        'kirov',
-        'cheboksary',
-        'tula',
-        'kaliningrad',
-        'kursk',
-        'sevastopol',
-        'ulanude',
-        'stavropol',
-        'sochi',
-        'tver',
-        'ivanovo',
-        'bryansk',
-        'belgorod',
-        'surgut',
-        'vladimir',
-        'arhangelsk',
-        'kaluga',
-        'smolensk',
-        'saransk',
-        'kurgan',
-        'orel',
-        'vologda',
-        'yakutsk',
-        'vladikavkaz',
-        'groznyi',
-        'murmansk',
-        'tambov',
-        'petrozavodsk',
-        'kostroma',
-        'novorossiysk',
-        'yoshkarola'
+        'saint-petersburg',     'novosibirsk',      'ekaterinburg',     'nizhniynovgorod',
+        'kazan',                'chelyabinsk',      'omsk',             'samara',
+        'rostovnadonu',         'ufa',              'krasnoyarsk',      'perm',
+        'voronezh',             'volgograd',        'krasnodar',        'saratov',
+        'tyumen',               'tolyatti',         'izhevsk',          'barnaul',
+        'ulyanovsk',            'irkutsk',          'yaroslavl',        'vladivostok',
+        'mahachkala',           'tomsk',            'orenburg',         'kemerovo',
+        'ryazan',               'astrahan',         'nabchelny',        'penza',
+        'lipetsk',              'kirov',            'cheboksary',       'tula',
+        'kaliningrad',          'kursk',            'sevastopol',       'ulanude',
+        'stavropol',            'sochi',            'tver',             'ivanovo',
+        'bryansk',              'belgorod',         'surgut',           'vladimir',
+        'arhangelsk',           'kaluga',           'smolensk',         'saransk',
+        'kurgan',               'orel',             'vologda',          'yakutsk',
+        'vladikavkaz',          'groznyi',          'murmansk',         'tambov',
+        'petrozavodsk',         'kostroma',         'novorossiysk',     'yoshkarola'
     ]
     start_urls = []
     for subdomain in subdomains:
@@ -226,6 +177,7 @@ class IrrSpider(scrapy.Spider):
         category = category.replace('real-estate::garage-rent', 'Гаражи и машиноместа')
         category = category.replace('real-estate::garage', 'Гаражи и машиноместа')
         category = category.replace('cars::passenger', 'Автомобили')
+        category = category.replace('cars::misc', 'Мототехника')
         item.add_value('category', category)
 
         item.add_value('original_url', url)
@@ -238,7 +190,7 @@ class IrrSpider(scrapy.Spider):
         subs = [
                 [u' м,', u','], [u' г.', u''],
                 [u' сот', u''], [u' м2', u''],
-                [u' км', u''],
+                [u' км', u''], [u' л.с.', u''],
                 [u'Этажей в здании', u'Этажей'],
                 [u'Количество этажей', u'Этажей'],
                 [u'Комнат в квартире', u'Количество комнат'],
@@ -248,30 +200,60 @@ class IrrSpider(scrapy.Spider):
                 [u'Площадь строения', u'Общая площадь'],
                 [u'Площадь арендуемой комнаты', u'Жилая площадь'],
                 [u'Удаленность', u'Расстояние до города'],
-                [u'Лифты в здании', u'Лифт: 1'],
-                [u'Отапливаемый', u'Отопление: 1'],
-                [u'Газ в доме', u'Газ: 1'],
-                [u'Водопровод', u'Центральное водоснабжение: 1'],
-                [u'Электричество (подведено)', u'Электричество: 1'],
+                [u'Лифты в здании', u'Лифт'],
+                [u'Отапливаемый', u'Отопление'],
+                [u'Газ в доме', u'Газ'],
+                [u'Водопровод', u'Центральное водоснабжение'],
+                [u'Электричество (подведено)', u'Электричество'],
                 #Автомобили
-                [u'Тип кузова', u'Кузов'],
-                [u'Тип трансмиссии', u'Трансмиссия'],
                 [u'Автозапуск', u'Дистанционный запуск'],
+                [u'Салон: велюровый', u'Салон: Велюр'],
+                [u'Салон: кожаный', u'Салон: Кожа'],
+                [u'Салон: тканевый', u'Салон: Ткань'],
                 [u'Салон: кожаный', u'Салон: Кожа'],
                 [u'Кол-во дверей', u'Количество дверей'],
+                [u'Стеклоподъемники: передних окон', u'Электростеклоподъемники передние: 1'],
                 [u'Стеклоподъемники: всех окон', u'Электростеклоподъемники передние: 1, Электростеклоподъемники задние: 1'],
-                [u'Зеркала: регулировка и обогрев и складывание', u'Электропривод зеркал:1, Привод складывания зеркал: 1, Электрообогрев зеркал: 1'],
-                [u'Зеркала: обогрев и складывание', u'Привод складывания зеркал: 1, Электрообогрев зеркал: 1'],
+                [u'Зеркала: регулировка', u'Электропривод зеркал: 1'],
                 [u'Зеркала: обогрев', u'Электрообогрев зеркал: 1'],
-                [u'Зеркала: складывание', u'Привод складывания зеркал: 1'],
+                [u'Зеркала: регулировка и обогрев', u'Электропривод зеркал: 1, Электрообогрев зеркал: 1'],
+                [u'Зеркала: регулировка и обогрев и складывание', u'Электропривод зеркал: 1, Привод складывания зеркал: 1, Электрообогрев зеркал: 1'],
                 [u'Обогрев стекол: заднего и переднего', u'Электрообогрев лобового стекла: 1'],
-                [u'Обогрев стекол: переднего', u'Электрообогрев лобового стекла: 1'],
                 [u'Обогрев сидений: всех', u'Подогрев водительского сидения: 1, Подогрев пассажирского сидения: 1, Подогрев задних сидений: 1'],
                 [u'Противотуманные фары', u'Противотуманные'],
+                [u'Кол-во владельцев', u'Записей в ПТС'],
+                [u'Кондиционер: климат-контроль', u'Климат: Климат контроль однозонный'],
+                [u'Кондиционер: двухзонный', u'Климат: Климат контроль двухзонный'],
+                [u'Привод: постоянный полный', u'Привод: Полный'],
+                [u'Привод: подключаемый полный', u'Привод: Полный подключаемый'],
+                [u'Тип кузова: хэтчбек', u'Кузов: Хетчбэк'],
+                [u'Тип двигателя: газ', u'Газ'],
+                [u'Тип трансмиссии: автомат', u'Трансмиссия: Автоматическая'],
+                [u'Тип трансмиссии: механика', u'Трансмиссия: Механическая'],
+                [u'Тип трансмиссии: вариатор', u'Трансмиссия: Вариатор'],
+                [u'Тип трансмиссии: робот', u'Трансмиссия: Роботизированная'],
+                [u'Состояние автомобиля: б/у', u'Б/у'],
+                [u'Состояние автомобиля: битый', u'Битый'],
+                [u'Усилитель руля (ГУР): гидроусилитель', u'Усилитель руля: Гидро'],
+                [u'Объем двигателя', u'Объем'],
+                [u'Фары: биксенон', u'Тип фар: Биксеноновые'],
+                [u'Фары: галогеновые', u'Тип фар: Галогенные'],
+                [u'Таможня: растаможен', u'Растаможен'],
+                [u'Таможня: не растаможен', u'Растаможен: 0'],
+                [u'Люк: электро', u'Люк'],
+                [u'Люк: механика', u'Люк'],
+                [u'Спутниковая сигнализация', u'Спутник'],
+                [u'Handsfree', u'Hands free'],
+                [u'Телевизор', u'TV'],
+                [u'ABS', u'Антиблокировочная система'],
+                [u'ESP', u'Курсовая устойчивость'],
+                [u'EBD', u'Распределение тормозных усилий']
             ]
         result = []
         print('draft details: '+'='.join(details))
         for i in details:
+            for k in subs:
+                i = i.replace(k[0], k[1])
             if re.search(': ', i) == None:
                 i = i + ': 1'
             result.append('"'+i.strip().replace(': ','": "')+'"')
@@ -303,10 +285,6 @@ class IrrSpider(scrapy.Spider):
         if (category == 'real-estate::apartments-sale') or (category == "real-estate::rent"):
             result.append('"Тип квартиры": "Квартира"')
         result = '{'+', '.join(result)+'}'
-        result = result.replace(' м"', '"')
-        result = result.replace(' сот"', '"')
 
-        for k in subs:
-            result = result.replace(k[0], k[1])
         print("details: "+result)
         return result
