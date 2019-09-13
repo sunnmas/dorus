@@ -60,7 +60,7 @@ class IrrSpider(scrapy.Spider):
         start_urls.append('https://irr.ru/'+base_url+'moskovskaya-obl/')
         start_urls.append('https://saint-petersburg.irr.ru/'+base_url+'leningradskaya-obl/')
 
-    start_urls = ['https://irr.ru/cars/passenger/used/volkswagen-touareg-vnedorozhnik-2014-g-v-probeg-advert719951693.html']
+    start_urls = ['https://kemerovo.irr.ru/real-estate/apartments-sale/secondary/1-komn-kvartira-stroiteley-b-r-59-2-advert719595154.html']
 
     allowed_domains = [
         'irr.ru'
@@ -143,6 +143,7 @@ class IrrSpider(scrapy.Spider):
             item.add_css('author', '.productPage__inlineWrapper a::text')
             item.add_css('author', '.productPage__infoTextBold.productPage__infoTextBold_inline::text')
             item.add_css('author', 'input[name="contactFace"]::attr(value)')
+            item.add_value('author', 'Нет имени')
 
             phone = response.css('input[name="phoneBase64"]::attr(value)').get()
             phone = base64.b64decode(phone).decode("utf-8").replace('(','').replace(')','').replace('-','').replace(' ','')[2:]
