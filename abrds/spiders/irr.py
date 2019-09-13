@@ -30,7 +30,10 @@ class IrrSpider(scrapy.Spider):
         'real-estate/garage-rent',          # Аренда гаражей и машиномест
     #Транспорт
         'cars/passenger/',                  # Легковые автомобили
-        'cars/misc/'                        # Мототехника
+        'cars/misc/',                       # Мототехника
+        'cars/water/',                      # Водный транспорт
+        'cars/commercial/',                 # Спецтехника
+        'cars/parts/',                      # Запчасти для авто
     ]
 
 
@@ -179,6 +182,9 @@ class IrrSpider(scrapy.Spider):
         category = category.replace('real-estate::garage', 'Гаражи и машиноместа')
         category = category.replace('cars::passenger', 'Автомобили')
         category = category.replace('cars::misc', 'Мототехника')
+        category = category.replace('cars::water', 'Водный транспорт')
+        category = category.replace('cars::commercial', 'Спецтехника')
+        category = category.replace('cars::parts', 'Запчасти для авто')
         item.add_value('category', category)
 
         item.add_value('original_url', url)
