@@ -34,6 +34,13 @@ class IrrSpider(scrapy.Spider):
         'cars/water/',                      # Водный транспорт
         'cars/commercial/',                 # Спецтехника
         'cars/parts/',                      # Запчасти для авто
+    #Хозяйство
+        '/home/building/instruments/',      # Инструменты
+        '/home/building/materials/',        # Материалы
+        '/home/building/plumbing/',         # Сантехника
+        '/home/building/constructions/',    # Готовые конструкции
+        '/home/building/other/',            # Другое
+        '/home/building/elements/',         # Двери, балконы
     ]
 
 
@@ -185,6 +192,19 @@ class IrrSpider(scrapy.Spider):
         category = category.replace('cars::water', 'Водный транспорт')
         category = category.replace('cars::commercial', 'Спецтехника')
         category = category.replace('cars::parts', 'Запчасти для авто')
+        if category == 'home::building':
+            if re.search('instruments', url) != None:
+                category = 'Инструменты'
+            elif re.search('materials', url) != None:
+                category = 'Ремонт и строительство'
+            elif re.search('plumbing', url) != None:
+                category = 'Ремонт и строительство'
+            elif re.search('other', url) != None:
+                category = 'Ремонт и строительство'
+            elif re.search('constructions', url) != None:
+                category = 'Ремонт и строительство'
+            elif re.search('elements', url) != None:
+                category = 'Ремонт и строительство'
         item.add_value('category', category)
 
         item.add_value('original_url', url)
