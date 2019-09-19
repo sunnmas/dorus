@@ -34,6 +34,12 @@ class IrrSpider(scrapy.Spider):
         'cars/water/',                      # Водный транспорт
         'cars/commercial/',                 # Спецтехника
         'cars/parts/',                      # Запчасти для авто
+    #Деловые отношения
+        '/business/services-business/',     # Услуги
+        '/business/business/',              # Готовый бизнес
+        '/business/equipment/',             # Оборудование для бизнеса
+        '/jobs-education/resumes/',         # Резюме
+        '/jobs-education/vacancies/',       # Вакансии
     #Хозяйство
         '/home/building/instruments/',      # Инструменты
         '/home/building/materials/',        # Материалы
@@ -205,6 +211,11 @@ class IrrSpider(scrapy.Spider):
                 category = 'Ремонт и строительство'
             elif re.search('elements', url) != None:
                 category = 'Ремонт и строительство'
+        category = category.replace('business::business', 'Готовый бизнес')
+        category = category.replace('business::services-business', 'Услуги')
+        category = category.replace('business::equipment', 'Оборудование для бизнеса')
+        category = category.replace('jobs-education::resumes', 'Резюме')
+        category = category.replace('jobs-education::vacancies', 'Вакансии')
         item.add_value('category', category)
 
         item.add_value('original_url', url)
