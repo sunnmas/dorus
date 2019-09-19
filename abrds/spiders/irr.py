@@ -42,11 +42,15 @@ class IrrSpider(scrapy.Spider):
         '/jobs-education/vacancies/',       # Вакансии
     #Хозяйство
         '/home/building/instruments/',      # Инструменты
+        '/home/furniture-interior/',        # Мебель и интерьер
         '/home/building/materials/',        # Материалы
         '/home/building/plumbing/',         # Сантехника
         '/home/building/constructions/',    # Готовые конструкции
         '/home/building/other/',            # Другое
         '/home/building/elements/',         # Двери, балконы
+        '/business/food/',                  # Продукты питания
+        '/animals-plants/plants/',          # Растения
+        '/home/garden/',                    # Дача
     ]
 
 
@@ -198,6 +202,12 @@ class IrrSpider(scrapy.Spider):
         category = category.replace('cars::water', 'Водный транспорт')
         category = category.replace('cars::commercial', 'Спецтехника')
         category = category.replace('cars::parts', 'Запчасти для авто')
+
+        category = category.replace('home::garden', 'Сад и огород, дача')
+        if category == 'home/furniture-interior':
+            if re.search('kitchen', url) != None:
+                category = 'Посуда и товары для кухни'
+            category = category.replace('home::furniture-interior', 'Мебель и интерьер')
         if category == 'home::building':
             if re.search('instruments', url) != None:
                 category = 'Инструменты'
@@ -211,6 +221,10 @@ class IrrSpider(scrapy.Spider):
                 category = 'Ремонт и строительство'
             elif re.search('elements', url) != None:
                 category = 'Ремонт и строительство'
+
+        home/furniture-interior/kitchen/
+        category = category.replace('animals-plants::plants', 'Растения')
+        category = category.replace('business::food', 'Продукты питания')
         category = category.replace('business::business', 'Готовый бизнес')
         category = category.replace('business::services-business', 'Услуги')
         category = category.replace('business::equipment', 'Оборудование для бизнеса')
