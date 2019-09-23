@@ -9,13 +9,14 @@
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'abrds'
+BOT_NAME = 'yandex'
 
 SPIDER_MODULES = ['abrds.spiders']
 NEWSPIDER_MODULE = 'abrds.spiders'
 USE_TOR = True
 HTTP_PROXY = '172.10.0.23:8118'
-
+REDIRECT_ENABLED = True
+REDIRECT_MAX_TIMES = 3
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'abrds (+http://www.yourdomain.com)'
 
@@ -41,7 +42,7 @@ ROBOTSTXT_OBEY = False
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = True
-COOKIES_DEBUG = False
+COOKIES_DEBUG = True
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
@@ -64,7 +65,8 @@ DOWNLOADER_MIDDLEWARES = {
     'abrds.middlewares.RandomUserAgentMiddleware': 400,
     'abrds.middlewares.ProxyMiddleware': 410,
     'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
-    'scrapy.contrib.downloadermiddleware.httpcompression.HttpCompressionMiddleware': None
+    'scrapy.contrib.downloadermiddleware.httpcompression.HttpCompressionMiddleware': None,
+    'scrapy.downloadermiddlewares.redirect.RedirectMiddleware': 100
 }
 
 # Enable or disable extensions
@@ -92,6 +94,9 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
 # Enable showing throttling stats for every response received:
 AUTOTHROTTLE_DEBUG = True
 
+CONCURRENT_REQUESTS = 10
+CONCURRENT_REQUESTS_PER_DOMAIN = 1
+DOWNLOAD_TIMEOUT = 3
 # Enable and configure HTTP caching (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
 #HTTPCACHE_ENABLED = True

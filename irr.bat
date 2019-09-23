@@ -1,1 +1,1 @@
-C:\Users\A\Anaconda3\Scripts\activate.bat base && python irr.py mysql:62.33.3.10 tor:http://127.0.0.1:8118 && conda.bat deactivate
+C:\Users\A\Anaconda3\Scripts\activate.bat base && python irr.py mysql:85.95.167.32 tor:http://127.0.0.1:8118 && conda.bat deactivate

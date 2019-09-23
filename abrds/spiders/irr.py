@@ -16,6 +16,10 @@ import base64
 
 class IrrSpider(scrapy.Spider):
     name = 'irr'
+    handle_httpstatus_list = [302]
+    custom_settings = {
+        'COOKIES_ENABLED': False,
+    }
     start_preurls = [
     #Недвижимость
         'real-estate/apartments-sale',      # Продажа квартир и студий
@@ -80,7 +84,7 @@ class IrrSpider(scrapy.Spider):
         start_urls.append('https://irr.ru/'+base_url+'moskovskaya-obl/')
         start_urls.append('https://saint-petersburg.irr.ru/'+base_url+'leningradskaya-obl/')
 
-    # start_urls = ['https://saint-petersburg.irr.ru/business/services-business/building/other/remont-dorog-arenda-spectehniki-advert721013599.html']
+    # start_urls = ['https://krasnoyarsk.irr.ru/real-estate/apartments-sale/secondary/prodam-2-komn-kv-61-1-kv-m-krasnoyarsk-dmitriya-advert721000118.html']
 
     allowed_domains = [
         'irr.ru'
@@ -91,25 +95,28 @@ class IrrSpider(scrapy.Spider):
         # Определяем список ссылок со страницы
         links = response.css('.listing .listing__item .listing__itemTitleWrapper a::attr(href)').getall()
         links = list(set(links))
-        print('LINKS TO ADS FROM PAGE:')
-        print(links)
+        print('############# LINKS FROM PAGE ('+str(response.status)+') '+response.url+':')
         for href in links:
             page = href
-            print("\tPARSING PAGE"+page)
+            print("######################### get: "+page)
             yield response.follow(page, self.parse_item)
         # ссылки на следующие страницы
-        try:
-            cur_page_id = int(re.search('/page\d+', response.url).group(0).replace('/page',''))
-            nextPage = response.url.replace('page'+str(cur_page_id)+'/','')+'page'+str(cur_page_id + 1)+'/'
-        except BaseException:
-            nextPage = response.url+'page2/'
-        print("next page is: "+nextPage)
-        yield response.follow(nextPage, self.parse)
+        if len(links) == 0:
+            print("nothing url was found. exiting")
+            return
+        else:
+            try:
+                cur_page_id = int(re.search('/page\d+', response.url).group(0).replace('/page',''))
+                nextPage = response.url.replace('page'+str(cur_page_id)+'/','')+'page'+str(cur_page_id + 1)+'/'
+            except BaseException:
+                nextPage = response.url+'page2/'
+            print("######################### next page is: "+nextPage)
+            yield response.follow(nextPage, self.parse)
 
 
     def parse_item(self, response):
     # def parse(self, response):
-        print('----------------------------------------------------------------')
+        print('------------------------------'+str(response.status)+'----------------------------------')
         print(response.url)
         item = ItemLoader(item=Ad(), response=response)
 
