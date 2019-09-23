@@ -29,28 +29,28 @@ class IrrSpider(scrapy.Spider):
         'real-estate/garage',               # Продажа гаражей и машиномест
         'real-estate/garage-rent',          # Аренда гаражей и машиномест
     #Транспорт
-        'cars/passenger/',                  # Легковые автомобили
-        'cars/misc/',                       # Мототехника
-        'cars/water/',                      # Водный транспорт
-        'cars/commercial/',                 # Спецтехника
-        'cars/parts/',                      # Запчасти для авто
+        'cars/passenger',                  # Легковые автомобили
+        'cars/misc',                       # Мототехника
+        'cars/water',                      # Водный транспорт
+        'cars/commercial',                 # Спецтехника
+        'cars/parts',                      # Запчасти для авто
     #Деловые отношения
-        '/business/services-business/',     # Услуги
-        '/business/business/',              # Готовый бизнес
-        '/business/equipment/',             # Оборудование для бизнеса
-        '/jobs-education/resumes/',         # Резюме
-        '/jobs-education/vacancies/',       # Вакансии
+        'business/services-business',     # Услуги
+        'business/business',              # Готовый бизнес
+        'business/equipment',             # Оборудование для бизнеса
+        'jobs-education/resumes',         # Резюме
+        'jobs-education/vacancies',       # Вакансии
     #Хозяйство
-        '/home/building/instruments/',      # Инструменты
-        '/home/furniture-interior/',        # Мебель и интерьер
-        '/home/building/materials/',        # Материалы
-        '/home/building/plumbing/',         # Сантехника
-        '/home/building/constructions/',    # Готовые конструкции
-        '/home/building/other/',            # Другое
-        '/home/building/elements/',         # Двери, балконы
-        '/business/food/',                  # Продукты питания
-        '/animals-plants/plants/',          # Растения
-        '/home/garden/',                    # Дача
+        'home/building/instruments',      # Инструменты
+        'home/furniture-interior',        # Мебель и интерьер
+        'home/building/materials',        # Материалы
+        'home/building/plumbing',         # Сантехника
+        'home/building/constructions',    # Готовые конструкции
+        'home/building/other',            # Другое
+        'home/building/elements',         # Двери, балконы
+        'business/food',                  # Продукты питания
+        'animals-plants/plants',          # Растения
+        'home/garden',                    # Дача
     ]
 
 
@@ -80,14 +80,14 @@ class IrrSpider(scrapy.Spider):
         start_urls.append('https://irr.ru/'+base_url+'moskovskaya-obl/')
         start_urls.append('https://saint-petersburg.irr.ru/'+base_url+'leningradskaya-obl/')
 
-    start_urls = ['https://kemerovo.irr.ru/real-estate/apartments-sale/secondary/1-komn-kvartira-stroiteley-b-r-59-2-advert719595154.html']
+    # start_urls = ['https://saint-petersburg.irr.ru/business/services-business/building/other/remont-dorog-arenda-spectehniki-advert721013599.html']
 
     allowed_domains = [
         'irr.ru'
     ]
 
-    def parse_dummy(self, response):
-    # def parse(self, response):
+    # def parse_dummy(self, response):
+    def parse(self, response):
         # Определяем список ссылок со страницы
         links = response.css('.listing .listing__item .listing__itemTitleWrapper a::attr(href)').getall()
         links = list(set(links))
@@ -107,8 +107,8 @@ class IrrSpider(scrapy.Spider):
         yield response.follow(nextPage, self.parse)
 
 
-    # def parse_item(self, response):
-    def parse(self, response):
+    def parse_item(self, response):
+    # def parse(self, response):
         print('----------------------------------------------------------------')
         print(response.url)
         item = ItemLoader(item=Ad(), response=response)
@@ -222,7 +222,6 @@ class IrrSpider(scrapy.Spider):
             elif re.search('elements', url) != None:
                 category = 'Ремонт и строительство'
 
-        home/furniture-interior/kitchen/
         category = category.replace('animals-plants::plants', 'Растения')
         category = category.replace('business::food', 'Продукты питания')
         category = category.replace('business::business', 'Готовый бизнес')
