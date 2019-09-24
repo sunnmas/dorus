@@ -314,7 +314,7 @@ class IrrSpider(scrapy.Spider):
                 i = i.replace(k[0], k[1])
             if re.search(': ', i) == None:
                 i = i + ': 1'
-            result.append('"'+i.strip().replace(': ','": "')+'"')
+            result.append('"'+i.strip().replace(': ','": "', 15)+'"')
         offer = re.search("::.+", category).group(0).replace('::','')
         offer = offer.replace('apartments-sale', 'Продам')
         offer = offer.replace('rooms-sale', 'Продам')
