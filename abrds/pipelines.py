@@ -30,8 +30,17 @@ class MysqlStore(object):
             self.mysql_host = '172.10.0.6'
         print('Mysql host:', self.mysql_host)
 
+        self.rejected_authors = [
+            'Ауди Авилон',          'Звезда Столицы Варшавка',
+            'Ауди Центр Юг',        'Звезда Столицы Каширка',
+            'Ауди Центр Россия',    'Jeep Авилон'
+        ]
 
     def process_item(self, item, spider):
+        if item['author'] in rejected_authors:
+            print('author rejected: '+item['author'])
+            return
+
         try:
             mysql_host = str(sys.argv[1])
         except:
