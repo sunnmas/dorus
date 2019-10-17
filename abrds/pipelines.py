@@ -37,7 +37,7 @@ class MysqlStore(object):
         ]
 
     def process_item(self, item, spider):
-        if item['author'] in rejected_authors:
+        if item['author'] in self.rejected_authors:
             print('author rejected: '+item['author'])
             return
 
@@ -105,8 +105,8 @@ class MysqlStore(object):
             print(result)
             if result:
                 print('update existing record..')
-                if item['actual'] == True:
-                    sql = "UPDATE items SET date=%s, title=%s, description=%s, price=%s, price_unit=%s, address=%s, coordinates=POINT(%s,%s), images=%s, videos=%s, site=%s, details=%s, phone=%s, processed=0, updated_at=NOW() WHERE provider=%s AND external_id=%s"
+                if item['actual'][0] == True:
+                    sql = "UPDATE items SET date=%s, title=%s, description=%s, price=%s, price_unit=%s, address=%s, coordinates=POINT(%s,%s), images=%s, videos=%s, site=%s, details=%s, phone=%s, actual=%s, processed=0, updated_at=NOW() WHERE provider=%s AND external_id=%s"
                     print(sql)
                     result = cursor.execute(sql, editable_params+select_condition)
                 else:
