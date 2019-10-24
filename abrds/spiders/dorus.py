@@ -104,7 +104,7 @@ class DorusSpider(scrapy.Spider):
         else:
             try:
                 cur_page_id = int(re.search('/page\d+', response.url).group(0).replace('/page',''))
-                nextPage = response.url.replace('page'+str(cur_page_id)+'.html','')+'page'+str(cur_page_id + 1)+'/'
+                nextPage = response.url.replace('page'+str(cur_page_id)+'.html','')+'page'+str(cur_page_id + 1)+'.html'
             except BaseException:
                 nextPage = response.url.replace('.html', '')+'page2.html'
             print("######################### next page is: "+nextPage)
