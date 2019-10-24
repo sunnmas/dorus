@@ -107,14 +107,12 @@ class AbrdsDownloaderMiddleware(object):
 import os
 import sys
 import random
-# try:
-#     from scrapy.conf import settings
-# except:
-#     from scrapy.crawler import settings
+import requests
 from scrapy.utils.project import get_project_settings
 from toripchanger import TorIpChanger
 
 # A Tor IP will be reused only after 10 different IPs were used.
+# ip_changer = TorIpChanger(reuse_threshold=100, local_http_proxy='127.0.0.1:8118')
 ip_changer = TorIpChanger(reuse_threshold=10)
 
 
@@ -132,10 +130,6 @@ class ProxyMiddleware(object):
         settings = get_project_settings()
         use_tor = settings.get('USE_TOR')
         if use_tor:
-            self._requests_count += 1
-            if self._requests_count > 111:
-                self._requests_count = 0 
-                ip_changer.get_new_ip()
             try:
                 proxy = str(sys.argv[1])
                 if re.match('tor:', proxy) == None:
@@ -149,8 +143,20 @@ class ProxyMiddleware(object):
                 proxy = proxy.replace('tor:','')
             except:
                 proxy = settings.get('HTTP_PROXY')
-
             request.meta['proxy'] = proxy
+
+            self._requests_count += 1
+            if self._requests_count > 350:
+                self._requests_count = 0
+                print('~    ..:::CHANGE TOR IP:::..    ~')
+                ip_changer.get_new_ip()
+                proxyDict = { 
+                    'http': proxy,
+                    'https': proxy,
+                }
+                ip = requests.get('https://api.ipify.org/', proxies=proxyDict).text
+                print('current IP: '+ip)
+
             spider.log('proxy: %s' % request.meta['proxy'])
         else: 
             spider.log('parsing without TOR!!')

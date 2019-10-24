@@ -37,6 +37,8 @@ class MysqlStore(object):
         ]
 
     def process_item(self, item, spider):
+        item.setdefault('price', '0')
+        item.setdefault('site', '')
         if item['author'] in self.rejected_authors:
             print('author rejected: '+item['author'])
             return
