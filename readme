@@ -3,25 +3,12 @@
 sudo apt install python3-pip
 python3.7 -m pip install pip
 
-Для яйцевания и деплоя ставим setuptools и scrapyd-client 
-	sudo python3.7 -m pip install setuptools
-        sudo python3.7 -m pip install git+https://github.com/scrapy/scrapyd-client
-	на винде для установки сетаптулс: install Microsoft visual c++ 14
-	pip install --upgrade setuptools
-
+pip install Scrapy
 pip install PyMySQL
-pip install toripchanger
-		
-=============================================
-Для работы в скрытом режиме по расписанию:
-
-1.запускаем taskschd.exe
-2.импортируем задание abrds.xml
-
 =============================================
 Для работы через Tor:
 		0. качаем tor expert bundle
-		1. устанавливаем как службу tor.exe --service install
+		1. устанавливаем как службу tor.exe --service install от админа
 			Если не запускается установленная служба говорит "Ошибка 5: Отказано в доступе", то может помочь следующее:
 			Идем в список служб, находим Tor Win32 Service и изменяем вход в систему с системной учетной записью, и на всякий галку: разрешить управлять рабочим столом
 		2.ставим http proxy privoxy
@@ -35,11 +22,21 @@ listen-address  127.0.0.1:8118
 		5. устанавливаем pip install toripchanger
 
 =============================================
+Для яйцевания и деплоя ставим setuptools и scrapyd-client 
+	sudo python3.7 -m pip install setuptools
+        sudo python3.7 -m pip install git+https://github.com/scrapy/scrapyd-client
+	на винде для установки сетаптулс: install Microsoft visual c++ 14
+	pip install --upgrade setuptools
 
 засовываем проект в яйцо:
 	python setup.py bdist_egg
 	python3.7 setup.py bdist_egg
+=============================================
+Для работы в скрытом режиме по расписанию:
 
+1.запускаем taskschd.exe
+2.импортируем задание abrds.xml
 =============================================
 поиграться со страницей:
 scrapy shell https://sevastopol.cian.ru/sale/flat/212247070/ tor:127.0.0.1:8118 mysql:62.33.3.10
+scrapy shell https://check.torproject.org/ tor:127.0.0.1:8118 mysql:62.33.3.10
