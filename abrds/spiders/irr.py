@@ -173,7 +173,7 @@ class IrrSpider(scrapy.Spider):
             item.add_value('author', 'Нет имени')
 
             phone = response.css('input[name="phoneBase64"]::attr(value)').get()
-            phone = base64.b64decode(phone).decode("utf-8").replace('(','').replace(')','').replace('-','').replace(' ','')[2:]
+            phone = base64.b64decode(phone).decode("utf-8").replace('(','').replace(')','').replace('-','').replace(' ','')
             item.add_value('phone', phone)
         else:
             item.add_value('author', 'Unknown')
