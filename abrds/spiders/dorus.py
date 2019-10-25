@@ -1,4 +1,6 @@
 import scrapy
+import sys
+from scrapy.utils.project import get_project_settings
 import re
 import requests
 import datetime
@@ -9,6 +11,9 @@ import json
 
 class DorusSpider(scrapy.Spider):
     name = 'dorus'
+    allowed_domains = [
+        'dorus.ru'
+    ]
     custom_settings = {
         'COOKIES_ENABLED': False,
         'CONCURRENT_REQUESTS': 1,
@@ -17,6 +22,27 @@ class DorusSpider(scrapy.Spider):
         'AUTOTHROTTLE_START_DELAY': 80,
         'AUTOTHROTTLE_TARGET_CONCURRENCY': 1
     }
+    settings = get_project_settings()
+    if settings.get('USE_TOR'):
+        try:
+            proxy = str(sys.argv[1])
+            if re.match('tor:', proxy) == None:
+                proxy = str(sys.argv[2])
+                if re.match('tor:', proxy) == None:
+                    proxy = str(sys.argv[3])
+                    if re.match('tor:', proxy) == None:
+                        proxy = str(sys.argv[4])
+                        if re.match('tor:', proxy) == None:
+                            raise Exception("There no tor proxy")
+            proxy = proxy.replace('tor:','')
+        except:
+            proxy = settings.get('HTTP_PROXY')
+    proxy = proxy.replace('http://', '')
+
+    proxyDict = { 
+        'http': proxy
+    }
+
     start_urls = [
         'http://russia.dorus.ru/auto/renovation/',
         'http://russia.dorus.ru/auto/buses/',
@@ -63,15 +89,22 @@ class DorusSpider(scrapy.Spider):
         'http://russia.dorus.ru/health/massage/',
         'http://russia.dorus.ru/health/accommodation/',
         'http://russia.dorus.ru/health/traditional/',
+
+        'http://russia.dorus.ru/furniture/kitchens/',
+        'http://russia.dorus.ru/furniture/home/',
+        'http://russia.dorus.ru/furniture/upholstered/',
+        'http://russia.dorus.ru/furniture/office/',
+        'http://russia.dorus.ru/furniture/miscellanea/',
+
+        'http://russia.dorus.ru/education/courses/',
+        'http://russia.dorus.ru/education/universities/',
+        'http://russia.dorus.ru/education/tutoring/',
+
+        'http://russia.dorus.ru/rest/passports/',
+        'http://russia.dorus.ru/rest/sports/',
+        'http://russia.dorus.ru/rest/tour-operators/',
     ]
 
-    allowed_domains = [
-        'dorus.ru'
-    ]
-
-    proxyDict = { 
-        'http': '127.0.0.1:8118'
-    }
     # start_urls = [
     #     'http://www.dorus.ru/auto/renovation/regulirovka-sveta-far_9105541.html',
     #     'http://www.dorus.ru/auto/renovation/remont-radiatorov-ohlazhdeniya-interkulerov_14558985.html',
@@ -87,8 +120,10 @@ class DorusSpider(scrapy.Spider):
     #     'http://www.dorus.ru/auto/cars/gaz-3110_7479495.html',
     # ]
 
-    def parse(self, response):
-    # def parse_dummy(self, response):
+    start_urls = ['http://www.dorus.ru/rest/sports/shahmaty-shkolnye_14103869.html']
+
+    # def parse(self, response):
+    def parse_dummy(self, response):
         links = response.xpath('///div[@class="onepost"]//a/@href').getall()
         links = list(set(links))
         print('############# LINKS FROM PAGE ('+str(response.status)+') '+response.url+':')
@@ -110,8 +145,8 @@ class DorusSpider(scrapy.Spider):
             print("######################### next page is: "+nextPage)
             yield response.follow(nextPage, self.parse)
 
-    def parse_item(self, response):
-    # def parse(self, response):
+    # def parse_item(self, response):
+    def parse(self, response):
         print('------------------------------'+str(response.status)+'----------------------------------')
         print(response.url)
         # print(response.text)
@@ -120,10 +155,13 @@ class DorusSpider(scrapy.Spider):
         item.add_value('external_id', id)
 
         phone = requests.post("http://www.dorus.ru/action.php", data={'act': 'getcontact', 'type': 'phone', 'id': id}, proxies=self.proxyDict)
-        if phone.status == 200:
+        print('$$$$$$$$$$$$$$$$$$'+str(phone.status_code)
+        if phone.status_code == 200:
             item.add_value('phone', phone.text)
         else:
-            raise Exception('Номер телефона не скачан. Код ответа: '+str(phone.status))
+            item.add_value('phone', 'None')
+            print('Телефон не скачан')
+            # raise Exception('Номер телефона не скачан. Код ответа: '+str(phone.status))
 
         item.add_value('author_external_id', phone)
         item.add_css('author', 'div.pauthor::text')
@@ -190,6 +228,20 @@ class DorusSpider(scrapy.Spider):
         category = category.replace('Массаж', 'Услуги')
         category = category.replace('Медицинские услуги', 'Услуги')
         category = category.replace('Услуги народной медицины', 'Услуги')
+
+        category = category.replace('Кухни', 'Мебель и интерьер')
+        category = category.replace('Мебель для дома', 'Мебель и интерьер')
+        category = category.replace('Мягкая мебель', 'Мебель и интерьер')
+        category = category.replace('Офисная мебель', 'Мебель и интерьер')
+        category = category.replace('Прочая мебель', 'Мебель и интерьер')
+
+        category = category.replace('Курсы', 'Услуги')
+        category = category.replace('Образовательные учреждения', 'Услуги')
+        category = category.replace('Репетиторы', 'Услуги')
+
+        category = category.replace('Билеты, паспорта и визы', 'Билеты и путешествия')
+        category = category.replace('Туроператоры', 'Билеты и путешествия')
+        category = category.replace('Спорт товары', 'Спорт и отдых')
 
         item.add_value('category', category)
 
