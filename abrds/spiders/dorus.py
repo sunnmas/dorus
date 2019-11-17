@@ -155,7 +155,7 @@ class DorusSpider(scrapy.Spider):
         item.add_value('external_id', id)
 
         phone = requests.post("http://www.dorus.ru/action.php", data={'act': 'getcontact', 'type': 'phone', 'id': id}, proxies=self.proxyDict)
-        print('$$$$$$$$$$$$$$$$$$'+str(phone.status_code)
+        print('$$$$$$$$$$$$$$$$$$'+str(phone.status_code))
         if phone.status_code == 200:
             item.add_value('phone', phone.text)
         else:

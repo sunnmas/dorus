@@ -84,14 +84,14 @@ class IrrSpider(scrapy.Spider):
         start_urls.append('https://irr.ru/'+base_url+'moskovskaya-obl/')
         start_urls.append('https://saint-petersburg.irr.ru/'+base_url+'leningradskaya-obl/')
 
-    # start_urls = ['https://krasnoyarsk.irr.ru/real-estate/apartments-sale/secondary/prodam-2-komn-kv-61-1-kv-m-krasnoyarsk-dmitriya-advert721000118.html']
+    start_urls = ['https://irr.ru/real-estate/garage/stall/prodam-boks-kirpichnyy-kommunal-naya-vysota-advert722691972.html']
 
     allowed_domains = [
         'irr.ru'
     ]
 
-    # def parse_dummy(self, response):
     def parse(self, response):
+    # def parse_dummy(self, response):
         # Определяем список ссылок со страницы
         links = response.css('.listing .listing__item .listing__itemTitleWrapper a::attr(href)').getall()
         links = list(set(links))
@@ -170,7 +170,7 @@ class IrrSpider(scrapy.Spider):
             item.add_css('author', '.productPage__inlineWrapper a::text')
             item.add_css('author', '.productPage__infoTextBold.productPage__infoTextBold_inline::text')
             item.add_css('author', 'input[name="contactFace"]::attr(value)')
-            item.add_value('author', 'Нет имени')
+            # item.add_value('author', 'Нет имени')
 
             phone = response.css('input[name="phoneBase64"]::attr(value)').get()
             phone = base64.b64decode(phone).decode("utf-8").replace('(','').replace(')','').replace('-','').replace(' ','')

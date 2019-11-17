@@ -16,88 +16,65 @@ import base64
 
 class IrrSpider(scrapy.Spider):
     name = 'irr'
-    # custom_settings = {
-    #     'LOG_FILE': 'irr.log',
-    # }
+    handle_httpstatus_list = [302]
+    custom_settings = {
+        'COOKIES_ENABLED': False,
+    }
     start_preurls = [
-        # 'real-estate/apartments-sale',     # Продажа квартир и студий
-        # 'real-estate/rent',                # Аренда квартир и студий
-        # 'real-estate/rooms-sale',          # Продажа комнат
-        # 'real-estate/rooms-rent',          # Аренда комнат
-        # 'real-estate/commercial-sale',     # Продажа коммерческой недвижимости
-        # 'real-estate/commercial',          # Аренда коммерческой недвижимости
-        # 'real-estate/out-of-town',         # Дома, коттеджи, участки продажа
-        # 'real-estate/out-of-town-rent',    # Дома, коттеджи, участки аренда
-        'real-estate/garage',                # Продажа гаражей и машиномест
-        'real-estate/garage-rent'            # Аренда гаражей и машиномест   
+    #Недвижимость
+        'real-estate/apartments-sale',      # Продажа квартир и студий
+        'real-estate/rent',                 # Аренда квартир и студий
+        'real-estate/rooms-sale',           # Продажа комнат
+        'real-estate/rooms-rent',           # Аренда комнат
+        'real-estate/commercial-sale',      # Продажа коммерческой недвижимости
+        'real-estate/commercial',           # Аренда коммерческой недвижимости
+        'real-estate/out-of-town',          # Дома, коттеджи, участки продажа
+        'real-estate/out-of-town-rent',     # Дома, коттеджи, участки аренда
+        'real-estate/garage',               # Продажа гаражей и машиномест
+        'real-estate/garage-rent',          # Аренда гаражей и машиномест
+    #Транспорт
+        'cars/passenger',                  # Легковые автомобили
+        'cars/misc',                       # Мототехника
+        'cars/water',                      # Водный транспорт
+        'cars/commercial',                 # Спецтехника
+        'cars/parts',                      # Запчасти для авто
+    #Деловые отношения
+        'business/services-business',     # Услуги
+        'business/business',              # Готовый бизнес
+        'business/equipment',             # Оборудование для бизнеса
+        'jobs-education/resumes',         # Резюме
+        'jobs-education/vacancies',       # Вакансии
+    #Хозяйство
+        'home/building/instruments',      # Инструменты
+        'home/furniture-interior',        # Мебель и интерьер
+        'home/building/materials',        # Материалы
+        'home/building/plumbing',         # Сантехника
+        'home/building/constructions',    # Готовые конструкции
+        'home/building/other',            # Другое
+        'home/building/elements',         # Двери, балконы
+        'business/food',                  # Продукты питания
+        'animals-plants/plants',          # Растения
+        'home/garden',                    # Дача
     ]
 
 
     subdomains = [
-        'saint-petersburg',
-        'novosibirsk',
-        'ekaterinburg',
-        'nizhniynovgorod',
-        'kazan',
-        'chelyabinsk',
-        'omsk',
-        'samara',
-        'rostovnadonu',
-        'ufa',
-        'krasnoyarsk',
-        'perm',
-        'voronezh',
-        'volgograd',
-        'krasnodar',
-        'saratov',
-        'tyumen',
-        'tolyatti',
-        'izhevsk',
-        'barnaul',
-        'ulyanovsk',
-        'irkutsk',
-        'yaroslavl',
-        'vladivostok',
-        'mahachkala'
-        'tomsk',
-        'orenburg',
-        'kemerovo',
-        'ryazan',
-        'astrahan',
-        'nabchelny',
-        'penza',
-        'lipetsk',
-        'kirov',
-        'cheboksary',
-        'tula',
-        'kaliningrad',
-        'kursk',
-        'sevastopol',
-        'ulanude',
-        'stavropol',
-        'sochi',
-        'tver',
-        'ivanovo',
-        'bryansk',
-        'belgorod',
-        'surgut',
-        'vladimir',
-        'arhangelsk',
-        'kaluga',
-        'smolensk',
-        'saransk',
-        'kurgan',
-        'orel',
-        'vologda',
-        'yakutsk',
-        'vladikavkaz',
-        'groznyi',
-        'murmansk',
-        'tambov',
-        'petrozavodsk',
-        'kostroma',
-        'novorossiysk',
-        'yoshkarola'
+        'saint-petersburg',     'novosibirsk',      'ekaterinburg',     'nizhniynovgorod',
+        'kazan',                'chelyabinsk',      'omsk',             'samara',
+        'rostovnadonu',         'ufa',              'krasnoyarsk',      'perm',
+        'voronezh',             'volgograd',        'krasnodar',        'saratov',
+        'tyumen',               'tolyatti',         'izhevsk',          'barnaul',
+        'ulyanovsk',            'irkutsk',          'yaroslavl',        'vladivostok',
+        'mahachkala',           'tomsk',            'orenburg',         'kemerovo',
+        'ryazan',               'astrahan',         'nabchelny',        'penza',
+        'lipetsk',              'kirov',            'cheboksary',       'tula',
+        'kaliningrad',          'kursk',            'sevastopol',       'ulanude',
+        'stavropol',            'sochi',            'tver',             'ivanovo',
+        'bryansk',              'belgorod',         'surgut',           'vladimir',
+        'arhangelsk',           'kaluga',           'smolensk',         'saransk',
+        'kurgan',               'orel',             'vologda',          'yakutsk',
+        'vladikavkaz',          'groznyi',          'murmansk',         'tambov',
+        'petrozavodsk',         'kostroma',         'novorossiysk',     'yoshkarola'
     ]
     start_urls = []
     for subdomain in subdomains:
@@ -107,102 +84,39 @@ class IrrSpider(scrapy.Spider):
         start_urls.append('https://irr.ru/'+base_url+'moskovskaya-obl/')
         start_urls.append('https://saint-petersburg.irr.ru/'+base_url+'leningradskaya-obl/')
 
-    # start_urls = ['https://perm.irr.ru/real-estate/commercial-sale/offices/ofis-152-6-kv-m-zhiloy-dom-otdel-nyy-vhod-semchenko-advert520921405.html']
+    # start_urls = ['https://irr.ru/real-estate/garage/stall/prodam-boks-kirpichnyy-kommunal-naya-vysota-advert722691972.html']
 
     allowed_domains = [
         'irr.ru'
     ]
 
-    def parse_details(self, details, category, title, url):
-        arr = [u'Этаж', u'Всего комнат', u'Комнат в квартире', u'Площадь кухни',
-            u'Год постройки', u'Общая площадь', u'Жилая площадь', u'Высота потолков', u'До метро',
-           u'Лифты в здании', u'Материал стен', u'Санузел', u'Приватизированная квартира', 
-           u'Площадь арендуемой комнаты', u'Можно с животными', u'Комиссия', u'Период аренды',
-           u'Комнат сдается', u'Доля', u'Тип здания',
-           u'Площадь участка', u'Категория земли', u'Вид разрешенного использования',
-           u'Отапливаемый', u'Мебель', u'Бытовая техника', u'Интернет',
-           u'Количество этажей', u'Количество комнат', u'Количество спален',
-           u'Гараж', u'Охрана']
-        subs = [
-                [u' м,', u','], [u' г.', u''],
-                [u' мин/пеш', u''], [u' км', u''],
-                [u'Этажей в здании', u'Этажей'],
-                [u'Комнат в квартире', u'Количество комнат'],
-                [u'Год постройки', u'Год постройки'],
-                [u'До метро, минут(пешком)', u'До метро пешком'],
-                [u'Материал стен', u'Тип здания'],
-                [u'Приватизированная квартира', u'Приватизированная квартира": "1'],
-                [u'Можно с животными', u'Можно с животными": "1'],
-                [u'Лифты в здании', u'Лифт": "1'],
-                [u'Отапливаемый', u'Отапливаемый": "1'],
-                [u'Мебель', u'Мебель": "1'],
-                [u'Бытовая техника', u'Бытовая техника": "1'],
-                [u'Интернет', u'Интернет": "1'],
-                [u'Гараж', u'Гараж": "1'],
-                [u'Охрана', u'Охрана": "1']
-            ]
-        result = []
-        print('draft details: '+'='.join(details))
-        for i in details:
-            for j in arr:
-                if not (re.search(j, i) is None):
-                    result.append('"'+i.strip().replace(': ','": "')+'"')
-        offer = re.search("::.+", category).group(0).replace('::','')
-        offer = offer.replace('apartments-sale', 'Продам')
-        offer = offer.replace('rooms-sale', 'Продам')
-        offer = offer.replace('rooms-rent', 'Сдам')
-        offer = offer.replace('commercial-sale', 'Продам')
-        offer = offer.replace('commercial', 'Сдам в аренду')
-        offer = offer.replace('out-of-town-rent', 'Сдам')
-        offer = offer.replace('out-of-town', 'Продам')
-        offer = offer.replace('garage-rent', 'Сдам')
-        offer = offer.replace('garage', 'Продам')
-        offer = offer.replace('rent', 'Сдам')
-        result.append('"Тип предложения": "'+offer+'"')
-        if (category == 'real-estate::apartments-sale') or (category == "real-estate::rent"):
-            if re.search('Студия, ', title) != None:
-                result.append('"Студия": "1"')
-            else:
-                result.append('"Студия": "0"')
-
-            if re.search('/secondary/', url) != None:
-                result.append('"Вторичное жилье": "1"')
-            else:
-                result.append('"Вторичное жилье": "0"')
-
-        result = '{'+', '.join(result)+'}'
-        result = result.replace(' м"', '"')
-        result = result.replace(' сот"', '"')
-
-        for k in subs:
-            result = result.replace(k[0], k[1])
-        print("details: "+result)
-        return result
-
-    # def parse_dummy(self, response):
     def parse(self, response):
+    # def parse_dummy(self, response):
         # Определяем список ссылок со страницы
         links = response.css('.listing .listing__item .listing__itemTitleWrapper a::attr(href)').getall()
         links = list(set(links))
-        print('LINKS TO ADS FROM PAGE:')
-        print(links)
+        print('############# LINKS FROM PAGE ('+str(response.status)+') '+response.url+':')
         for href in links:
             page = href
-            print("\tPARSING PAGE"+page)
+            print("######################### get: "+page)
             yield response.follow(page, self.parse_item)
         # ссылки на следующие страницы
-        try:
-            cur_page_id = int(re.search('/page\d+', response.url).group(0).replace('/page',''))
-            nextPage = response.url.replace('page'+str(cur_page_id)+'/','')+'page'+str(cur_page_id + 1)+'/'
-        except BaseException:
-            nextPage = response.url+'page2/'
-        print("next page is: "+nextPage)
-        yield response.follow(nextPage, self.parse)
+        if len(links) == 0:
+            print("nothing url was found. exiting")
+            return
+        else:
+            try:
+                cur_page_id = int(re.search('/page\d+', response.url).group(0).replace('/page',''))
+                nextPage = response.url.replace('page'+str(cur_page_id)+'/','')+'page'+str(cur_page_id + 1)+'/'
+            except BaseException:
+                nextPage = response.url+'page2/'
+            print("######################### next page is: "+nextPage)
+            yield response.follow(nextPage, self.parse)
 
 
     def parse_item(self, response):
     # def parse(self, response):
-        print('----------------------------------------------------------------')
+        print('------------------------------'+str(response.status)+'----------------------------------')
         print(response.url)
         item = ItemLoader(item=Ad(), response=response)
 
@@ -223,6 +137,7 @@ class IrrSpider(scrapy.Spider):
         item.add_value('title', title)
         item.add_value('description', adv['text'])
         item.add_css('price', '.productPage__price::attr(content)')
+        item.add_css('price_unit', '.productPage__price::attr(content)')
         item.add_css('address', '.js-scrollToMap::text')
         item.add_css('address', '.productPage__metro::text')
         
@@ -254,6 +169,8 @@ class IrrSpider(scrapy.Spider):
         if actual == True:
             item.add_css('author', '.productPage__inlineWrapper a::text')
             item.add_css('author', '.productPage__infoTextBold.productPage__infoTextBold_inline::text')
+            item.add_css('author', 'input[name="contactFace"]::attr(value)')
+            # item.add_value('author', 'Нет имени')
 
             phone = response.css('input[name="phoneBase64"]::attr(value)').get()
             phone = base64.b64decode(phone).decode("utf-8").replace('(','').replace(')','').replace('-','').replace(' ','')[2:]
@@ -287,6 +204,38 @@ class IrrSpider(scrapy.Spider):
         category = category.replace('real-estate::out-of-town', 'Дома, дачи, коттеджи')
         category = category.replace('real-estate::garage-rent', 'Гаражи и машиноместа')
         category = category.replace('real-estate::garage', 'Гаражи и машиноместа')
+        category = category.replace('cars::passenger', 'Автомобили')
+        category = category.replace('cars::misc', 'Мототехника')
+        category = category.replace('cars::water', 'Водный транспорт')
+        category = category.replace('cars::commercial', 'Спецтехника')
+        category = category.replace('cars::parts', 'Запчасти для авто')
+
+        category = category.replace('home::garden', 'Сад и огород, дача')
+        if category == 'home/furniture-interior':
+            if re.search('kitchen', url) != None:
+                category = 'Посуда и товары для кухни'
+            category = category.replace('home::furniture-interior', 'Мебель и интерьер')
+        if category == 'home::building':
+            if re.search('instruments', url) != None:
+                category = 'Инструменты'
+            elif re.search('materials', url) != None:
+                category = 'Ремонт и строительство'
+            elif re.search('plumbing', url) != None:
+                category = 'Ремонт и строительство'
+            elif re.search('other', url) != None:
+                category = 'Ремонт и строительство'
+            elif re.search('constructions', url) != None:
+                category = 'Ремонт и строительство'
+            elif re.search('elements', url) != None:
+                category = 'Ремонт и строительство'
+
+        category = category.replace('animals-plants::plants', 'Растения')
+        category = category.replace('business::food', 'Продукты питания')
+        category = category.replace('business::business', 'Готовый бизнес')
+        category = category.replace('business::services-business', 'Услуги')
+        category = category.replace('business::equipment', 'Оборудование для бизнеса')
+        category = category.replace('jobs-education::resumes', 'Резюме')
+        category = category.replace('jobs-education::vacancies', 'Вакансии')
         item.add_value('category', category)
 
         item.add_value('original_url', url)
@@ -294,3 +243,107 @@ class IrrSpider(scrapy.Spider):
         item.add_value('processed', False)
         print('======================================================')
         return item.load_item()
+
+    def parse_details(self, details, category, title, url):
+        subs = [
+                [u' м,', u','], [u' г.', u''],
+                [u' сот', u''], [u' м2', u''],
+                [u' км', u''], [u' л.с.', u''],
+                [u' мм', u''], [u' "', u''],
+                [u'Этажей в здании', u'Этажей'],
+                [u'Количество этажей', u'Этажей'],
+                [u'Комнат в квартире', u'Количество комнат'],
+                [u'Год постройки/сдачи', u'Год постройки'],
+                [u'До метро, минут(пешком)', u'До метро пешком'],
+                [u'Материал стен', u'Материал здания'],
+                [u'Площадь строения', u'Общая площадь'],
+                [u'Площадь арендуемой комнаты', u'Жилая площадь'],
+                [u'Удаленность', u'Расстояние до города'],
+                [u'Лифты в здании', u'Лифт'],
+                [u'Отапливаемый', u'Отопление'],
+                [u'Газ в доме', u'Газ'],
+                [u'Водопровод', u'Центральное водоснабжение'],
+                [u'Электричество (подведено)', u'Электричество'],
+                #Автомобили
+                [u'Автозапуск', u'Дистанционный запуск'],
+                [u'Салон: велюровый', u'Салон: Велюр'],
+                [u'Салон: кожаный', u'Салон: Кожа'],
+                [u'Салон: тканевый', u'Салон: Ткань'],
+                [u'Салон: кожаный', u'Салон: Кожа'],
+                [u'Кол-во дверей', u'Количество дверей'],
+                [u'Стеклоподъемники: передних окон', u'Электростеклоподъемники передние: 1'],
+                [u'Стеклоподъемники: всех окон', u'Электростеклоподъемники передние: 1, Электростеклоподъемники задние: 1'],
+                [u'Зеркала: регулировка', u'Электропривод зеркал: 1'],
+                [u'Зеркала: обогрев', u'Электрообогрев зеркал: 1'],
+                [u'Зеркала: регулировка и обогрев', u'Электропривод зеркал: 1, Электрообогрев зеркал: 1'],
+                [u'Зеркала: регулировка и обогрев и складывание', u'Электропривод зеркал: 1, Привод складывания зеркал: 1, Электрообогрев зеркал: 1'],
+                [u'Обогрев стекол: заднего и переднего', u'Электрообогрев лобового стекла: 1'],
+                [u'Обогрев сидений: всех', u'Подогрев водительского сидения: 1, Подогрев пассажирского сидения: 1, Подогрев задних сидений: 1'],
+                [u'Противотуманные фары', u'Противотуманные'],
+                [u'Кол-во владельцев', u'Записей в ПТС'],
+                [u'Кондиционер: климат-контроль', u'Климат: Климат контроль однозонный'],
+                [u'Кондиционер: двухзонный', u'Климат: Климат контроль двухзонный'],
+                [u'Привод: постоянный полный', u'Привод: Полный'],
+                [u'Привод: подключаемый полный', u'Привод: Полный подключаемый'],
+                [u'Тип кузова: хэтчбек', u'Кузов: Хетчбэк'],
+                [u'Тип двигателя: газ', u'Газ'],
+                [u'Тип трансмиссии: автомат', u'Трансмиссия: Автоматическая'],
+                [u'Тип трансмиссии: механика', u'Трансмиссия: Механическая'],
+                [u'Тип трансмиссии: вариатор', u'Трансмиссия: Вариатор'],
+                [u'Тип трансмиссии: робот', u'Трансмиссия: Роботизированная'],
+                [u'Состояние автомобиля: б/у', u'Б/у'],
+                [u'Состояние автомобиля: битый', u'Битый'],
+                [u'Усилитель руля (ГУР): гидроусилитель', u'Усилитель руля: Гидро'],
+                [u'Объем двигателя', u'Объем'],
+                [u'Фары: биксенон', u'Тип фар: Биксеноновые'],
+                [u'Фары: галогеновые', u'Тип фар: Галогенные'],
+                [u'Таможня: растаможен', u'Растаможен'],
+                [u'Таможня: не растаможен', u'Растаможен: 0'],
+                [u'Люк: электро', u'Люк'],
+                [u'Люк: механика', u'Люк'],
+                [u'Спутниковая сигнализация', u'Спутник'],
+                [u'Handsfree', u'Hands free'],
+                [u'Телевизор', u'TV'],
+                [u'ABS', u'Антиблокировочная система'],
+                [u'ESP', u'Курсовая устойчивость'],
+                [u'EBD', u'Распределение тормозных усилий']
+            ]
+        result = []
+        print('draft details: '+'='.join(details))
+        for i in details:
+            for k in subs:
+                i = i.replace(k[0], k[1])
+            if re.search(': ', i) == None:
+                i = i + ': 1'
+            result.append('"'+i.strip().replace(': ','": "', 15)+'"')
+        offer = re.search("::.+", category).group(0).replace('::','')
+        offer = offer.replace('apartments-sale', 'Продам')
+        offer = offer.replace('rooms-sale', 'Продам')
+        offer = offer.replace('rooms-rent', 'Сдам')
+        offer = offer.replace('commercial-sale', 'Продам')
+        offer = offer.replace('commercial', 'Сдам в аренду')
+        offer = offer.replace('out-of-town-rent', 'Сдам')
+        offer = offer.replace('out-of-town', 'Продам')
+        offer = offer.replace('garage-rent', 'Сдам')
+        offer = offer.replace('garage', 'Продам')
+        offer = offer.replace('rent', 'Сдам')
+        result.append('"Тип предложения": "'+offer+'"')
+        if (category == 'real-estate::apartments-sale') or (category == "real-estate::rent"):
+            if re.search('Студия, ', title) != None:
+                result.append('"Студия": "1"')
+            else:
+                result.append('"Студия": "0"')
+
+            if re.search('/secondary/', url) != None:
+                result.append('"Тип жилья": "Вторичное жилье"')
+            else:
+                result.append('"Тип жилья": "Новостройка"')
+
+        if (category == 'real-estate::rooms-sale') or (category == "real-estate::rooms-rent"):
+            result.append('"Тип квартиры": "Комната"')
+        if (category == 'real-estate::apartments-sale') or (category == "real-estate::rent"):
+            result.append('"Тип квартиры": "Квартира"')
+        result = '{'+', '.join(result)+'}'
+
+        print("details: "+result)
+        return result
