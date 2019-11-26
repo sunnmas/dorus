@@ -31,9 +31,9 @@ class MysqlStore(object):
         print('Mysql host:', self.mysql_host)
 
         self.rejected_authors = [
-            'Ауди Авилон',          'Звезда Столицы Варшавка',
-            'Ауди Центр Юг',        'Звезда Столицы Каширка',
-            'Ауди Центр Россия',    'Jeep Авилон'
+            'Ауди Авилон',          'Звезда Столицы Варшавка',      'Maserati Авилон',
+            'Ауди Центр Юг',        'Звезда Столицы Каширка',       'KIA Арманд',
+            'Ауди Центр Россия',    'Jeep Авилон',                  'Hyundai Авилон'
         ]
 
     def process_item(self, item, spider):
