@@ -31,9 +31,15 @@ class MysqlStore(object):
         print('Mysql host:', self.mysql_host)
 
         self.rejected_authors = [
-            'Ауди Авилон',          'Звезда Столицы Варшавка',      'Maserati Авилон',
-            'Ауди Центр Юг',        'Звезда Столицы Каширка',       'KIA Арманд',
-            'Ауди Центр Россия',    'Jeep Авилон',                  'Hyundai Авилон'
+            'Ауди Авилон',          'Звезда Столицы Варшавка',      'Maserati Авилон',      'Компания',
+            'Ауди Центр Юг',        'Звезда Столицы Каширка',       'KIA Арманд',           'Интернет-магазин шин и дисков SA.RU',
+            'Ауди Центр Россия',    'Jeep Авилон',                  'Hyundai Авилон',
+        ]
+
+        self.rejected_titles = [
+            'Диск литой',           'Зимние шины',
+            'Диск штампованный',    'Летние шины',
+            'Диск кованый'
         ]
 
     def process_item(self, item, spider):
@@ -42,6 +48,11 @@ class MysqlStore(object):
         if item['author'] in self.rejected_authors:
             print('author rejected: '+item['author'])
             return
+
+        for i in self.rejected_titles:
+            if re.search(item['title'], i) != None:
+                print('title rejected: '+item['title'])
+                return
 
         try:
             mysql_host = str(sys.argv[1])
