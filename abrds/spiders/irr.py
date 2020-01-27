@@ -55,8 +55,17 @@ class IrrSpider(scrapy.Spider):
         'business/food',                  # Продукты питания
         'animals-plants/plants',          # Растения
         'home/garden',                    # Дача
+    #Электроника
+        'electronics-technics/tv-audio-dvd',        # Аудио и видео техника
+        'electronics-technics/photo',               # Фототехника
+        'electronics-technics/computers-devices/',  # Компьютеры и пр.
+        'electronics-technics/games',               # Игры и приставки
+        'electronics-technics/kitchen',                      # Бытовая техника
+        'electronics-technics/vacuum',                       # Бытовая техника
+        'electronics-technics/washing-machines',             # Бытовая техника
+        'electronics-technics/ironing-sewing-equipment',     # Бытовая техника
+        'electronics-technics/climatic-technics',            # Бытовая техника
     ]
-
 
     subdomains = [
         'saint-petersburg',     'novosibirsk',      'ekaterinburg',     'nizhniynovgorod',
@@ -84,11 +93,12 @@ class IrrSpider(scrapy.Spider):
         start_urls.append('https://irr.ru/'+base_url+'moskovskaya-obl/')
         start_urls.append('https://saint-petersburg.irr.ru/'+base_url+'leningradskaya-obl/')
 
-    start_urls = ['https://irr.ru/real-estate/garage/stall/prodam-boks-kirpichnyy-kommunal-naya-vysota-advert722691972.html']
+    # start_urls = ['https://saint-petersburg.irr.ru/cars/passenger/used/skoda-fabia-hetchbek-2014-g-v-probeg-109000-km-avtomat-1-598-l-advert730808484.html']
 
-    allowed_domains = [
-        'irr.ru'
-    ]
+    allowed_domains = ['irr.ru']
+    def __init__(self, *a, **kw):
+        super(IrrSpider, self).__init__(*a, **kw)
+        self.draft_category = ''
 
     def parse(self, response):
     # def parse_dummy(self, response):
@@ -134,6 +144,7 @@ class IrrSpider(scrapy.Spider):
         item.add_value('external_id', id)
         item.add_value('date', adv['date_create'])
         title = response.css('.productPage__title::text').get()
+        title = title.replace("(другое)",'')
         item.add_value('title', title)
         item.add_value('description', adv['text'])
         item.add_css('price', '.productPage__price::attr(content)')
@@ -180,12 +191,12 @@ class IrrSpider(scrapy.Spider):
             item.add_value('phone', 'None')
         item.add_value('company', False)
         url = response.url
-        draft_category = re.search("irr.ru/.*?/.*?/", url).group(0)[0:-1].replace('irr.ru/','').replace('/','::')
+        self.draft_category = re.search("irr.ru/.*?/.*?/", url).group(0)[0:-1].replace('irr.ru/','').replace('/','::')
         details = response.css('.productPage__infoColumnBlockText::text').getall()
-        details = self.parse_details(details, draft_category, title, response.url)
+        details = self.parse_details(details, title, response.url)
         item.add_value('details', details)
 
-        category = draft_category.replace('real-estate::apartments-sale', 'Квартиры, комнаты')
+        category = self.draft_category.replace('real-estate::apartments-sale', 'Квартиры, комнаты')
         category = category.replace('real-estate::rooms-sale', 'Квартиры, комнаты')
         category = category.replace('real-estate::rooms-rent', 'Квартиры, комнаты')
         category = category.replace('real-estate::rent', 'Квартиры, комнаты')
@@ -236,6 +247,15 @@ class IrrSpider(scrapy.Spider):
         category = category.replace('business::equipment', 'Оборудование для бизнеса')
         category = category.replace('jobs-education::resumes', 'Резюме')
         category = category.replace('jobs-education::vacancies', 'Вакансии')
+        category = category.replace('electronics-technics::tv-audio-dvd', 'Аудио и видео техника')
+        category = category.replace('electronics-technics::photo', 'Фототехника')
+        category = category.replace('electronics-technics::computers-devices', 'Компьютеры и пр.')
+        category = category.replace('electronics-technics::games', 'Игры и приставки')
+        category = category.replace('electronics-technics::kitchen', 'Бытовая техника')
+        category = category.replace('electronics-technics::vacuum', 'Бытовая техника')
+        category = category.replace('electronics-technics::washing-machines', 'Бытовая техника')
+        category = category.replace('electronics-technics::ironing-sewing-equipment', 'Бытовая техника')
+        category = category.replace('electronics-technics::climatic-technics', 'Бытовая техника')
         item.add_value('category', category)
 
         item.add_value('original_url', url)
@@ -244,7 +264,7 @@ class IrrSpider(scrapy.Spider):
         print('======================================================')
         return item.load_item()
 
-    def parse_details(self, details, category, title, url):
+    def parse_details(self, details, title, url):
         subs = [
                 [u' м,', u','], [u' г.', u''],
                 [u' сот', u''], [u' м2', u''],
@@ -272,13 +292,13 @@ class IrrSpider(scrapy.Spider):
                 [u'Салон: кожаный', u'Салон: Кожа'],
                 [u'Кол-во дверей', u'Количество дверей'],
                 [u'Стеклоподъемники: передних окон', u'Электростеклоподъемники передние: 1'],
-                [u'Стеклоподъемники: всех окон', u'Электростеклоподъемники передние: 1, Электростеклоподъемники задние: 1'],
+                [u'Стеклоподъемники: всех окон', u'Электростеклоподъемники передние: 1", "Электростеклоподъемники задние: 1'],
+                [u'Зеркала: регулировка и обогрев и складывание', u'Электропривод зеркал: 1", "Привод складывания зеркал: 1", "Электрообогрев зеркал: 1'],
+                [u'Зеркала: регулировка и обогрев', u'Электропривод зеркал: 1", "Электрообогрев зеркал: 1'],
                 [u'Зеркала: регулировка', u'Электропривод зеркал: 1'],
                 [u'Зеркала: обогрев', u'Электрообогрев зеркал: 1'],
-                [u'Зеркала: регулировка и обогрев', u'Электропривод зеркал: 1, Электрообогрев зеркал: 1'],
-                [u'Зеркала: регулировка и обогрев и складывание', u'Электропривод зеркал: 1, Привод складывания зеркал: 1, Электрообогрев зеркал: 1'],
                 [u'Обогрев стекол: заднего и переднего', u'Электрообогрев лобового стекла: 1'],
-                [u'Обогрев сидений: всех', u'Подогрев водительского сидения: 1, Подогрев пассажирского сидения: 1, Подогрев задних сидений: 1'],
+                [u'Обогрев сидений: всех', u'Подогрев водительского сидения: 1", "Подогрев пассажирского сидения": "1", "Подогрев задних сидений: 1'],
                 [u'Противотуманные фары', u'Противотуманные'],
                 [u'Кол-во владельцев', u'Записей в ПТС'],
                 [u'Кондиционер: климат-контроль', u'Климат: Климат контроль однозонный'],
@@ -316,19 +336,23 @@ class IrrSpider(scrapy.Spider):
             if re.search(': ', i) == None:
                 i = i + ': 1'
             result.append('"'+i.strip().replace(': ','": "', 15)+'"')
-        offer = re.search("::.+", category).group(0).replace('::','')
+        offer = re.search("::.+", self.draft_category).group(0).replace('::','')
         offer = offer.replace('apartments-sale', 'Продам')
         offer = offer.replace('rooms-sale', 'Продам')
         offer = offer.replace('rooms-rent', 'Сдам')
         offer = offer.replace('commercial-sale', 'Продам')
-        offer = offer.replace('commercial', 'Сдам в аренду')
+        if self.draft_category == 'real-estate::commercial':
+            offer = offer.replace('commercial', 'Сдам в аренду')
+        else:
+            offer = ''
         offer = offer.replace('out-of-town-rent', 'Сдам')
         offer = offer.replace('out-of-town', 'Продам')
         offer = offer.replace('garage-rent', 'Сдам')
         offer = offer.replace('garage', 'Продам')
         offer = offer.replace('rent', 'Сдам')
-        result.append('"Тип предложения": "'+offer+'"')
-        if (category == 'real-estate::apartments-sale') or (category == "real-estate::rent"):
+        if offer != '':
+            result.append('"Тип предложения": "'+offer+'"')
+        if (self.draft_category == 'real-estate::apartments-sale') or (self.draft_category == "real-estate::rent"):
             if re.search('Студия, ', title) != None:
                 result.append('"Студия": "1"')
             else:
@@ -338,11 +362,53 @@ class IrrSpider(scrapy.Spider):
                 result.append('"Тип жилья": "Вторичное жилье"')
             else:
                 result.append('"Тип жилья": "Новостройка"')
-
-        if (category == 'real-estate::rooms-sale') or (category == "real-estate::rooms-rent"):
+        if (self.draft_category == 'real-estate::rooms-sale') or (self.draft_category == "real-estate::rooms-rent"):
             result.append('"Тип квартиры": "Комната"')
-        if (category == 'real-estate::apartments-sale') or (category == "real-estate::rent"):
+        if (self.draft_category == 'real-estate::apartments-sale') or (self.draft_category == "real-estate::rent"):
             result.append('"Тип квартиры": "Квартира"')
+
+        if (self.draft_category == 'business::services-business'):
+            auto_vishka = re.compile('автовышк', re.IGNORECASE)
+            auto_kran = re.compile('автокран', re.IGNORECASE)
+            exkavator = re.compile('экскаватор', re.IGNORECASE)
+            buldozer = re.compile('бульдозер', re.IGNORECASE)
+            manipulator = re.compile('манипулятор', re.IGNORECASE)
+            euacuator = re.compile('эвакуатор', re.IGNORECASE)
+            jamabur = re.compile('ямобур', re.IGNORECASE)
+            hydrohammer = re.compile('гидромолот', re.IGNORECASE)
+            if (re.search(auto_vishka, title) != None):
+                result.append('"Тип предложения": "Сдам в аренду"')
+                result.append('"Тип техники": "Автовышка"')
+                self.draft_category = 'Спецтехника'
+            if (re.search(auto_kran, title) != None):
+                result.append('"Тип предложения": "Сдам в аренду"')
+                result.append('"Тип техники": "Автокран"')
+                self.draft_category = 'Спецтехника'
+            if (re.search(exkavator, title) != None):
+                result.append('"Тип предложения": "Сдам в аренду"')
+                result.append('"Тип техники": "Экскаватор"')
+                self.draft_category = 'Спецтехника'
+            if (re.search(buldozer, title) != None):
+                result.append('"Тип предложения": "Сдам в аренду"')
+                result.append('"Тип техники": "Бульдозер"')
+                self.draft_category = 'Спецтехника'
+            if (re.search(manipulator, title) != None):
+                result.append('"Тип предложения": "Сдам в аренду"')
+                result.append('"Тип техники": "Манипулятор"')
+                self.draft_category = 'Спецтехника'
+            if (re.search(euacuator, title) != None):
+                result.append('"Тип предложения": "Сдам в аренду"')
+                result.append('"Тип техники": "Эвакуатор"')
+                self.draft_category = 'Спецтехника'
+            if (re.search(jamabur, title) != None):
+                result.append('"Тип предложения": "Сдам в аренду"')
+                result.append('"Тип техники": "Ямобур"')
+                self.draft_category = 'Спецтехника'
+            if (re.search(hydrohammer, title) != None):
+                result.append('"Тип предложения": "Сдам в аренду"')
+                result.append('"Тип техники": "Гидромолот"')
+                self.draft_category = 'Спецтехника'
+
         result = '{'+', '.join(result)+'}'
 
         print("details: "+result)
