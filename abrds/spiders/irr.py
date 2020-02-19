@@ -68,6 +68,22 @@ class IrrSpider(scrapy.Spider):
     #Личные вещи
         'personal/children/baby-clothes',                   # Детская одежда
         'personal/children/baby-shoes',                     # Детская обувь
+        'personal/children/baby-carriage',                  # Коляски
+        'personal/children/baby-carseat',                   # Автокресла
+        'personal/children/baby-furniture',                 # Детская мебель
+        'personal/children/babyware',                       # Детские товары для новорожденных
+        'personal/children/toys',                           # Детские игрушки
+        'personal/children/baby-textile',                   # Детские постельные принадлежности
+        'personal/children/schoolware',                     # Школьные принадлежности
+        'personal/children/baby-sportware',                 # Детский спортивный инвентарь
+        'personal/children/mum-to-be',                      # Для будущих мам
+        'personal/children/other',                          # Прочие детские товары
+
+        'personal/apparel-footwear/women-clothes',          # Женская одежда
+        'personal/apparel-footwear/men-clothes',            # Мужская одежда
+        'personal/apparel-footwear/women-shoes',            # Женская обувь
+        'personal/apparel-footwear/men-shoes',              # Мужская обувь
+
     ]
 
     subdomains = [
@@ -419,6 +435,10 @@ class IrrSpider(scrapy.Spider):
                 self.draft_category = 'Одежда и обувь для детей'
             if re.search('baby-shoes', url) != None:
                 self.draft_category = 'Одежда и обувь для детей'
+            else:
+                self.draft_category = 'Товары для детей и игрушки'
+        if (self.draft_category == 'personal::apparel-footwear'):
+            self.draft_category = 'Одежда и обувь для взрослых'
 
         result = '{'+', '.join(result)+'}'
         print("details: "+result)
