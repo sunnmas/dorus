@@ -44,9 +44,18 @@ def detect_price_unit(value):
         return '₽'
 
 def clean_author_id(value):
-    return value.replace('ID ','')
+    value = value.replace('&#40;','').replace('&#41;','').replace('&#43;','')
+    value = value.replace('&nbsp;','').replace('&ndash;','')
+    try:
+        return value.replace('ID ','')
+    except BaseException:
+        return value
 
 def clean_phone(value):
+    if value == 'None':
+        return value
+    value = value.replace('&#40;','').replace('&#41;','').replace('&#43;','')
+    value = value.replace('&nbsp;','').replace('&ndash;','')
     value = value.replace('+7','8').replace('(','').replace(')','').replace('-','').replace(' ','')
     value = value[1:11]
     return value
